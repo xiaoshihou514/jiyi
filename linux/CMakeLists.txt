@@ -7,7 +7,7 @@ project(runner LANGUAGES CXX)
 set(BINARY_NAME "jiyi")
 # The unique GTK application identifier for this application. See:
 # https://wiki.gnome.org/HowDoI/ChooseApplicationID
-set(APPLICATION_ID "com.example.jiyi")
+set(APPLICATION_ID "com.github.xiaoshihou.jiyi")
 
 # Explicitly opt in to modern CMake behaviors to avoid warnings with recent
 # versions of CMake.
@@ -73,6 +73,16 @@ apply_standard_settings(${BINARY_NAME})
 # Add dependency libraries. Add any application-specific dependencies here.
 target_link_libraries(${BINARY_NAME} PRIVATE flutter)
 target_link_libraries(${BINARY_NAME} PRIVATE PkgConfig::GTK)
+
+############################################################################################################
+# https://github.com/Skyost/OpenAuthenticator/blob/152acc82369ec9b2a7564e348ab25120ad5510b0/linux/CMakeLists.txt#L77
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
+
+find_package(PAM REQUIRED)
+
+target_include_directories(${BINARY_NAME} PRIVATE ${PAM_INCLUDE_DIRS})
+target_link_libraries(${BINARY_NAME} PRIVATE ${PAM_LIBRARIES})
+############################################################################################################
 
 # Run the Flutter tool portions of the build. This must not be removed.
 add_dependencies(${BINARY_NAME} flutter_assemble)
