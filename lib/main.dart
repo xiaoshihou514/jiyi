@@ -1,6 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-void main() {
+// ignore: non_constant_identifier_names
+final String MASTER_KEY_STORAGE_KEY = "JIYI_MASTER_KEY";
+
+Future main() async {
+  // Create storage
+  final storage = FlutterSecureStorage();
+  // Read value
+  final String? masterKey = await storage.read(key: MASTER_KEY_STORAGE_KEY);
+
+  if (masterKey == null) {
+    // app init
+  } else {
+    // goto main page
+  }
+
   runApp(const MyApp());
 }
 
@@ -15,6 +30,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
+      debugShowCheckedModeBanner: false,
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
