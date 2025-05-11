@@ -59,8 +59,8 @@ class _MasterKeyPage extends State<MasterKeyPage> {
       floatingActionButton: IconButton(
         onPressed: submit,
         icon: Container(
-          width: 32.em,
-          height: 20.em,
+          width: 25.em,
+          height: 15.em,
           decoration: BoxDecoration(
             color: enteredMK ? DefaultColors.constant : DefaultColors.shade_2,
             borderRadius: BorderRadius.circular(10),
@@ -68,6 +68,7 @@ class _MasterKeyPage extends State<MasterKeyPage> {
           child: Icon(
             writing ? Icons.sync : Icons.navigate_next_rounded,
             color: enteredMK ? DefaultColors.bg : DefaultColors.fg,
+            size: 12.em,
           ),
         ),
       ),
@@ -85,7 +86,14 @@ class _MasterKeyPage extends State<MasterKeyPage> {
               children: [
                 // title
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 7.5.em),
+                  padding:
+                      ScreenUtil().scaleWidth < ScreenUtil().scaleHeight
+                          ?
+                          // mobile
+                          EdgeInsets.symmetric(vertical: 7.5.em)
+                          :
+                          // desktop / tablet
+                          EdgeInsets.zero,
                   child: Text.rich(
                     TextSpan(
                       text: AppLocalizations.of(context)!.mk_title,
@@ -114,7 +122,17 @@ class _MasterKeyPage extends State<MasterKeyPage> {
                     ),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 2.5.em),
+                    padding:
+                        ScreenUtil().scaleWidth < ScreenUtil().scaleHeight
+                            ?
+                            // mobile
+                            EdgeInsets.symmetric(vertical: 2.5.em)
+                            :
+                            // desktop / tablet
+                            EdgeInsets.symmetric(
+                              vertical: 4.em,
+                              horizontal: 50.em,
+                            ),
                     child: AutofillGroup(
                       // input field
                       child: TextField(
@@ -125,12 +143,18 @@ class _MasterKeyPage extends State<MasterKeyPage> {
                               enteredMK = s.isNotEmpty;
                             }),
 
-                        obscureText: !showMK,
-                        cursorColor: DefaultColors.shade_6,
-                        style: TextStyle(color: DefaultColors.fg),
                         // enable password completion
                         autofillHints: [AutofillHints.password],
                         enableIMEPersonalizedLearning: false,
+                        obscureText: !showMK,
+
+                        cursorColor: DefaultColors.shade_6,
+                        style: TextStyle(
+                          color: DefaultColors.fg,
+                          fontSize: 4.em,
+                        ),
+                        autofocus: true,
+
                         decoration: InputDecoration(
                           // toggle obscureText
                           suffixIcon: IconButton(
@@ -175,26 +199,29 @@ class _MasterKeyPage extends State<MasterKeyPage> {
                     ),
                   ],
                 ),
-                Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: AppLocalizations.of(context)!.mk_warn_desc_1,
-                        style: TextStyle(
-                          fontSize: 5.em,
-                          fontWeight: FontWeight.bold,
-                          color: DefaultColors.error,
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: AppLocalizations.of(context)!.mk_warn_desc_1,
+                          style: TextStyle(
+                            fontSize: 5.em,
+                            fontWeight: FontWeight.bold,
+                            color: DefaultColors.error,
+                          ),
                         ),
-                      ),
-                      TextSpan(
-                        text: AppLocalizations.of(context)!.mk_warn_desc_2,
-                        style: TextStyle(
-                          fontSize: 5.em,
-                          fontStyle: FontStyle.italic,
-                          color: DefaultColors.error,
+                        TextSpan(
+                          text: AppLocalizations.of(context)!.mk_warn_desc_2,
+                          style: TextStyle(
+                            fontSize: 5.em,
+                            fontStyle: FontStyle.italic,
+                            color: DefaultColors.error,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],
