@@ -213,7 +213,6 @@ static void my_application_activate(GApplication *application) {
     gtk_header_bar_set_show_close_button(header_bar, TRUE);
     gtk_window_set_titlebar(window, GTK_WIDGET(header_bar));
   }
-
   gtk_window_set_default_size(window, 1280, 720);
   gtk_widget_show(GTK_WIDGET(window));
 
@@ -233,7 +232,7 @@ static void my_application_activate(GApplication *application) {
   g_autoptr(FlBinaryMessenger) messenger =
       fl_engine_get_binary_messenger(engine);
   g_autoptr(FlMethodChannel) channel = fl_method_channel_new(
-      messenger, "app.openauthenticator.localauth", FL_METHOD_CODEC(codec));
+      messenger, "com.github.xiaoshihou.ffi", FL_METHOD_CODEC(codec));
   fl_method_channel_set_method_call_handler(channel, method_call_cb,
                                             g_object_ref(view), g_object_unref);
 
@@ -258,7 +257,7 @@ static gboolean my_application_local_command_line(GApplication *application,
   g_application_activate(application);
   *exit_status = 0;
 
-  return FALSE;
+  return TRUE;
 }
 
 // Implements GObject::dispose.
@@ -279,8 +278,7 @@ static void my_application_init(MyApplication *self) {}
 
 MyApplication *my_application_new() {
   g_set_prgname(APPLICATION_ID);
-  return MY_APPLICATION(g_object_new(
-      my_application_get_type(), "application-id", APPLICATION_ID, "flags",
-      G_APPLICATION_HANDLES_COMMAND_LINE | G_APPLICATION_HANDLES_OPEN,
-      nullptr));
+  return MY_APPLICATION(g_object_new(my_application_get_type(),
+                                     "application-id", APPLICATION_ID, "flags",
+                                     G_APPLICATION_NON_UNIQUE, nullptr));
 }
