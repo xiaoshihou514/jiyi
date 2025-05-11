@@ -128,6 +128,36 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'此刻'**
   String get welcome_4_2;
+
+  /// No description provided for @mk_title.
+  ///
+  /// In zh, this message translates to:
+  /// **'创建主密钥'**
+  String get mk_title;
+
+  /// No description provided for @mk_desc.
+  ///
+  /// In zh, this message translates to:
+  /// **'用来解密您的语音日志的密钥。若录音文件被转移到其他设备，需重新输入该密钥方可读取录音。'**
+  String get mk_desc;
+
+  /// No description provided for @mk_warn_title.
+  ///
+  /// In zh, this message translates to:
+  /// **'请务必牢记主密钥！'**
+  String get mk_warn_title;
+
+  /// No description provided for @mk_warn_desc_1.
+  ///
+  /// In zh, this message translates to:
+  /// **'主密钥不可重置或找回'**
+  String get mk_warn_desc_1;
+
+  /// No description provided for @mk_warn_desc_2.
+  ///
+  /// In zh, this message translates to:
+  /// **'，一旦丢失，您将永久无法访问已加密的语音内容。'**
+  String get mk_warn_desc_2;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

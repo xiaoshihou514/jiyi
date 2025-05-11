@@ -17,6 +17,7 @@ dependencies:
   pointycastle: ^4.0.0
   record: ^6.0.0
   flutter_animate: ^4.5.2
+  flutter_screenutil: ^5.9.3
 
 dev_dependencies:
   flutter_test:
@@ -43,3 +44,6 @@ flutter:
     - family: 851手写杂书体
       fonts:
         - asset: fonts/851手写杂书体.ttf
+    - family: 朱雀仿宋
+      fonts:
+        - asset: fonts/朱雀仿宋.ttf

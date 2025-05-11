@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/pages/setup/master_key.dart';
 import 'package:jiyi/l10n/localizations.dart';
+import 'package:jiyi/em.dart';
+import 'package:jiyi/smooth_router.dart';
 
 const delay_1 = Duration(milliseconds: 100);
 const duration_1 = Duration(seconds: 1);
@@ -22,7 +25,7 @@ final delay_4_2 = delay_4_1 + duration_4_1;
 const duration_4_2 = Duration(milliseconds: 500);
 
 final delayLightup = delay_4_2 + duration_4_2 + Duration(seconds: 1);
-const durationLightup = Duration(milliseconds: 750);
+const durationLightup = Duration(seconds: 1);
 
 class WelcomePage extends StatefulWidget {
   final String? masterKey;
@@ -46,27 +49,16 @@ class _WelcomePageState extends State<WelcomePage> {
         if (masterKey == null) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (ctx) => MasterKeyPage()),
+            SmoothRouter.builder(MasterKeyPage()),
           );
         }
       } else {
         // Uh, idk
       }
     });
-    final size = MediaQuery.of(context).size;
-    final w = size.width;
-    final h = size.height;
-    double fontSize = 80;
-    double iconSize = 80;
-    if (w > h) {
-      // desktop / tablet
-      fontSize = h / 8;
-      iconSize = h / 8;
-    } else {
-      // phone
-      fontSize = w / 8;
-      iconSize = w / 8;
-    }
+    ScreenUtil.init(context);
+    final double fontSize = 15.em;
+    final double iconSize = 15.em;
 
     return DefaultTextStyle.merge(
       style: TextStyle(
@@ -158,11 +150,7 @@ class _WelcomePageState extends State<WelcomePage> {
             ),
           ],
         ),
-      ).animate().tint(
-        color: DefaultColors.shade_1,
-        delay: delayLightup,
-        duration: durationLightup,
-      ),
+      ).animate().fadeOut(delay: delayLightup, duration: durationLightup),
     );
   }
 }
