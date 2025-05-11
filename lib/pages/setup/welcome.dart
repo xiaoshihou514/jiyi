@@ -22,7 +22,7 @@ final delay_4_2 = delay_4_1 + duration_4_1;
 const duration_4_2 = Duration(milliseconds: 500);
 
 final delayLightup = delay_4_2 + duration_4_2 + Duration(seconds: 1);
-const durationLightup = Duration(seconds: 2);
+const durationLightup = Duration(milliseconds: 750);
 
 class WelcomePage extends StatefulWidget {
   final String? masterKey;
@@ -44,11 +44,7 @@ class _WelcomePageState extends State<WelcomePage> {
     Future.delayed(delayLightup + durationLightup, () {
       if (context.mounted) {
         if (masterKey == null) {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(builder: (ctx) => MasterKeyPage()),
-          // );
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (ctx) => MasterKeyPage()),
           );
