@@ -12,14 +12,12 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget? home;
-    if (masterKey == null || storagePath == null) {
-      home = WelcomePage(masterKey, storagePath);
-    } else {
-      home = HomePage();
-    }
     return MaterialApp(
-      home: home,
+      home:
+          (masterKey == null || storagePath == null)
+              ? WelcomePage(masterKey, storagePath)
+              : HomePage(),
+
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
