@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_gen/gen_l10n/localizations.dart';
+
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/pages/setup/master_key.dart';
+import 'package:jiyi/l10n/localizations.dart';
 
 const delay_1 = Duration(milliseconds: 100);
 const duration_1 = Duration(seconds: 1);
@@ -29,6 +30,7 @@ class WelcomePage extends StatefulWidget {
   const WelcomePage(this.masterKey, this.storagePath, {super.key});
 
   @override
+  // ignore: no_logic_in_create_state
   State<WelcomePage> createState() => _WelcomePageState(masterKey, storagePath);
 }
 
@@ -42,6 +44,10 @@ class _WelcomePageState extends State<WelcomePage> {
     Future.delayed(delayLightup + durationLightup, () {
       if (context.mounted) {
         if (masterKey == null) {
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(builder: (ctx) => MasterKeyPage()),
+          // );
           Navigator.push(
             context,
             MaterialPageRoute(builder: (ctx) => MasterKeyPage()),
@@ -51,10 +57,24 @@ class _WelcomePageState extends State<WelcomePage> {
         // Uh, idk
       }
     });
+    final size = MediaQuery.of(context).size;
+    final w = size.width;
+    final h = size.height;
+    double fontSize = 80;
+    double iconSize = 80;
+    if (w > h) {
+      // desktop / tablet
+      fontSize = h / 8;
+      iconSize = h / 8;
+    } else {
+      // phone
+      fontSize = w / 8;
+      iconSize = w / 8;
+    }
 
     return DefaultTextStyle.merge(
       style: TextStyle(
-        fontSize: 80.0,
+        fontSize: fontSize,
         fontFamily: "851手写杂书体",
         decoration: TextDecoration.none,
         color: DefaultColors.fg,
@@ -69,7 +89,7 @@ class _WelcomePageState extends State<WelcomePage> {
               children: [
                 Icon(
                   Icons.graphic_eq,
-                  size: 80,
+                  size: iconSize,
                   color: DefaultColors.info,
                 ).animate().fadeIn(delay: delay_1, duration: duration_1),
 
@@ -83,7 +103,11 @@ class _WelcomePageState extends State<WelcomePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.photo_library, size: 80, color: DefaultColors.func)
+                Icon(
+                      Icons.photo_library,
+                      size: iconSize,
+                      color: DefaultColors.func,
+                    )
                     .animate()
                     .fadeIn(delay: delay_2_2, duration: duration_2_2)
                     .tint(
@@ -112,7 +136,7 @@ class _WelcomePageState extends State<WelcomePage> {
               children: [
                 Icon(
                   Icons.lock_person_rounded,
-                  size: 80,
+                  size: iconSize,
                   color: DefaultColors.keyword,
                 ).animate().fadeIn(delay: delay_3, duration: duration_3),
 
@@ -139,7 +163,7 @@ class _WelcomePageState extends State<WelcomePage> {
           ],
         ),
       ).animate().tint(
-        color: DefaultColors.shade_3,
+        color: DefaultColors.shade_1,
         delay: delayLightup,
         duration: durationLightup,
       ),
