@@ -13,7 +13,8 @@ import 'package:jiyi/smooth_router.dart';
 const durationDim = Duration(seconds: 2);
 
 class MasterKeyPage extends StatefulWidget {
-  const MasterKeyPage({super.key});
+  final bool needInitStorage;
+  const MasterKeyPage(this.needInitStorage, {super.key});
 
   @override
   State<MasterKeyPage> createState() => _MasterKeyPage();
@@ -54,10 +55,15 @@ class _MasterKeyPage extends State<MasterKeyPage> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
+    final l = AppLocalizations.of(context)!;
 
     return Scaffold(
       floatingActionButton: IconButton(
-        onPressed: submit,
+        onPressed: () {
+          if (enteredMK) {
+            submit();
+          }
+        },
         icon: Container(
           width: 25.em,
           height: 15.em,
@@ -96,7 +102,7 @@ class _MasterKeyPage extends State<MasterKeyPage> {
                           EdgeInsets.zero,
                   child: Text.rich(
                     TextSpan(
-                      text: AppLocalizations.of(context)!.mk_title,
+                      text: l.mk_title,
                       style: TextStyle(
                         fontSize: 15.em,
                         color: DefaultColors.keyword,
@@ -107,10 +113,7 @@ class _MasterKeyPage extends State<MasterKeyPage> {
 
                 // desc
                 Text.rich(
-                  TextSpan(
-                    text: AppLocalizations.of(context)!.mk_desc,
-                    style: TextStyle(fontSize: 8.em),
-                  ),
+                  TextSpan(text: l.mk_desc, style: TextStyle(fontSize: 8.em)),
                 ),
 
                 // override cursor related colors
@@ -190,7 +193,7 @@ class _MasterKeyPage extends State<MasterKeyPage> {
                     Icon(Icons.warning, color: DefaultColors.error),
                     Text.rich(
                       TextSpan(
-                        text: AppLocalizations.of(context)!.mk_warn_title,
+                        text: l.mk_warn_title,
                         style: TextStyle(
                           fontSize: 8.em,
                           color: DefaultColors.error,
@@ -205,7 +208,7 @@ class _MasterKeyPage extends State<MasterKeyPage> {
                     TextSpan(
                       children: [
                         TextSpan(
-                          text: AppLocalizations.of(context)!.mk_warn_desc_1,
+                          text: l.mk_warn_desc_1,
                           style: TextStyle(
                             fontSize: 5.em,
                             fontWeight: FontWeight.bold,
@@ -213,7 +216,7 @@ class _MasterKeyPage extends State<MasterKeyPage> {
                           ),
                         ),
                         TextSpan(
-                          text: AppLocalizations.of(context)!.mk_warn_desc_2,
+                          text: l.mk_warn_desc_2,
                           style: TextStyle(
                             fontSize: 5.em,
                             fontStyle: FontStyle.italic,

@@ -158,6 +158,36 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'，一旦丢失，您将永久无法访问已加密的语音内容。'**
   String get mk_warn_desc_2;
+
+  /// No description provided for @st_title.
+  ///
+  /// In zh, this message translates to:
+  /// **'选择储存路径'**
+  String get st_title;
+
+  /// No description provided for @st_desc.
+  ///
+  /// In zh, this message translates to:
+  /// **'所有文件均储存在本地，用户可以自行将其备份到云端或其他设备。'**
+  String get st_desc;
+
+  /// No description provided for @st_hint.
+  ///
+  /// In zh, this message translates to:
+  /// **'选择文件夹'**
+  String get st_hint;
+
+  /// No description provided for @st_path_placeholder.
+  ///
+  /// In zh, this message translates to:
+  /// **'您还未选择储存路径'**
+  String get st_path_placeholder;
+
+  /// No description provided for @st_path_prefix.
+  ///
+  /// In zh, this message translates to:
+  /// **'您已选择：'**
+  String get st_path_prefix;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

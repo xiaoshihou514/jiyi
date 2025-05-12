@@ -6,6 +6,7 @@ import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/pages/setup/master_key.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/em.dart';
+import 'package:jiyi/pages/setup/storage.dart';
 import 'package:jiyi/smooth_router.dart';
 
 const delay_1 = Duration(milliseconds: 100);
@@ -49,14 +50,21 @@ class _WelcomePageState extends State<WelcomePage> {
         if (masterKey == null) {
           Navigator.pushReplacement(
             context,
-            SmoothRouter.builder(MasterKeyPage()),
+            SmoothRouter.builder(MasterKeyPage(storagePath == null)),
+          );
+        } else if (storagePath == null) {
+          Navigator.pushReplacement(
+            context,
+            SmoothRouter.builder(StoragePage()),
           );
         }
       } else {
         // Uh, idk
       }
     });
+
     ScreenUtil.init(context);
+    final l = AppLocalizations.of(context)!;
     final double fontSize = 15.em;
     final double iconSize = 15.em;
 
@@ -83,7 +91,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
                 // "welcome_1": "你所记录的",
                 Text.rich(
-                  TextSpan(text: AppLocalizations.of(context)!.welcome_1),
+                  TextSpan(text: l.welcome_1),
                 ).animate().fadeIn(delay: delay_1, duration: duration_1),
               ],
             ),
@@ -106,13 +114,11 @@ class _WelcomePageState extends State<WelcomePage> {
 
                 // "welcome_2_1": "就是",
                 Text.rich(
-                  TextSpan(text: AppLocalizations.of(context)!.welcome_2_1),
+                  TextSpan(text: l.welcome_2_1),
                 ).animate().fadeIn(delay: delay_2_1, duration: duration_2_1),
 
                 // "welcome_2_2": "你的回忆",
-                Text.rich(
-                      TextSpan(text: AppLocalizations.of(context)!.welcome_2_2),
-                    )
+                Text.rich(TextSpan(text: l.welcome_2_2))
                     .animate()
                     .fadeIn(delay: delay_2_2, duration: duration_2_2)
                     .tint(color: DefaultColors.special),
@@ -130,7 +136,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
                 // "welcome_3": "让心事沉入琥珀",
                 Text.rich(
-                  TextSpan(text: AppLocalizations.of(context)!.welcome_3),
+                  TextSpan(text: l.welcome_3),
                 ).animate().fadeIn(delay: delay_3, duration: duration_3),
               ],
             ),
@@ -140,11 +146,11 @@ class _WelcomePageState extends State<WelcomePage> {
               children: [
                 // "welcome_4_1": "封存",
                 Text.rich(
-                  TextSpan(text: AppLocalizations.of(context)!.welcome_4_1),
+                  TextSpan(text: l.welcome_4_1),
                 ).animate().fadeIn(delay: delay_4_1, duration: duration_4_1),
                 // "welcome_4_2": "此刻"
                 Text.rich(
-                  TextSpan(text: AppLocalizations.of(context)!.welcome_4_2),
+                  TextSpan(text: l.welcome_4_2),
                 ).animate().fadeIn(delay: delay_4_2, duration: duration_4_2),
               ],
             ),

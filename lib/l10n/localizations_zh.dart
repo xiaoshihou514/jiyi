@@ -40,4 +40,19 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get mk_warn_desc_2 => '，一旦丢失，您将永久无法访问已加密的语音内容。';
+
+  @override
+  String get st_title => '选择储存路径';
+
+  @override
+  String get st_desc => '所有文件均储存在本地，用户可以自行将其备份到云端或其他设备。';
+
+  @override
+  String get st_hint => '选择文件夹';
+
+  @override
+  String get st_path_placeholder => '您还未选择储存路径';
+
+  @override
+  String get st_path_prefix => '您已选择：';
 }
