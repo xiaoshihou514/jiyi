@@ -18,13 +18,14 @@ dependencies:
   record: ^6.0.0
   flutter_animate: ^4.5.2
   flutter_screenutil: ^5.9.3
-  file_picker: ^10.1.7
+  file_picker: ^9.2.3
+  permission_handler: ^12.0.0+1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
   flutter_lints: ^5.0.0
+  flutter_app_name_localization: ^0.0.6
 
 flutter:
   uses-material-design: true
@@ -48,3 +49,9 @@ flutter:
     - family: 朱雀仿宋
       fonts:
         - asset: fonts/朱雀仿宋.ttf
+
+flutter_app_name_localization:
+  default: "记忆"
+  locales:
+    - locale: "en"
+      name: "jiyi"

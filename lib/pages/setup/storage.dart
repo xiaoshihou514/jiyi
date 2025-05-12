@@ -9,6 +9,7 @@ import 'package:jiyi/main.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/pages/setup/finish.dart';
 import 'package:jiyi/smooth_router.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class StoragePage extends StatefulWidget {
   const StoragePage({super.key});
@@ -27,7 +28,7 @@ class _StoragePage extends State<StoragePage> {
 
   String storagePath = "";
 
-  Future writeStoragePath() async {
+  Future<void> writeStoragePath() async {
     final storage = FlutterSecureStorage();
     try {
       setState(() => writing = true);
@@ -47,11 +48,19 @@ class _StoragePage extends State<StoragePage> {
     Navigator.pushReplacement(context, SmoothRouter.builder(FinishPage()));
   }
 
-  Future choose() async {
+  Future<void> choose() async {
+    if (!await Permission.storage.status.isGranted) {
+      await Permission.storage.request();
+    }
+    if (!await Permission.manageExternalStorage.status.isGranted) {
+      await Permission.manageExternalStorage.request();
+    }
+
     String? selectedDirectory = await FilePicker.platform.getDirectoryPath(
       lockParentWindow: true,
     );
 
+    print(selectedDirectory);
     if (selectedDirectory != null) {
       setState(() {
         storagePath = selectedDirectory;

@@ -32,7 +32,7 @@ class _MasterKeyPage extends State<MasterKeyPage> {
   // error handling and display
   String? error;
 
-  Future writeMasterKey() async {
+  Future<void> writeMasterKey() async {
     final storage = FlutterSecureStorage();
     try {
       setState(() => writing = true);
