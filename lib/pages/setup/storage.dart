@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,7 +9,7 @@ import 'package:jiyi/em.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/main.dart';
 import 'package:jiyi/pages/default_colors.dart';
-import 'package:jiyi/pages/setup/finish.dart';
+import 'package:jiyi/pages/home.dart';
 import 'package:jiyi/smooth_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -20,51 +22,52 @@ class StoragePage extends StatefulWidget {
 
 class _StoragePage extends State<StoragePage> {
   // float button ui state
-  bool choosen = false;
-  bool writing = false;
+  bool _choosen = false;
+  bool _writing = false;
 
   // error handling and display
-  String? error;
+  String? _error;
 
-  String storagePath = "";
+  String _storagePath = "";
 
-  Future<void> writeStoragePath() async {
+  Future<void> _writeStoragePath() async {
     final storage = FlutterSecureStorage();
     try {
-      setState(() => writing = true);
-      storage.write(key: MASTER_KEY_STORAGE_KEY, value: storagePath);
-      setState(() => writing = false);
+      setState(() => _writing = true);
+      storage.write(key: STORAGE_PATH_KEY, value: _storagePath);
+      setState(() => _writing = false);
     } catch (e) {
-      error = e.toString();
+      _error = e.toString();
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error!), duration: Durations.long1),
+        SnackBar(content: Text(_error!), duration: Durations.long1),
       );
     }
   }
 
-  void submit() {
-    writeStoragePath();
-    Navigator.pushReplacement(context, SmoothRouter.builder(FinishPage()));
+  void _submit() {
+    _writeStoragePath();
+    Navigator.pushReplacement(context, SmoothRouter.builder(HomePage(true)));
   }
 
-  Future<void> choose() async {
-    if (!await Permission.storage.status.isGranted) {
-      await Permission.storage.request();
-    }
-    if (!await Permission.manageExternalStorage.status.isGranted) {
-      await Permission.manageExternalStorage.request();
+  Future<void> _choose() async {
+    if (!Platform.isLinux) {
+      if (!await Permission.storage.status.isGranted) {
+        await Permission.storage.request();
+      }
+      if (!await Permission.manageExternalStorage.status.isGranted) {
+        await Permission.manageExternalStorage.request();
+      }
     }
 
     String? selectedDirectory = await FilePicker.platform.getDirectoryPath(
       lockParentWindow: true,
     );
 
-    print(selectedDirectory);
     if (selectedDirectory != null) {
       setState(() {
-        storagePath = selectedDirectory;
-        choosen = true;
+        _storagePath = selectedDirectory;
+        _choosen = true;
       });
     }
   }
@@ -77,20 +80,20 @@ class _StoragePage extends State<StoragePage> {
     return Scaffold(
       floatingActionButton: IconButton(
         onPressed: () {
-          if (choosen) {
-            submit();
+          if (_choosen) {
+            _submit();
           }
         },
         icon: Container(
           width: 25.em,
           height: 15.em,
           decoration: BoxDecoration(
-            color: choosen ? DefaultColors.constant : DefaultColors.shade_2,
+            color: _choosen ? DefaultColors.constant : DefaultColors.shade_2,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Icon(
-            writing ? Icons.sync : Icons.navigate_next_rounded,
-            color: choosen ? DefaultColors.bg : DefaultColors.fg,
+            _writing ? Icons.sync : Icons.navigate_next_rounded,
+            color: _choosen ? DefaultColors.bg : DefaultColors.fg,
             size: 12.em,
           ),
         ),
@@ -139,13 +142,13 @@ class _StoragePage extends State<StoragePage> {
                   child: Column(
                     children: [
                       IconButton(
-                        onPressed: choose,
+                        onPressed: _choose,
                         iconSize: 12.em,
                         alignment: Alignment.center,
                         icon: Container(
                           decoration: BoxDecoration(
                             color:
-                                choosen
+                                _choosen
                                     ? DefaultColors.constant
                                     : DefaultColors.shade_2,
                             borderRadius: BorderRadius.circular(40),
@@ -184,8 +187,8 @@ class _StoragePage extends State<StoragePage> {
                       Text.rich(
                         TextSpan(
                           text:
-                              choosen
-                                  ? l.st_path_prefix + storagePath
+                              _choosen
+                                  ? l.st_path_prefix + _storagePath
                                   : l.st_path_placeholder,
                           style: TextStyle(fontSize: 4.em),
                         ),

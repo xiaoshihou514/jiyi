@@ -55,4 +55,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get st_path_prefix => '您已选择：';
+
+  @override
+  String get auth_unlock_reason => '验证身份以解锁';
+
+  @override
+  String get auth_unlock_err => '身份认证时出现错误';
 }

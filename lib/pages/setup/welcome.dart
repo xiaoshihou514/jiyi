@@ -29,30 +29,31 @@ final delayLightup = delay_4_2 + duration_4_2 + Duration(seconds: 1);
 const durationLightup = Duration(seconds: 1);
 
 class WelcomePage extends StatefulWidget {
-  final String? masterKey;
-  final String? storagePath;
-  const WelcomePage(this.masterKey, this.storagePath, {super.key});
+  final String? _masterKey;
+  final String? _storagePath;
+  const WelcomePage(this._masterKey, this._storagePath, {super.key});
 
   @override
+  State<WelcomePage> createState() =>
   // ignore: no_logic_in_create_state
-  State<WelcomePage> createState() => _WelcomePageState(masterKey, storagePath);
+  _WelcomePageState(_masterKey, _storagePath);
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-  final String? masterKey;
-  final String? storagePath;
-  _WelcomePageState(this.masterKey, this.storagePath);
+  final String? _masterKey;
+  final String? _storagePath;
+  _WelcomePageState(this._masterKey, this._storagePath);
 
   @override
   Widget build(BuildContext context) {
     Future.delayed(delayLightup + durationLightup, () {
       if (context.mounted) {
-        if (masterKey == null) {
+        if (_masterKey == null) {
           Navigator.pushReplacement(
             context,
-            SmoothRouter.builder(MasterKeyPage(storagePath == null)),
+            SmoothRouter.builder(MasterKeyPage(_storagePath == null)),
           );
-        } else if (storagePath == null) {
+        } else if (_storagePath == null) {
           Navigator.pushReplacement(
             context,
             SmoothRouter.builder(StoragePage()),

@@ -16,8 +16,8 @@ Future main() async {
 
   print(await storage.read(key: MASTER_KEY_STORAGE_KEY));
   print(await storage.read(key: STORAGE_PATH_KEY));
-  await storage.delete(key: MASTER_KEY_STORAGE_KEY);
-  await storage.delete(key: STORAGE_PATH_KEY);
+  // await storage.delete(key: MASTER_KEY_STORAGE_KEY);
+  // await storage.delete(key: STORAGE_PATH_KEY);
 
   final String? masterKey = await storage.read(key: MASTER_KEY_STORAGE_KEY);
   final String? storagePath = await storage.read(key: STORAGE_PATH_KEY);

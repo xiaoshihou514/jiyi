@@ -22,33 +22,33 @@ class MasterKeyPage extends StatefulWidget {
 
 class _MasterKeyPage extends State<MasterKeyPage> {
   // text field state
-  bool showMK = false;
-  String masterKey = "";
+  bool _showMK = false;
+  String _masterKey = "";
 
   // float button ui state
-  bool enteredMK = false;
-  bool writing = false;
+  bool _enteredMK = false;
+  bool _writing = false;
 
   // error handling and display
-  String? error;
+  String? _error;
 
-  Future<void> writeMasterKey() async {
+  Future<void> _writeMasterKey() async {
     final storage = FlutterSecureStorage();
     try {
-      setState(() => writing = true);
-      storage.write(key: MASTER_KEY_STORAGE_KEY, value: masterKey);
-      setState(() => writing = false);
+      setState(() => _writing = true);
+      storage.write(key: MASTER_KEY_STORAGE_KEY, value: _masterKey);
+      setState(() => _writing = false);
     } catch (e) {
-      error = e.toString();
+      _error = e.toString();
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error!), duration: Durations.long1),
+        SnackBar(content: Text(_error!), duration: Durations.long1),
       );
     }
   }
 
-  void submit() {
-    writeMasterKey();
+  void _submit() {
+    _writeMasterKey();
     Navigator.pushReplacement(context, SmoothRouter.builder(StoragePage()));
   }
 
@@ -60,20 +60,20 @@ class _MasterKeyPage extends State<MasterKeyPage> {
     return Scaffold(
       floatingActionButton: IconButton(
         onPressed: () {
-          if (enteredMK) {
-            submit();
+          if (_enteredMK) {
+            _submit();
           }
         },
         icon: Container(
           width: 25.em,
           height: 15.em,
           decoration: BoxDecoration(
-            color: enteredMK ? DefaultColors.constant : DefaultColors.shade_2,
+            color: _enteredMK ? DefaultColors.constant : DefaultColors.shade_2,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Icon(
-            writing ? Icons.sync : Icons.navigate_next_rounded,
-            color: enteredMK ? DefaultColors.bg : DefaultColors.fg,
+            _writing ? Icons.sync : Icons.navigate_next_rounded,
+            color: _enteredMK ? DefaultColors.bg : DefaultColors.fg,
             size: 12.em,
           ),
         ),
@@ -139,17 +139,17 @@ class _MasterKeyPage extends State<MasterKeyPage> {
                     child: AutofillGroup(
                       // input field
                       child: TextField(
-                        onSubmitted: (_) => submit(),
+                        onSubmitted: (_) => _submit(),
                         onChanged:
                             (s) => setState(() {
-                              masterKey = s;
-                              enteredMK = s.isNotEmpty;
+                              _masterKey = s;
+                              _enteredMK = s.isNotEmpty;
                             }),
 
                         // enable password completion
                         autofillHints: [AutofillHints.password],
                         enableIMEPersonalizedLearning: false,
-                        obscureText: !showMK,
+                        obscureText: !_showMK,
 
                         cursorColor: DefaultColors.shade_6,
                         style: TextStyle(
@@ -163,9 +163,9 @@ class _MasterKeyPage extends State<MasterKeyPage> {
                           suffixIcon: IconButton(
                             color: DefaultColors.info,
                             icon: Icon(
-                              showMK ? Icons.visibility_off : Icons.visibility,
+                              _showMK ? Icons.visibility_off : Icons.visibility,
                             ),
-                            onPressed: () => setState(() => showMK = !showMK),
+                            onPressed: () => setState(() => _showMK = !_showMK),
                           ),
                           fillColor: DefaultColors.shade_2,
                           filled: true,

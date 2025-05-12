@@ -188,6 +188,18 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'您已选择：'**
   String get st_path_prefix;
+
+  /// No description provided for @auth_unlock_reason.
+  ///
+  /// In zh, this message translates to:
+  /// **'验证身份以解锁'**
+  String get auth_unlock_reason;
+
+  /// No description provided for @auth_unlock_err.
+  ///
+  /// In zh, this message translates to:
+  /// **'身份认证时出现错误'**
+  String get auth_unlock_err;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

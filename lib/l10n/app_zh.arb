@@ -16,5 +16,8 @@
   "st_desc": "所有文件均储存在本地，用户可以自行将其备份到云端或其他设备。",
   "st_hint": "选择文件夹",
   "st_path_placeholder": "您还未选择储存路径",
-  "st_path_prefix": "您已选择："
+  "st_path_prefix": "您已选择：",
+
+  "auth_unlock_reason": "验证身份以解锁",
+  "auth_unlock_err": "身份认证时出现错误"
 }
