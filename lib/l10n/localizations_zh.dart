@@ -61,4 +61,13 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get auth_unlock_err => '身份认证时出现错误';
+
+  @override
+  String get auth_linux_unknown_user => '未知用户';
+
+  @override
+  String get auth_linux_cancel => '取消';
+
+  @override
+  String get auth_linux_enter => '确定';
 }

@@ -23,10 +23,10 @@ class MasterKeyPage extends StatefulWidget {
 class _MasterKeyPage extends State<MasterKeyPage> {
   // text field state
   bool _showMK = false;
-  String _masterKey = "";
+  final _controller = TextEditingController();
 
   // float button ui state
-  bool _enteredMK = false;
+  bool get _enteredMK => _controller.text.isNotEmpty;
   bool _writing = false;
 
   // error handling and display
@@ -36,7 +36,7 @@ class _MasterKeyPage extends State<MasterKeyPage> {
     final storage = FlutterSecureStorage();
     try {
       setState(() => _writing = true);
-      storage.write(key: MASTER_KEY_STORAGE_KEY, value: _masterKey);
+      storage.write(key: MASTER_KEY_STORAGE_KEY, value: _controller.text);
       setState(() => _writing = false);
     } catch (e) {
       _error = e.toString();
@@ -140,11 +140,7 @@ class _MasterKeyPage extends State<MasterKeyPage> {
                       // input field
                       child: TextField(
                         onSubmitted: (_) => _submit(),
-                        onChanged:
-                            (s) => setState(() {
-                              _masterKey = s;
-                              _enteredMK = s.isNotEmpty;
-                            }),
+                        controller: _controller,
 
                         // enable password completion
                         autofillHints: [AutofillHints.password],
@@ -176,7 +172,7 @@ class _MasterKeyPage extends State<MasterKeyPage> {
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(15),
                             borderSide: const BorderSide(
                               color: Colors.transparent,
                             ),

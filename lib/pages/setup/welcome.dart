@@ -34,26 +34,22 @@ class WelcomePage extends StatefulWidget {
   const WelcomePage(this._masterKey, this._storagePath, {super.key});
 
   @override
-  State<WelcomePage> createState() =>
-  // ignore: no_logic_in_create_state
-  _WelcomePageState(_masterKey, _storagePath);
+  State<WelcomePage> createState() => _WelcomePageState();
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-  final String? _masterKey;
-  final String? _storagePath;
-  _WelcomePageState(this._masterKey, this._storagePath);
+  _WelcomePageState();
 
   @override
   Widget build(BuildContext context) {
     Future.delayed(delayLightup + durationLightup, () {
       if (context.mounted) {
-        if (_masterKey == null) {
+        if (widget._masterKey == null) {
           Navigator.pushReplacement(
             context,
-            SmoothRouter.builder(MasterKeyPage(_storagePath == null)),
+            SmoothRouter.builder(MasterKeyPage(widget._storagePath == null)),
           );
-        } else if (_storagePath == null) {
+        } else if (widget._storagePath == null) {
           Navigator.pushReplacement(
             context,
             SmoothRouter.builder(StoragePage()),

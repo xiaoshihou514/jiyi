@@ -200,6 +200,24 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'身份认证时出现错误'**
   String get auth_unlock_err;
+
+  /// No description provided for @auth_linux_unknown_user.
+  ///
+  /// In zh, this message translates to:
+  /// **'未知用户'**
+  String get auth_linux_unknown_user;
+
+  /// No description provided for @auth_linux_cancel.
+  ///
+  /// In zh, this message translates to:
+  /// **'取消'**
+  String get auth_linux_cancel;
+
+  /// No description provided for @auth_linux_enter.
+  ///
+  /// In zh, this message translates to:
+  /// **'确定'**
+  String get auth_linux_enter;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

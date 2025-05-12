@@ -29,19 +29,6 @@ struct pam_response_t {
 
 G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
 
-static gboolean can_authenticate() {
-  pam_handle_t *pamh = nullptr;
-  struct pam_conv conv = {nullptr, nullptr};
-
-  int ret = pam_start("login", nullptr, &conv, &pamh);
-  if (ret != PAM_SUCCESS) {
-    return FALSE;
-  }
-
-  pam_end(pamh, ret);
-  return TRUE;
-}
-
 static gchar *get_real_name() {
   GError *error = nullptr;
   GDBusConnection *connection =
@@ -151,12 +138,7 @@ static void method_call_cb(FlMethodChannel *channel, FlMethodCall *method_call,
                            gpointer user_data) {
   const gchar *method = fl_method_call_get_name(method_call);
 
-  if (strcmp(method, "localAuth.isDeviceSupported") == 0) {
-    g_autoptr(FlValue) result = fl_value_new_bool(can_authenticate());
-    g_autoptr(FlMethodResponse) response =
-        FL_METHOD_RESPONSE(fl_method_success_response_new(result));
-    fl_method_call_respond(method_call, response, nullptr);
-  } else if (strcmp(method, "localAuth.getRealName") == 0) {
+  if (strcmp(method, "localAuth.getRealName") == 0) {
     g_autoptr(FlValue) result = fl_value_new_string(get_real_name());
     g_autoptr(FlMethodResponse) response =
         FL_METHOD_RESPONSE(fl_method_success_response_new(result));

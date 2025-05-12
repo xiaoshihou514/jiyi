@@ -12,20 +12,21 @@ class HomePage extends StatefulWidget {
   const HomePage(this.skipEncryption, {super.key});
 
   @override
-  // ignore: no_logic_in_create_state
-  State<HomePage> createState() => _HomePage(skipEncryption);
+  State<HomePage> createState() => _HomePage();
 }
 
 class _HomePage extends State<HomePage> {
   final storage = FlutterSecureStorage();
   bool unlocked = false;
 
-  _HomePage(this.unlocked);
+  _HomePage();
 
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
+    unlocked |= widget.skipEncryption;
 
+    // authorize
     if (!unlocked) {
       _maybeUnlock();
     }
@@ -36,18 +37,25 @@ class _HomePage extends State<HomePage> {
           child: IconButton(
             icon: Icon(Icons.lock, size: 40.em, color: DefaultColors.error),
             onPressed: _maybeUnlock,
+            hoverColor: Colors.transparent,
+            style: ButtonStyle(
+              overlayColor: WidgetStateProperty.all(Colors.transparent),
+            ),
           ),
         );
   }
 
   Future<void> _maybeUnlock() async {
     final AuthResult result = await Authenticator.authenticate(
+      context,
       AppLocalizations.of(context)!.auth_unlock_reason,
     );
     switch (result) {
       case AuthResult.success:
+        // successfully authorized
         setState(() => unlocked = true);
       case AuthResult.error:
+        // display error in snack bar
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -57,6 +65,7 @@ class _HomePage extends State<HomePage> {
           );
         }
       case AuthResult.failure:
+        // silently fail
         break;
     }
   }
