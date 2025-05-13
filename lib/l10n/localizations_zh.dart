@@ -70,4 +70,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get auth_linux_enter => '确定';
+
+  @override
+  String get mic_error_title => '麦克风初始化失败';
+
+  @override
+  String get mic_error_ok => '啊这';
 }

@@ -218,6 +218,18 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'确定'**
   String get auth_linux_enter;
+
+  /// No description provided for @mic_error_title.
+  ///
+  /// In zh, this message translates to:
+  /// **'麦克风初始化失败'**
+  String get mic_error_title;
+
+  /// No description provided for @mic_error_ok.
+  ///
+  /// In zh, this message translates to:
+  /// **'啊这'**
+  String get mic_error_ok;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

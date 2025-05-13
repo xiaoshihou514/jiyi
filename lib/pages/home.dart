@@ -6,6 +6,8 @@ import 'package:jiyi/em.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/authenticator.dart';
+import 'package:jiyi/pages/record.dart';
+import 'package:jiyi/smooth_router.dart';
 
 class HomePage extends StatefulWidget {
   final bool skipEncryption;
@@ -32,14 +34,19 @@ class _HomePage extends State<HomePage> {
     }
     return unlocked
         ? _page
-        : Container(
-          color: DefaultColors.bg,
-          child: IconButton(
-            icon: Icon(Icons.lock, size: 40.em, color: DefaultColors.error),
-            onPressed: _maybeUnlock,
-            hoverColor: Colors.transparent,
-            style: ButtonStyle(
-              overlayColor: WidgetStateProperty.all(Colors.transparent),
+        : Scaffold(
+          backgroundColor: DefaultColors.bg,
+          body: Center(
+            child: Container(
+              color: DefaultColors.bg,
+              child: IconButton(
+                icon: Icon(Icons.lock, size: 40.em, color: DefaultColors.error),
+                onPressed: _maybeUnlock,
+                hoverColor: Colors.transparent,
+                style: ButtonStyle(
+                  overlayColor: WidgetStateProperty.all(Colors.transparent),
+                ),
+              ),
             ),
           ),
         );
@@ -71,6 +78,26 @@ class _HomePage extends State<HomePage> {
   }
 
   Widget get _page {
-    return const Scaffold();
+    bool isMobile = ScreenUtil().screenWidth <= ScreenUtil().screenHeight;
+    return Scaffold(
+      backgroundColor: DefaultColors.bg,
+      floatingActionButton: IconButton(
+        onPressed:
+            () => {Navigator.push(context, SmoothRouter.builder(RecordPage()))},
+        icon: Container(
+          width: isMobile ? 25.em : 10.em,
+          height: isMobile ? 25.em : 10.em,
+          decoration: BoxDecoration(
+            color: DefaultColors.special,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(
+            Icons.mic,
+            color: DefaultColors.bg,
+            size: isMobile ? 20.em : 7.5.em,
+          ),
+        ),
+      ),
+    );
   }
 }

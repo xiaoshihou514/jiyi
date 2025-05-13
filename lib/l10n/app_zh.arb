@@ -22,5 +22,8 @@
   "auth_unlock_err": "身份认证时出现错误",
   "auth_linux_unknown_user": "未知用户",
   "auth_linux_cancel": "取消",
-  "auth_linux_enter": "确定"
+  "auth_linux_enter": "确定",
+
+  "mic_error_title": "麦克风初始化失败",
+  "mic_error_ok": "啊这"
 }
