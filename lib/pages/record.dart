@@ -1,11 +1,9 @@
 import 'dart:io';
 
-import 'package:audio_visualizer/audio_visualizer.dart';
-import 'package:audio_visualizer/visualizers/bar_visualizer.dart';
-import 'package:audio_visualizer/visualizers/circular_bar_visualizer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_recorder/flutter_recorder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:jiyi/components/soundviz.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -19,15 +17,8 @@ class RecordPage extends StatefulWidget {
   State<RecordPage> createState() => _RecordPageState();
 }
 
-class _RecordPageState extends State<RecordPage> with WidgetsBindingObserver {
+class _RecordPageState extends State<RecordPage> {
   bool _isPaused = false;
-  final source = PCMVisualizer();
-
-  @override
-  void dispose() {
-    super.dispose();
-    source.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,21 +31,7 @@ class _RecordPageState extends State<RecordPage> with WidgetsBindingObserver {
         padding: EdgeInsets.all(8.em),
         child: Column(
           children: [
-            SizedBox(
-              height: 50.em,
-              width: 50.em,
-              child: ListenableBuilder(
-                listenable: source,
-                builder: (context, child) {
-                  return CircularBarVisualizer(
-                    input: source.value.waveform,
-                    backgroundColor: DefaultColors.bg,
-                    color: DefaultColors.special,
-                    gap: 2,
-                  );
-                },
-              ),
-            ),
+            SizedBox(width: 100.em, height: 30.em, child: SoundViz()),
             Row(
               children: [
                 IconButton(
@@ -96,18 +73,17 @@ class _RecordPageState extends State<RecordPage> with WidgetsBindingObserver {
   }
 
   Future<void> _recorderInit() async {
-    print("_recorderInit");
     if (Platform.isAndroid) {
       _ensurePermission();
     }
     try {
-      await Recorder.instance.init(format: PCMFormat.s16le);
+      await Recorder.instance.init(format: PCMFormat.f32le);
       Recorder.instance.start();
     } on Exception catch (e) {
       _micError(e.toString());
     }
     Recorder.instance.uint8ListStream.listen((data) {
-      source.feed(data.toU8List(from: PCMFormat.s16le));
+      // TODO: maybe stream encryption
     });
     Recorder.instance.startStreamingData();
   }

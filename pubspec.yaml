@@ -16,13 +16,13 @@ dependencies:
   flutter_secure_storage: ^9.2.4
   pointycastle: ^4.0.0
   flutter_recorder: ^1.1.1
+  collection: ^1.19.1
   flutter_animate: ^4.5.2
   flutter_screenutil: ^5.9.3
   file_picker: ^9.2.3
   permission_handler: ^12.0.0+1
   local_auth: ^2.3.0
   flutter_map: ^8.1.1
-  audio_visualizer: ^1.1.0
   json_serializable: ^6.9.5
 
 dev_dependencies:

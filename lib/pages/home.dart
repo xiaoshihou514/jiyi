@@ -53,10 +53,12 @@ class _HomePage extends State<HomePage> {
   }
 
   Future<void> _maybeUnlock() async {
-    final AuthResult result = await Authenticator.authenticate(
-      context,
-      AppLocalizations.of(context)!.auth_unlock_reason,
-    );
+    // final AuthResult result = await Authenticator.authenticate(
+    //   context,
+    //   AppLocalizations.of(context)!.auth_unlock_reason,
+    // );
+    final AuthResult result = AuthResult.success;
+    print("skipping auth...");
     switch (result) {
       case AuthResult.success:
         // successfully authorized
