@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import 'package:jiyi/em.dart';
+import 'package:jiyi/utils/em.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/main.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/pages/home.dart';
-import 'package:jiyi/smooth_router.dart';
+import 'package:jiyi/utils/smooth_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class StoragePage extends StatefulWidget {

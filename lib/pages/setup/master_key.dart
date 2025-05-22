@@ -3,12 +3,12 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import 'package:jiyi/em.dart';
+import 'package:jiyi/utils/em.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/main.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/pages/setup/storage.dart';
-import 'package:jiyi/smooth_router.dart';
+import 'package:jiyi/utils/smooth_router.dart';
 
 const durationDim = Duration(seconds: 2);
 

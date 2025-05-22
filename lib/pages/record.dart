@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_recorder/flutter_recorder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:jiyi/components/soundviz.dart';
+import 'package:jiyi/components/recorder_tape.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:jiyi/pages/default_colors.dart';
-import 'package:jiyi/em.dart';
+import 'package:jiyi/utils/em.dart';
 
 class RecordPage extends StatefulWidget {
   const RecordPage({super.key});
@@ -19,6 +19,7 @@ class RecordPage extends StatefulWidget {
 
 class _RecordPageState extends State<RecordPage> {
   bool _isPaused = false;
+  final timestamp = DateTime.now().toLocal();
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class _RecordPageState extends State<RecordPage> {
         padding: EdgeInsets.all(8.em),
         child: Column(
           children: [
-            SizedBox(width: 100.em, height: 30.em, child: SoundViz()),
+            RecordingTape(timestamp),
             Row(
               children: [
                 IconButton(

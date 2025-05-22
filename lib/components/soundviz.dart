@@ -31,7 +31,9 @@ class SoundVizState extends State<SoundViz>
   }
 
   void _tick(Duration elapsed) {
-    if (context.mounted && Recorder.instance.isDeviceStarted()) {
+    if (elapsed > Duration(milliseconds: 16) &&
+        context.mounted &&
+        Recorder.instance.isDeviceStarted()) {
       setState(() {});
     }
   }
@@ -49,7 +51,6 @@ class SoundVizState extends State<SoundViz>
 }
 
 class SoundVizPainter extends CustomPainter {
-  SoundVizPainter();
   static final offsets = DoubleLinkedQueue();
   static final stroke = Paint();
   static const sampleSize = 256;
@@ -102,12 +103,10 @@ class SoundVizPainter extends CustomPainter {
       Offset(size.width, size.height / 2),
       Paint()
         ..color = DefaultColors.shade_3
-        ..strokeWidth = 2.0,
+        ..strokeWidth = 1.0,
     );
   }
 
   @override
-  bool shouldRepaint(SoundVizPainter oldDelegate) {
-    return true;
-  }
+  bool shouldRepaint(SoundVizPainter oldDelegate) => true;
 }
