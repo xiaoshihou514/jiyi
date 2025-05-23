@@ -1,38 +1,38 @@
+import 'dart:async';
 import 'dart:collection';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_recorder/flutter_recorder.dart';
 
 import 'package:jiyi/pages/default_colors.dart';
+import 'package:jiyi/utils/stop_model.dart';
 
 class SoundViz extends StatefulWidget {
-  const SoundViz({super.key});
+  final StopModel _stop;
+  const SoundViz(this._stop, {super.key});
 
   @override
   State<SoundViz> createState() => SoundVizState();
 }
 
-class SoundVizState extends State<SoundViz>
-    with SingleTickerProviderStateMixin {
-  late final Ticker ticker;
+class SoundVizState extends State<SoundViz> {
+  late final Timer timer;
 
   @override
   void initState() {
     super.initState();
-    ticker = createTicker(_tick);
-    ticker.start();
+    timer = Timer.periodic(Duration(milliseconds: 16), (Timer t) => _tick());
   }
 
   @override
   void dispose() {
-    ticker.stop();
     super.dispose();
+    timer.cancel();
   }
 
-  void _tick(Duration elapsed) {
-    if (elapsed > Duration(milliseconds: 16) &&
-        context.mounted &&
+  void _tick() {
+    if (context.mounted &&
+        !widget._stop.value &&
         Recorder.instance.isDeviceStarted()) {
       setState(() {});
     }
@@ -43,7 +43,7 @@ class SoundVizState extends State<SoundViz>
     return RepaintBoundary(
       child: CustomPaint(
         key: UniqueKey(),
-        painter: SoundVizPainter(),
+        painter: SoundVizPainter(widget._stop),
         child: Container(),
       ),
     );
@@ -54,14 +54,18 @@ class SoundVizPainter extends CustomPainter {
   static final offsets = DoubleLinkedQueue();
   static final stroke = Paint();
   static const sampleSize = 256;
+  static Recorder recorder = Recorder.instance;
+
+  final StopModel _stop;
+  SoundVizPainter(this._stop);
 
   @override
   void paint(Canvas canvas, Size size) {
     canvas.clipRect(Offset.zero & size);
-    if (!Recorder.instance.isDeviceStarted()) return;
-    final data = Recorder.instance.getFft(alwaysReturnData: true);
+    if (!recorder.isDeviceStarted()) return;
+    final data = recorder.getFft(alwaysReturnData: true);
     if (data.isEmpty) return;
-    final db = (Recorder.instance.getVolumeDb() + 100) / 100;
+    final db = (recorder.getVolumeDb() + 100) / 100;
 
     offsets.addFirst((
       data
@@ -108,5 +112,5 @@ class SoundVizPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(SoundVizPainter oldDelegate) => true;
+  bool shouldRepaint(SoundVizPainter oldDelegate) => !_stop.value;
 }

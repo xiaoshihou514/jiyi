@@ -1,14 +1,24 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_recorder/flutter_recorder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:jiyi/components/recorder_tape.dart';
+import 'package:jiyi/components/soundviz.dart';
+import 'package:jiyi/components/tape.dart';
+import 'package:jiyi/components/tapewheel.dart';
 import 'package:jiyi/l10n/localizations.dart';
+import 'package:jiyi/utils/stop_model.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:jiyi/pages/default_colors.dart';
-import 'package:jiyi/utils/em.dart';
+
+extension on num {
+  double get em =>
+      (ScreenUtil().screenWidth > ScreenUtil().screenHeight)
+          ? sh / 100
+          : sw / 96;
+}
 
 class RecordPage extends StatefulWidget {
   const RecordPage({super.key});
@@ -18,13 +28,36 @@ class RecordPage extends StatefulWidget {
 }
 
 class _RecordPageState extends State<RecordPage> {
-  bool _isPaused = false;
-  final timestamp = DateTime.now().toLocal();
+  final StopModel _stop = StopModel();
+  final Recorder _recorder = Recorder.instance;
+  late final Timer timer;
+
+  // timer state
+  final _startTime = DateTime.now().toLocal();
+  Duration _duration = Duration.zero;
+  late DateTime _pausedAt;
+  Duration _pausedTime = Duration.zero;
+
+  @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(Duration(milliseconds: 16), (Timer t) => _tick());
+    _recorderInit();
+  }
+
+  void _tick() {
+    if (context.mounted && !_stop.value) {
+      setState(() {
+        _duration = DateTime.now().difference(_startTime) - _pausedTime;
+      });
+    }
+  }
+
+  bool get _isMobile => ScreenUtil().screenWidth < ScreenUtil().screenHeight;
 
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
-    _recorderInit();
 
     return Scaffold(
       backgroundColor: DefaultColors.bg,
@@ -32,19 +65,123 @@ class _RecordPageState extends State<RecordPage> {
         padding: EdgeInsets.all(8.em),
         child: Column(
           children: [
-            RecordingTape(timestamp),
-            Row(
+            Spacer(flex: _isMobile ? 1 : 3),
+            Stack(
+              alignment: AlignmentDirectional.center,
               children: [
+                SizedBox(width: 84.em, height: 50.em, child: Tape()),
+                // tape "hole"
+                Padding(
+                  padding: EdgeInsets.only(bottom: 2.em),
+                  child: Container(
+                    width: _isMobile ? 46.em : 50.em,
+                    height: 18.05.em,
+                    decoration: BoxDecoration(
+                      color: DefaultColors.bg,
+                      borderRadius: BorderRadius.circular(8.5.em),
+                      border: Border.all(
+                        color: DefaultColors.shade_3,
+                        width: 1.em,
+                      ),
+                    ),
+                  ),
+                ),
+                // sound wave
+                Padding(
+                  padding: EdgeInsets.only(bottom: 2.em),
+                  child: SizedBox(
+                    width: 32.em,
+                    height: 12.em,
+                    child: SoundViz(_stop),
+                  ),
+                ),
+                // tape cog - left
+                Positioned(
+                  top: 16.em,
+                  left: 18.em,
+                  child: Container(
+                    width: 16.em,
+                    height: 16.em,
+                    decoration: BoxDecoration(
+                      color: DefaultColors.shade_6,
+                      borderRadius: BorderRadius.circular(8.em),
+                      border: Border.all(
+                        color: DefaultColors.func,
+                        width: 0.8.em,
+                      ),
+                    ),
+                    child: FittedBox(child: Tapewheel(_stop)),
+                  ),
+                ),
+                // tape cog - right
+                Positioned(
+                  top: 16.em,
+                  right: 18.em,
+                  child: Container(
+                    width: 16.em,
+                    height: 16.em,
+                    decoration: BoxDecoration(
+                      color: DefaultColors.shade_6,
+                      borderRadius: BorderRadius.circular(8.em),
+                      border: Border.all(
+                        color: DefaultColors.func,
+                        width: 0.8.em,
+                      ),
+                    ),
+                    child: FittedBox(child: Tapewheel(_stop)),
+                  ),
+                ),
+                // tape title
+                Positioned(
+                  top: 8.em,
+                  child: Text.rich(
+                    TextSpan(
+                      text: _startTime.toString(),
+                      style: TextStyle(
+                        fontSize: 4.em,
+                        fontFamily: "851手写杂书体",
+                        decoration: TextDecoration.none,
+                        color: DefaultColors.info,
+                      ),
+                    ),
+                  ),
+                ),
+                // record time
+                Positioned(
+                  bottom: 2.5.em,
+                  child: Text.rich(
+                    TextSpan(
+                      text: _printDuration(_duration),
+                      style: TextStyle(
+                        fontSize: 6.em,
+                        fontFamily: "digital7-mono",
+                        decoration: TextDecoration.none,
+                        color: DefaultColors.bg,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Spacer(flex: 1),
+            // control buttons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  onPressed: _cancel,
+                  icon: Icon(Icons.close, size: 20.em),
+                ),
                 IconButton(
                   onPressed: _togglePause,
                   icon: Icon(
-                    _isPaused ? Icons.play_arrow : Icons.pause,
+                    _stop.value ? Icons.play_arrow : Icons.pause,
                     size: 20.em,
                   ),
                 ),
                 IconButton(
-                  onPressed: _cancel,
-                  icon: Icon(Icons.cancel, size: 20.em),
+                  onPressed: _done,
+                  icon: Icon(Icons.stop, size: 20.em),
                 ),
               ],
             ),
@@ -55,15 +192,28 @@ class _RecordPageState extends State<RecordPage> {
   }
 
   void _togglePause() {
-    setState(() => _isPaused = !_isPaused);
-    if (_isPaused) {
-      Recorder.instance.stopStreamingData();
+    setState(() {
+      _stop.flip();
+      if (_stop.value) {
+        _pausedAt = DateTime.now().toLocal();
+      } else {
+        _pausedTime += DateTime.now().toLocal().difference(_pausedAt);
+      }
+    });
+    if (_stop.value) {
+      _recorder.stopStreamingData();
     } else {
-      Recorder.instance.startStreamingData();
+      _recorder.startStreamingData();
     }
   }
 
   void _cancel() {
+    _recorder.stopStreamingData();
+    timer.cancel();
+    Navigator.pop(context);
+  }
+
+  void _done() {
     // TODO
   }
 
@@ -78,15 +228,22 @@ class _RecordPageState extends State<RecordPage> {
       _ensurePermission();
     }
     try {
-      await Recorder.instance.init(format: PCMFormat.f32le);
-      Recorder.instance.start();
+      await _recorder.init(format: PCMFormat.f32le);
+      _recorder.start();
     } on Exception catch (e) {
       _micError(e.toString());
     }
-    Recorder.instance.uint8ListStream.listen((data) {
+    _recorder.uint8ListStream.listen((data) {
       // TODO: maybe stream encryption
     });
-    Recorder.instance.startStreamingData();
+    _recorder.startStreamingData();
+  }
+
+  String _printDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60).abs());
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60).abs());
+    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 
   void _micError(String msg) {

@@ -1,34 +1,35 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:jiyi/pages/default_colors.dart';
+import 'package:jiyi/utils/stop_model.dart';
 
 class Tapewheel extends StatefulWidget {
-  const Tapewheel({super.key});
+  final StopModel _stop;
+  const Tapewheel(this._stop, {super.key});
 
   @override
   State<Tapewheel> createState() => _TapewheelState();
 }
 
-class _TapewheelState extends State<Tapewheel>
-    with SingleTickerProviderStateMixin {
+class _TapewheelState extends State<Tapewheel> {
+  late final Timer timer;
   double turn = 0.0;
-  late final Ticker ticker;
 
   @override
   void initState() {
     super.initState();
-    ticker = createTicker(_tick);
-    ticker.start();
+    timer = Timer.periodic(Duration(milliseconds: 16), (Timer t) => _tick());
   }
 
   @override
   void dispose() {
-    ticker.stop();
     super.dispose();
+    timer.cancel();
   }
 
-  void _tick(Duration elapsed) {
-    if (context.mounted) {
+  void _tick() {
+    if (!widget._stop.value && context.mounted) {
       setState(() {
         turn += 0.01;
       });
@@ -39,7 +40,7 @@ class _TapewheelState extends State<Tapewheel>
   Widget build(BuildContext context) {
     return AnimatedRotation(
       turns: turn,
-      duration: const Duration(seconds: 1),
+      duration: const Duration(milliseconds: 16),
       child: Icon(Icons.settings, color: DefaultColors.bg),
     );
   }
