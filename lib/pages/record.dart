@@ -13,7 +13,6 @@ import 'package:jiyi/components/soundviz.dart';
 import 'package:jiyi/components/tape.dart';
 import 'package:jiyi/components/tapewheel.dart';
 import 'package:jiyi/l10n/localizations.dart';
-import 'package:jiyi/main.dart';
 import 'package:jiyi/utils/stop_model.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:wav/wav_file.dart';
@@ -46,7 +45,6 @@ class _RecordPageState extends State<RecordPage> {
   Duration _pausedTime = Duration.zero;
 
   // io stuff
-  late final File _dest;
   final List<double> _bytes = List.empty(growable: true);
   bool _cancelled = false;
 
@@ -56,7 +54,6 @@ class _RecordPageState extends State<RecordPage> {
 
     timer = Timer.periodic(Duration(milliseconds: 16), (Timer t) => _tick());
     _recorderInit();
-    _setDest();
   }
 
   void _tick() {
@@ -232,7 +229,9 @@ class _RecordPageState extends State<RecordPage> {
     _cleanup();
     final unencrypted =
         Wav([Float64List.fromList(_bytes)], 44100, WavFormat.pcm32bit).write();
-    await _dest.writeAsBytes(
+    await File(
+      path.join(widget.storagePath, "${_startTime.toString()}.cd"),
+    ).writeAsBytes(
       (await Encryption.encrypt(unencrypted)).toList(growable: false),
     );
 
@@ -273,11 +272,6 @@ class _RecordPageState extends State<RecordPage> {
       }
     });
     _recorder.startStreamingData();
-  }
-
-  Future<void> _setDest() async {
-    _dest = File(path.join(widget.storagePath, "${_startTime.toString()}.cd"));
-    print(_dest);
   }
 
   String _printDuration(Duration duration) {
