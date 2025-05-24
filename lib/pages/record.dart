@@ -1,17 +1,23 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_recorder/flutter_recorder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:path/path.dart' as path;
+
 import 'package:jiyi/components/soundviz.dart';
 import 'package:jiyi/components/tape.dart';
 import 'package:jiyi/components/tapewheel.dart';
 import 'package:jiyi/l10n/localizations.dart';
+import 'package:jiyi/main.dart';
 import 'package:jiyi/utils/stop_model.dart';
-import 'package:permission_handler/permission_handler.dart';
-
 import 'package:jiyi/pages/default_colors.dart';
+import 'package:wav/wav_file.dart';
+import 'package:wav/wav_format.dart';
 
 extension on num {
   double get em =>
@@ -38,11 +44,18 @@ class _RecordPageState extends State<RecordPage> {
   late DateTime _pausedAt;
   Duration _pausedTime = Duration.zero;
 
+  // io stuff
+  late final File _dest;
+  final List<double> _bytes = List.empty(growable: true);
+  bool _cancelled = false;
+
   @override
   void initState() {
     super.initState();
+
     timer = Timer.periodic(Duration(milliseconds: 16), (Timer t) => _tick());
     _recorderInit();
+    _setDest();
   }
 
   void _tick() {
@@ -192,29 +205,43 @@ class _RecordPageState extends State<RecordPage> {
   }
 
   void _togglePause() {
+    _stop.flip();
+    _recorder.setPauseRecording(pause: _stop.value);
+    if (_stop.value) {
+      _recorder.stopStreamingData();
+    } else {
+      _recorder.startStreamingData();
+    }
+
     setState(() {
-      _stop.flip();
       if (_stop.value) {
         _pausedAt = DateTime.now().toLocal();
       } else {
         _pausedTime += DateTime.now().toLocal().difference(_pausedAt);
       }
     });
-    if (_stop.value) {
-      _recorder.stopStreamingData();
-    } else {
-      _recorder.startStreamingData();
-    }
   }
 
   void _cancel() {
-    _recorder.stopStreamingData();
-    timer.cancel();
+    _cleanup();
     Navigator.pop(context);
   }
 
   void _done() {
-    // TODO
+    _cleanup();
+    Wav(
+      [Float64List.fromList(_bytes)],
+      44100,
+      WavFormat.pcm32bit,
+    ).writeFile(_dest.path);
+    Navigator.pop(context);
+  }
+
+  void _cleanup() {
+    _recorder.stopStreamingData();
+    _recorder.deinit();
+    timer.cancel();
+    _cancelled = true;
   }
 
   Future<void> _ensurePermission() async {
@@ -228,15 +255,32 @@ class _RecordPageState extends State<RecordPage> {
       _ensurePermission();
     }
     try {
-      await _recorder.init(format: PCMFormat.f32le);
+      await _recorder.init(
+        channels: RecorderChannels.stereo,
+        format: PCMFormat.f32le,
+      );
       _recorder.start();
     } on Exception catch (e) {
       _micError(e.toString());
     }
     _recorder.uint8ListStream.listen((data) {
       // TODO: maybe stream encryption
+      if (!_cancelled) {
+        _bytes.addAll(data.toF32List(from: PCMFormat.f32le));
+      }
     });
     _recorder.startStreamingData();
+  }
+
+  Future<void> _setDest() async {
+    final storage = FlutterSecureStorage();
+    _dest = File(
+      path.join(
+        (await storage.read(key: STORAGE_PATH_KEY))!,
+        "${_startTime.toString()}.cd",
+      ),
+    );
+    print(_dest);
   }
 
   String _printDuration(Duration duration) {

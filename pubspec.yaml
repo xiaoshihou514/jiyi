@@ -24,6 +24,8 @@ dependencies:
   local_auth: ^2.3.0
   flutter_map: ^8.1.1
   json_serializable: ^6.9.5
+  path: ^1.9.1
+  wav: ^1.4.0
 
 dev_dependencies:
   flutter_test:

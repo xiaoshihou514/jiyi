@@ -494,7 +494,7 @@ packages:
     source: hosted
     version: "2.2.0"
   path:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path
       sha256: "75cca69d1490965be98c73ceaea117e8a04dd21217b37b292c9ddbec0d955bc5"
@@ -770,6 +770,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+  wav:
+    dependency: "direct main"
+    description:
+      name: wav
+      sha256: e8f26c493017b64165098c13e6f27be22db6c3ed275544c048d97b667f5455bf
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.0"
   web:
     dependency: transitive
     description:
