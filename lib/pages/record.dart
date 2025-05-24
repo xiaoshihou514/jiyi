@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_recorder/flutter_recorder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:jiyi/utils/encryption.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path/path.dart' as path;
 
@@ -227,14 +228,15 @@ class _RecordPageState extends State<RecordPage> {
     Navigator.pop(context);
   }
 
-  void _done() {
+  Future<void> _done() async {
     _cleanup();
-    Wav(
-      [Float64List.fromList(_bytes)],
-      44100,
-      WavFormat.pcm32bit,
-    ).writeFile(_dest.path);
-    Navigator.pop(context);
+    final unencrypted =
+        Wav([Float64List.fromList(_bytes)], 44100, WavFormat.pcm32bit).write();
+    await _dest.writeAsBytes(Encryption.encrypt(unencrypted));
+
+    if (mounted) {
+      Navigator.pop(context);
+    }
   }
 
   void _cleanup() {
@@ -273,6 +275,7 @@ class _RecordPageState extends State<RecordPage> {
   }
 
   Future<void> _setDest() async {
+    // TODO: abstract this
     final storage = FlutterSecureStorage();
     _dest = File(
       path.join(
