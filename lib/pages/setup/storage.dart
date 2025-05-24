@@ -14,7 +14,8 @@ import 'package:jiyi/utils/smooth_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class StoragePage extends StatefulWidget {
-  const StoragePage({super.key});
+  final String masterKey;
+  const StoragePage(this.masterKey, {super.key});
 
   @override
   State<StoragePage> createState() => _StoragePage();
@@ -47,7 +48,10 @@ class _StoragePage extends State<StoragePage> {
 
   void _submit() {
     _writeStoragePath();
-    Navigator.pushReplacement(context, SmoothRouter.builder(HomePage(true)));
+    Navigator.pushReplacement(
+      context,
+      SmoothRouter.builder(HomePage(true, _storagePath, widget.masterKey)),
+    );
   }
 
   Future<void> _choose() async {

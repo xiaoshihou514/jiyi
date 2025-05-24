@@ -5,7 +5,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_recorder/flutter_recorder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jiyi/utils/encryption.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path/path.dart' as path;
@@ -28,7 +27,8 @@ extension on num {
 }
 
 class RecordPage extends StatefulWidget {
-  const RecordPage({super.key});
+  final String storagePath;
+  const RecordPage(this.storagePath, {super.key});
 
   @override
   State<RecordPage> createState() => _RecordPageState();
@@ -232,7 +232,9 @@ class _RecordPageState extends State<RecordPage> {
     _cleanup();
     final unencrypted =
         Wav([Float64List.fromList(_bytes)], 44100, WavFormat.pcm32bit).write();
-    await _dest.writeAsBytes(Encryption.encrypt(unencrypted));
+    await _dest.writeAsBytes(
+      (await Encryption.encrypt(unencrypted)).toList(growable: false),
+    );
 
     if (mounted) {
       Navigator.pop(context);
@@ -266,7 +268,6 @@ class _RecordPageState extends State<RecordPage> {
       _micError(e.toString());
     }
     _recorder.uint8ListStream.listen((data) {
-      // TODO: maybe stream encryption
       if (!_cancelled) {
         _bytes.addAll(data.toF32List(from: PCMFormat.f32le));
       }
@@ -275,14 +276,7 @@ class _RecordPageState extends State<RecordPage> {
   }
 
   Future<void> _setDest() async {
-    // TODO: abstract this
-    final storage = FlutterSecureStorage();
-    _dest = File(
-      path.join(
-        (await storage.read(key: STORAGE_PATH_KEY))!,
-        "${_startTime.toString()}.cd",
-      ),
-    );
+    _dest = File(path.join(widget.storagePath, "${_startTime.toString()}.cd"));
     print(_dest);
   }
 

@@ -16,7 +16,7 @@ class App extends StatelessWidget {
       home:
           (masterKey == null || storagePath == null)
               ? WelcomePage(masterKey, storagePath)
-              : HomePage(false),
+              : HomePage(false, storagePath!, masterKey!),
 
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

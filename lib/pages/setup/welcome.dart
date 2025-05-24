@@ -52,7 +52,7 @@ class _WelcomePageState extends State<WelcomePage> {
         } else if (widget._storagePath == null) {
           Navigator.pushReplacement(
             context,
-            SmoothRouter.builder(StoragePage()),
+            SmoothRouter.builder(StoragePage(widget._masterKey!)),
           );
         }
       } else {

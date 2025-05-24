@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:jiyi/utils/em.dart';
@@ -7,18 +6,25 @@ import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/utils/authenticator.dart';
 import 'package:jiyi/pages/record.dart';
+import 'package:jiyi/utils/encryption.dart';
 import 'package:jiyi/utils/smooth_router.dart';
 
 class HomePage extends StatefulWidget {
   final bool skipEncryption;
-  const HomePage(this.skipEncryption, {super.key});
+  final String storagePath;
+  final String masterKey;
+  const HomePage(
+    this.skipEncryption,
+    this.storagePath,
+    this.masterKey, {
+    super.key,
+  });
 
   @override
   State<HomePage> createState() => _HomePage();
 }
 
 class _HomePage extends State<HomePage> {
-  final storage = FlutterSecureStorage();
   bool unlocked = false;
 
   _HomePage();
@@ -32,6 +38,8 @@ class _HomePage extends State<HomePage> {
     if (!unlocked) {
       _maybeUnlock();
     }
+    _setup();
+
     return unlocked
         ? _page
         : Scaffold(
@@ -79,13 +87,22 @@ class _HomePage extends State<HomePage> {
     }
   }
 
+  Future<void> _setup() async {
+    await Encryption.init(widget.masterKey, widget.storagePath);
+  }
+
   Widget get _page {
     bool isMobile = ScreenUtil().screenWidth <= ScreenUtil().screenHeight;
     return Scaffold(
       backgroundColor: DefaultColors.bg,
       floatingActionButton: IconButton(
         onPressed:
-            () => {Navigator.push(context, SmoothRouter.builder(RecordPage()))},
+            () => {
+              Navigator.push(
+                context,
+                SmoothRouter.builder(RecordPage(widget.storagePath)),
+              ),
+            },
         icon: Container(
           width: isMobile ? 25.em : 10.em,
           height: isMobile ? 25.em : 10.em,

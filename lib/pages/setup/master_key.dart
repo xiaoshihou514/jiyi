@@ -49,7 +49,10 @@ class _MasterKeyPage extends State<MasterKeyPage> {
 
   void _submit() {
     _writeMasterKey();
-    Navigator.pushReplacement(context, SmoothRouter.builder(StoragePage()));
+    Navigator.pushReplacement(
+      context,
+      SmoothRouter.builder(StoragePage(_controller.text)),
+    );
   }
 
   @override
