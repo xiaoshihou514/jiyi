@@ -1,0 +1,3 @@
+class IO {
+  void write() {}
+}

@@ -236,13 +236,11 @@ class _RecordPageState extends State<RecordPage> {
     setState(() => done = true);
 
     // do this in another thread
-    final params = {
+    await compute(encryptAndWrite, {
       'bytes': _bytes,
-      'storagePath': widget.storagePath,
-      'startTime': "${_startTime.toString()}.cd",
+      'path': path.join(widget.storagePath, "${_startTime.toString()}.cd"),
       'encryption': widget.encryption,
-    };
-    await compute(encryptAndWrite, params);
+    });
 
     _cleanup();
     if (mounted) Navigator.pop(context);
@@ -250,8 +248,7 @@ class _RecordPageState extends State<RecordPage> {
 
   static Future<void> encryptAndWrite(Map<String, dynamic> params) async {
     final bytes = params['bytes'] as List<double>;
-    final storagePath = params['storagePath'] as String;
-    final fileName = params['startTime'] as String;
+    final path = params['path'] as String;
     final encryption = params['encryption'] as Encryption;
 
     final wav = Wav([Float64List.fromList(bytes)], 44100, WavFormat.pcm32bit);
@@ -259,8 +256,7 @@ class _RecordPageState extends State<RecordPage> {
 
     final encrypted = await encryption.encrypt(wavData);
 
-    final file = File(path.join(storagePath, fileName));
-    await file.writeAsBytes(encrypted.toList(growable: false));
+    await File(path).writeAsBytes(encrypted.toList(growable: false));
   }
 
   void _cleanup() {
