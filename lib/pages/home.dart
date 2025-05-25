@@ -26,6 +26,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePage extends State<HomePage> {
   bool unlocked = false;
+  late Encryption encryption;
 
   _HomePage();
 
@@ -38,7 +39,7 @@ class _HomePage extends State<HomePage> {
     if (!unlocked) {
       _maybeUnlock();
     }
-    _setup();
+    _setupEncryption();
 
     return unlocked
         ? _page
@@ -87,10 +88,6 @@ class _HomePage extends State<HomePage> {
     }
   }
 
-  Future<void> _setup() async {
-    await Encryption.init(widget.masterKey, widget.storagePath);
-  }
-
   Widget get _page {
     bool isMobile = ScreenUtil().screenWidth <= ScreenUtil().screenHeight;
     return Scaffold(
@@ -100,7 +97,9 @@ class _HomePage extends State<HomePage> {
             () => {
               Navigator.push(
                 context,
-                SmoothRouter.builder(RecordPage(widget.storagePath)),
+                SmoothRouter.builder(
+                  RecordPage(encryption, widget.storagePath),
+                ),
               ),
             },
         icon: Container(
@@ -118,5 +117,10 @@ class _HomePage extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  Future<void> _setupEncryption() async {
+    encryption = Encryption();
+    await encryption.init(widget.masterKey, widget.storagePath);
   }
 }

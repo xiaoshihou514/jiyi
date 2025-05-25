@@ -51,12 +51,12 @@ class SoundVizState extends State<SoundViz> {
 }
 
 class SoundVizPainter extends CustomPainter {
-  static final offsets = DoubleLinkedQueue();
   static final stroke = Paint();
   static const sampleSize = 256;
   static Recorder recorder = Recorder.instance;
 
   final StopModel _stop;
+  static final offsets = DoubleLinkedQueue();
   SoundVizPainter(this._stop);
 
   @override

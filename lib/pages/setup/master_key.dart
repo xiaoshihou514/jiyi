@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:jiyi/components/spinner.dart';
 
 import 'package:jiyi/utils/em.dart';
 import 'package:jiyi/l10n/localizations.dart';
@@ -74,11 +75,14 @@ class _MasterKeyPage extends State<MasterKeyPage> {
             color: _enteredMK ? DefaultColors.constant : DefaultColors.shade_2,
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Icon(
-            _writing ? Icons.sync : Icons.navigate_next_rounded,
-            color: _enteredMK ? DefaultColors.bg : DefaultColors.fg,
-            size: 12.em,
-          ),
+          child:
+              _writing
+                  ? Spinner(Icons.sync, DefaultColors.bg, 12.em)
+                  : Icon(
+                    Icons.navigate_next_rounded,
+                    color: _enteredMK ? DefaultColors.bg : DefaultColors.fg,
+                    size: 12.em,
+                  ),
         ),
       ),
       body: DefaultTextStyle.merge(

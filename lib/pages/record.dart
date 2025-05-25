@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_recorder/flutter_recorder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:jiyi/components/spinner.dart';
 import 'package:jiyi/utils/encryption.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path/path.dart' as path;
@@ -27,7 +28,8 @@ extension on num {
 
 class RecordPage extends StatefulWidget {
   final String storagePath;
-  const RecordPage(this.storagePath, {super.key});
+  final Encryption encryption;
+  const RecordPage(this.encryption, this.storagePath, {super.key});
 
   @override
   State<RecordPage> createState() => _RecordPageState();
@@ -47,6 +49,9 @@ class _RecordPageState extends State<RecordPage> {
   // io stuff
   final List<double> _bytes = List.empty(growable: true);
   bool _cancelled = false;
+
+  // done animation
+  bool done = false;
 
   @override
   void initState() {
@@ -190,10 +195,12 @@ class _RecordPageState extends State<RecordPage> {
                     size: 20.em,
                   ),
                 ),
-                IconButton(
-                  onPressed: _done,
-                  icon: Icon(Icons.stop, size: 20.em),
-                ),
+                done
+                    ? Spinner(Icons.sync, DefaultColors.keyword, 20.em)
+                    : IconButton(
+                      onPressed: _done,
+                      icon: Icon(Icons.stop, size: 20.em),
+                    ),
               ],
             ),
           ],
@@ -226,18 +233,34 @@ class _RecordPageState extends State<RecordPage> {
   }
 
   Future<void> _done() async {
-    _cleanup();
-    final unencrypted =
-        Wav([Float64List.fromList(_bytes)], 44100, WavFormat.pcm32bit).write();
-    await File(
-      path.join(widget.storagePath, "${_startTime.toString()}.cd"),
-    ).writeAsBytes(
-      (await Encryption.encrypt(unencrypted)).toList(growable: false),
-    );
+    setState(() => done = true);
 
-    if (mounted) {
-      Navigator.pop(context);
-    }
+    // do this in another thread
+    final params = {
+      'bytes': _bytes,
+      'storagePath': widget.storagePath,
+      'startTime': "${_startTime.toString()}.cd",
+      'encryption': widget.encryption,
+    };
+    await compute(encryptAndWrite, params);
+
+    _cleanup();
+    if (mounted) Navigator.pop(context);
+  }
+
+  static Future<void> encryptAndWrite(Map<String, dynamic> params) async {
+    final bytes = params['bytes'] as List<double>;
+    final storagePath = params['storagePath'] as String;
+    final fileName = params['startTime'] as String;
+    final encryption = params['encryption'] as Encryption;
+
+    final wav = Wav([Float64List.fromList(bytes)], 44100, WavFormat.pcm32bit);
+    final wavData = wav.write();
+
+    final encrypted = await encryption.encrypt(wavData);
+
+    final file = File(path.join(storagePath, fileName));
+    await file.writeAsBytes(encrypted.toList(growable: false));
   }
 
   void _cleanup() {

@@ -8,14 +8,14 @@ import 'package:pointycastle/pointycastle.dart';
 import 'package:pointycastle/random/fortuna_random.dart';
 import 'package:pointycastle/stream/chacha20poly1305.dart';
 
-abstract class Encryption {
-  static bool _init = false;
-  static late Uint8List _encryptionKey;
-  static late AEADCipher _encEngine;
-  static late AEADCipher _decEngine;
+class Encryption {
+  bool _init = false;
+  late Uint8List _encryptionKey;
+  late AEADCipher _encEngine;
+  late AEADCipher _decEngine;
   // ignore: constant_identifier_names
   static const ENC_KEY_LEN = ChaCha20Poly1305.KEY_SIZE;
-  static final _srand = SecureRandom('Fortuna') as FortunaRandom;
+  final _srand = SecureRandom('Fortuna') as FortunaRandom;
 
   static Future<Uint8List> _readSaltOrCreate(String storagePath) async {
     final fd = File(path.join(storagePath, "salt.txt"));
@@ -29,7 +29,7 @@ abstract class Encryption {
     }
   }
 
-  static Future<void> init(String masterKey, String storagePath) async {
+  Future<void> init(String masterKey, String storagePath) async {
     if (_init) {
       return;
     }
@@ -58,7 +58,7 @@ abstract class Encryption {
     _init = true;
   }
 
-  static Future<Uint8List> encrypt(Uint8List data) async {
+  Future<Uint8List> encrypt(Uint8List data) async {
     assert(_init);
 
     final nonce = _srand.nextBytes(ChaCha20Poly1305.NONCE_SIZE);
@@ -86,7 +86,7 @@ abstract class Encryption {
     return result.toBytes();
   }
 
-  static Future<Uint8List> decrypt(Uint8List data) async {
+  Future<Uint8List> decrypt(Uint8List data) async {
     assert(_init);
 
     final nonceSize = ChaCha20Poly1305.NONCE_SIZE;
