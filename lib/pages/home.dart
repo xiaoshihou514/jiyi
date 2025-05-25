@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:jiyi/pages/home/calendar.dart';
+import 'package:jiyi/pages/home/map.dart';
+import 'package:jiyi/pages/home/settings.dart';
 
 import 'package:jiyi/utils/em.dart';
 import 'package:jiyi/l10n/localizations.dart';
@@ -44,21 +47,25 @@ class _HomePage extends State<HomePage> {
     return unlocked
         ? _page
         : Scaffold(
-          backgroundColor: DefaultColors.bg,
-          body: Center(
-            child: Container(
-              color: DefaultColors.bg,
-              child: IconButton(
-                icon: Icon(Icons.lock, size: 40.em, color: DefaultColors.error),
-                onPressed: _maybeUnlock,
-                hoverColor: Colors.transparent,
-                style: ButtonStyle(
-                  overlayColor: WidgetStateProperty.all(Colors.transparent),
+            backgroundColor: DefaultColors.bg,
+            body: Center(
+              child: Container(
+                color: DefaultColors.bg,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.lock,
+                    size: 40.em,
+                    color: DefaultColors.error,
+                  ),
+                  onPressed: _maybeUnlock,
+                  hoverColor: Colors.transparent,
+                  style: ButtonStyle(
+                    overlayColor: WidgetStateProperty.all(Colors.transparent),
+                  ),
                 ),
               ),
             ),
-          ),
-        );
+          );
   }
 
   Future<void> _maybeUnlock() async {
@@ -90,29 +97,47 @@ class _HomePage extends State<HomePage> {
 
   Widget get _page {
     bool isMobile = ScreenUtil().screenWidth <= ScreenUtil().screenHeight;
-    return Scaffold(
-      backgroundColor: DefaultColors.bg,
-      floatingActionButton: IconButton(
-        onPressed:
-            () => {
-              Navigator.push(
-                context,
-                SmoothRouter.builder(
-                  RecordPage(encryption, widget.storagePath),
-                ),
+
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        backgroundColor: DefaultColors.bg,
+        body: TabBarView(children: [Calendar(), MapView(), Settings()]),
+        appBar: AppBar(
+          backgroundColor: DefaultColors.bg,
+          toolbarHeight: 3.em,
+          bottom: TabBar(
+            labelColor: DefaultColors.keyword,
+            indicatorColor: DefaultColors.keyword,
+            dividerColor: Colors.transparent,
+            tabs: [
+              Tab(
+                icon: Icon(Icons.calendar_month, size: isMobile ? 15.em : 5.em),
               ),
-            },
-        icon: Container(
-          width: isMobile ? 25.em : 10.em,
-          height: isMobile ? 25.em : 10.em,
-          decoration: BoxDecoration(
-            color: DefaultColors.special,
-            borderRadius: BorderRadius.circular(10),
+              Tab(icon: Icon(Icons.map, size: isMobile ? 15.em : 5.em)),
+              Tab(icon: Icon(Icons.settings, size: isMobile ? 15.em : 5.em)),
+            ],
           ),
-          child: Icon(
-            Icons.mic,
-            color: DefaultColors.bg,
-            size: isMobile ? 20.em : 7.5.em,
+        ),
+        floatingActionButton: IconButton(
+          onPressed: () => {
+            Navigator.push(
+              context,
+              SmoothRouter.builder(RecordPage(encryption, widget.storagePath)),
+            ),
+          },
+          icon: Container(
+            width: isMobile ? 25.em : 10.em,
+            height: isMobile ? 25.em : 10.em,
+            decoration: BoxDecoration(
+              color: DefaultColors.special,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(
+              Icons.mic,
+              color: DefaultColors.bg,
+              size: isMobile ? 20.em : 7.5.em,
+            ),
           ),
         ),
       ),

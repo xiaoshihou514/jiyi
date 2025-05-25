@@ -185,11 +185,11 @@ class _RecordPageState extends State<RecordPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  onPressed: _cancel,
+                  onPressed: done ? () {} : _cancel,
                   icon: Icon(Icons.close, size: 20.em),
                 ),
                 IconButton(
-                  onPressed: _togglePause,
+                  onPressed: done ? () {} : _togglePause,
                   icon: Icon(
                     _stop.value ? Icons.play_arrow : Icons.pause,
                     size: 20.em,
@@ -234,6 +234,7 @@ class _RecordPageState extends State<RecordPage> {
 
   Future<void> _done() async {
     setState(() => done = true);
+    _stop.value = true;
 
     // do this in another thread
     await compute(encryptAndWrite, {
