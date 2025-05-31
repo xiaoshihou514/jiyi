@@ -2,15 +2,16 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:jiyi/l10n/localizations.dart';
+import 'package:jiyi/components/download.dart';
+import 'package:numberpicker/numberpicker.dart';
+import 'package:path/path.dart' as path;
+import 'package:permission_handler/permission_handler.dart';
 
+import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/utils/em.dart';
 import 'package:jiyi/utils/map_setting.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
-import 'package:numberpicker/numberpicker.dart';
-import 'package:path/path.dart' as path;
-import 'package:permission_handler/permission_handler.dart';
 
 class Settings extends StatelessWidget {
   const Settings({super.key});
@@ -510,8 +511,6 @@ class _MapSettingsState extends State<MapSettings> {
   }
 
   void _download(String prefix) {
-    for (int i = 4; i < 11; i++) {
-      // download the thing
-    }
+    showDownloadDialog(context, prefix, _setting.path!, _setting.maxZoom);
   }
 }
