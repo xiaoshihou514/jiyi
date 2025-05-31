@@ -25,8 +25,15 @@ dependencies:
   path: ^1.9.1
   wav: ^1.4.0
   json_annotation: ^4.9.0
-  flutter_map_marker_cluster: ^1.4.0
-  flutter_map: ^7.0.2
+  flutter_map_marker_cluster: any
+  flutter_map: any
+  flutter_map_cache: any
+  http_cache_file_store: any
+  path_provider: ^2.1.5
+  url_launcher: ^6.3.1
+  latlong2: ^0.9.1
+  archive: ^4.0.7
+  dio_cache_interceptor: ^4.0.3
 
 dev_dependencies:
   flutter_test:
@@ -36,20 +43,15 @@ dev_dependencies:
   build_runner: ^2.3.3
   json_serializable: ^6.8.0
 
+flutter_app_name_localization:
+  default: "记忆"
+  locales:
+    - locale: "en"
+      name: "jiyi"
+
 flutter:
   uses-material-design: true
   generate: true
-
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
-
-  # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/assets-and-images/#resolution-aware
-
-  # For details regarding adding assets from package dependencies, see
-  # https://flutter.dev/assets-and-images/#from-packages
 
   fonts:
     - family: 851手写杂书体
@@ -61,9 +63,3 @@ flutter:
     - family: digital7-mono
       fonts:
         - asset: fonts/digital-7-mono.ttf
-
-flutter_app_name_localization:
-  default: "记忆"
-  locales:
-    - locale: "en"
-      name: "jiyi"

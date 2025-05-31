@@ -3,14 +3,13 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jiyi/components/spinner.dart';
 
 import 'package:jiyi/utils/em.dart';
 import 'package:jiyi/l10n/localizations.dart';
-import 'package:jiyi/main.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/pages/home.dart';
+import 'package:jiyi/utils/secure_storage.dart' as ss;
 import 'package:jiyi/utils/smooth_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -33,10 +32,9 @@ class _StoragePage extends State<StoragePage> {
   String _storagePath = "";
 
   Future<void> _writeStoragePath() async {
-    final storage = FlutterSecureStorage();
     try {
       setState(() => _writing = true);
-      storage.write(key: STORAGE_PATH_KEY, value: _storagePath);
+      ss.write(key: ss.STORAGE_PATH_KEY, value: _storagePath);
       setState(() => _writing = false);
     } catch (e) {
       _error = e.toString();
@@ -96,14 +94,13 @@ class _StoragePage extends State<StoragePage> {
             color: _choosen ? DefaultColors.constant : DefaultColors.shade_2,
             borderRadius: BorderRadius.circular(10),
           ),
-          child:
-              _writing
-                  ? Spinner(Icons.sync, DefaultColors.bg, 12.em)
-                  : Icon(
-                    Icons.navigate_next_rounded,
-                    color: _choosen ? DefaultColors.bg : DefaultColors.fg,
-                    size: 12.em,
-                  ),
+          child: _writing
+              ? Spinner(Icons.sync, DefaultColors.bg, 12.em)
+              : Icon(
+                  Icons.navigate_next_rounded,
+                  color: _choosen ? DefaultColors.bg : DefaultColors.fg,
+                  size: 12.em,
+                ),
         ),
       ),
       body: DefaultTextStyle.merge(
@@ -120,14 +117,13 @@ class _StoragePage extends State<StoragePage> {
               children: [
                 // title
                 Padding(
-                  padding:
-                      ScreenUtil().scaleWidth < ScreenUtil().scaleHeight
-                          ?
-                          // mobile
-                          EdgeInsets.symmetric(vertical: 7.5.em)
-                          :
-                          // desktop / tablet
-                          EdgeInsets.zero,
+                  padding: ScreenUtil().scaleWidth < ScreenUtil().scaleHeight
+                      ?
+                        // mobile
+                        EdgeInsets.symmetric(vertical: 7.5.em)
+                      :
+                        // desktop / tablet
+                        EdgeInsets.zero,
                   child: Text.rich(
                     TextSpan(
                       text: l.st_title,
@@ -141,7 +137,10 @@ class _StoragePage extends State<StoragePage> {
 
                 // desc
                 Text.rich(
-                  TextSpan(text: l.st_desc, style: TextStyle(fontSize: 8.em)),
+                  TextSpan(
+                    text: l.st_desc,
+                    style: TextStyle(fontSize: 8.em),
+                  ),
                 ),
 
                 // button
@@ -155,10 +154,9 @@ class _StoragePage extends State<StoragePage> {
                         alignment: Alignment.center,
                         icon: Container(
                           decoration: BoxDecoration(
-                            color:
-                                _choosen
-                                    ? DefaultColors.constant
-                                    : DefaultColors.shade_2,
+                            color: _choosen
+                                ? DefaultColors.constant
+                                : DefaultColors.shade_2,
                             borderRadius: BorderRadius.circular(40),
                           ),
                           child: Padding(
@@ -194,10 +192,9 @@ class _StoragePage extends State<StoragePage> {
                       // hint
                       Text.rich(
                         TextSpan(
-                          text:
-                              _choosen
-                                  ? l.st_path_prefix + _storagePath
-                                  : l.st_path_placeholder,
+                          text: _choosen
+                              ? l.st_path_prefix + _storagePath
+                              : l.st_path_placeholder,
                           style: TextStyle(fontSize: 4.em),
                         ),
                       ),

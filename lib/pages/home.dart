@@ -27,11 +27,25 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePage();
 }
 
-class _HomePage extends State<HomePage> {
+class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
   bool unlocked = false;
   late Encryption encryption;
+  late TabController _tabController;
 
   _HomePage();
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _tabController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,11 +116,15 @@ class _HomePage extends State<HomePage> {
       length: 3,
       child: Scaffold(
         backgroundColor: DefaultColors.bg,
-        body: TabBarView(children: [Calendar(), MapView(), Settings()]),
+        body: TabBarView(
+          controller: _tabController,
+          children: [Calendar(), MapView(), Settings()],
+        ),
         appBar: AppBar(
           backgroundColor: DefaultColors.bg,
           toolbarHeight: 3.em,
           bottom: TabBar(
+            controller: _tabController,
             labelColor: DefaultColors.keyword,
             indicatorColor: DefaultColors.keyword,
             dividerColor: Colors.transparent,
@@ -119,27 +137,31 @@ class _HomePage extends State<HomePage> {
             ],
           ),
         ),
-        floatingActionButton: IconButton(
-          onPressed: () => {
-            Navigator.push(
-              context,
-              SmoothRouter.builder(RecordPage(encryption, widget.storagePath)),
-            ),
-          },
-          icon: Container(
-            width: isMobile ? 25.em : 10.em,
-            height: isMobile ? 25.em : 10.em,
-            decoration: BoxDecoration(
-              color: DefaultColors.special,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(
-              Icons.mic,
-              color: DefaultColors.bg,
-              size: isMobile ? 20.em : 7.5.em,
-            ),
-          ),
-        ),
+        floatingActionButton: _tabController.index == 0
+            ? IconButton(
+                onPressed: () => {
+                  Navigator.push(
+                    context,
+                    SmoothRouter.builder(
+                      RecordPage(encryption, widget.storagePath),
+                    ),
+                  ),
+                },
+                icon: Container(
+                  width: isMobile ? 25.em : 10.em,
+                  height: isMobile ? 25.em : 10.em,
+                  decoration: BoxDecoration(
+                    color: DefaultColors.special,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(
+                    Icons.mic,
+                    color: DefaultColors.bg,
+                    size: isMobile ? 20.em : 7.5.em,
+                  ),
+                ),
+              )
+            : null,
       ),
     );
   }

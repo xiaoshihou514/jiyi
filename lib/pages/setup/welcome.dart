@@ -47,7 +47,7 @@ class _WelcomePageState extends State<WelcomePage> {
         if (widget._masterKey == null) {
           Navigator.pushReplacement(
             context,
-            SmoothRouter.builder(MasterKeyPage(widget._storagePath == null)),
+            SmoothRouter.builder(MasterKeyPage(widget._storagePath)),
           );
         } else if (widget._storagePath == null) {
           Navigator.pushReplacement(

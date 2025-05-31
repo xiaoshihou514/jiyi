@@ -76,4 +76,37 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get mic_error_ok => '啊这';
+
+  @override
+  String get settings_map => '地图设置';
+
+  @override
+  String get settings_map_provider => '选择地图源';
+
+  @override
+  String get settings_map_local => '本地地图';
+
+  @override
+  String get settings_map_osm => '在线OpenStreetMap地图';
+
+  @override
+  String get settings_map_other => '其他地图';
+
+  @override
+  String get settings_reset => '重置应用状态';
+
+  @override
+  String get settings_reset_mk => '重置主密钥';
+
+  @override
+  String get settings_reset_mk_desc => '重置主密钥，在下次打开应用时重新输入';
+
+  @override
+  String get settings_reset_spath => '重置储存路径';
+
+  @override
+  String get settings_reset_spath_desc => '重置储存路径，在下次打开应用时重新输入';
+
+  @override
+  String get settings_reset_success => '已重置';
 }

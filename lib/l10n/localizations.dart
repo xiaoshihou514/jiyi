@@ -231,6 +231,72 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'啊这'**
   String get mic_error_ok;
+
+  /// No description provided for @settings_map.
+  ///
+  /// In zh, this message translates to:
+  /// **'地图设置'**
+  String get settings_map;
+
+  /// No description provided for @settings_map_provider.
+  ///
+  /// In zh, this message translates to:
+  /// **'选择地图源'**
+  String get settings_map_provider;
+
+  /// No description provided for @settings_map_local.
+  ///
+  /// In zh, this message translates to:
+  /// **'本地地图'**
+  String get settings_map_local;
+
+  /// No description provided for @settings_map_osm.
+  ///
+  /// In zh, this message translates to:
+  /// **'在线OpenStreetMap地图'**
+  String get settings_map_osm;
+
+  /// No description provided for @settings_map_other.
+  ///
+  /// In zh, this message translates to:
+  /// **'其他地图'**
+  String get settings_map_other;
+
+  /// No description provided for @settings_reset.
+  ///
+  /// In zh, this message translates to:
+  /// **'重置应用状态'**
+  String get settings_reset;
+
+  /// No description provided for @settings_reset_mk.
+  ///
+  /// In zh, this message translates to:
+  /// **'重置主密钥'**
+  String get settings_reset_mk;
+
+  /// No description provided for @settings_reset_mk_desc.
+  ///
+  /// In zh, this message translates to:
+  /// **'重置主密钥，在下次打开应用时重新输入'**
+  String get settings_reset_mk_desc;
+
+  /// No description provided for @settings_reset_spath.
+  ///
+  /// In zh, this message translates to:
+  /// **'重置储存路径'**
+  String get settings_reset_spath;
+
+  /// No description provided for @settings_reset_spath_desc.
+  ///
+  /// In zh, this message translates to:
+  /// **'重置储存路径，在下次打开应用时重新输入'**
+  String get settings_reset_spath_desc;
+
+  /// No description provided for @settings_reset_success.
+  ///
+  /// In zh, this message translates to:
+  /// **'已重置'**
+  String get settings_reset_success;
 }
 
 class _AppLocalizationsDelegate

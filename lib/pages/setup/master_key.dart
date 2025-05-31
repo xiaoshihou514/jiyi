@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jiyi/components/spinner.dart';
+import 'package:jiyi/pages/home.dart';
 
 import 'package:jiyi/utils/em.dart';
 import 'package:jiyi/l10n/localizations.dart';
-import 'package:jiyi/main.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/pages/setup/storage.dart';
+import 'package:jiyi/utils/secure_storage.dart' as ss;
 import 'package:jiyi/utils/smooth_router.dart';
 
 const durationDim = Duration(seconds: 2);
 
 class MasterKeyPage extends StatefulWidget {
-  final bool needInitStorage;
-  const MasterKeyPage(this.needInitStorage, {super.key});
+  final String? storagePath;
+  const MasterKeyPage(this.storagePath, {super.key});
 
   @override
   State<MasterKeyPage> createState() => _MasterKeyPage();
@@ -34,10 +34,9 @@ class _MasterKeyPage extends State<MasterKeyPage> {
   String? _error;
 
   Future<void> _writeMasterKey() async {
-    final storage = FlutterSecureStorage();
     try {
       setState(() => _writing = true);
-      storage.write(key: MASTER_KEY_STORAGE_KEY, value: _controller.text);
+      ss.write(key: ss.MASTER_KEY_KEY, value: _controller.text);
       setState(() => _writing = false);
     } catch (e) {
       _error = e.toString();
@@ -52,7 +51,11 @@ class _MasterKeyPage extends State<MasterKeyPage> {
     _writeMasterKey();
     Navigator.pushReplacement(
       context,
-      SmoothRouter.builder(StoragePage(_controller.text)),
+      SmoothRouter.builder(
+        widget.storagePath == null
+            ? StoragePage(_controller.text)
+            : HomePage(true, widget.storagePath!, _controller.text),
+      ),
     );
   }
 
@@ -75,14 +78,13 @@ class _MasterKeyPage extends State<MasterKeyPage> {
             color: _enteredMK ? DefaultColors.constant : DefaultColors.shade_2,
             borderRadius: BorderRadius.circular(10),
           ),
-          child:
-              _writing
-                  ? Spinner(Icons.sync, DefaultColors.bg, 12.em)
-                  : Icon(
-                    Icons.navigate_next_rounded,
-                    color: _enteredMK ? DefaultColors.bg : DefaultColors.fg,
-                    size: 12.em,
-                  ),
+          child: _writing
+              ? Spinner(Icons.sync, DefaultColors.bg, 12.em)
+              : Icon(
+                  Icons.navigate_next_rounded,
+                  color: _enteredMK ? DefaultColors.bg : DefaultColors.fg,
+                  size: 12.em,
+                ),
         ),
       ),
       body: DefaultTextStyle.merge(
@@ -99,14 +101,13 @@ class _MasterKeyPage extends State<MasterKeyPage> {
               children: [
                 // title
                 Padding(
-                  padding:
-                      ScreenUtil().scaleWidth < ScreenUtil().scaleHeight
-                          ?
-                          // mobile
-                          EdgeInsets.symmetric(vertical: 7.5.em)
-                          :
-                          // desktop / tablet
-                          EdgeInsets.zero,
+                  padding: ScreenUtil().scaleWidth < ScreenUtil().scaleHeight
+                      ?
+                        // mobile
+                        EdgeInsets.symmetric(vertical: 7.5.em)
+                      :
+                        // desktop / tablet
+                        EdgeInsets.zero,
                   child: Text.rich(
                     TextSpan(
                       text: l.mk_title,
@@ -120,7 +121,10 @@ class _MasterKeyPage extends State<MasterKeyPage> {
 
                 // desc
                 Text.rich(
-                  TextSpan(text: l.mk_desc, style: TextStyle(fontSize: 8.em)),
+                  TextSpan(
+                    text: l.mk_desc,
+                    style: TextStyle(fontSize: 8.em),
+                  ),
                 ),
 
                 // override cursor related colors
@@ -132,17 +136,16 @@ class _MasterKeyPage extends State<MasterKeyPage> {
                     ),
                   ),
                   child: Padding(
-                    padding:
-                        ScreenUtil().scaleWidth < ScreenUtil().scaleHeight
-                            ?
-                            // mobile
-                            EdgeInsets.symmetric(vertical: 2.5.em)
-                            :
-                            // desktop / tablet
-                            EdgeInsets.symmetric(
-                              vertical: 4.em,
-                              horizontal: 50.em,
-                            ),
+                    padding: ScreenUtil().scaleWidth < ScreenUtil().scaleHeight
+                        ?
+                          // mobile
+                          EdgeInsets.symmetric(vertical: 2.5.em)
+                        :
+                          // desktop / tablet
+                          EdgeInsets.symmetric(
+                            vertical: 4.em,
+                            horizontal: 50.em,
+                          ),
                     child: AutofillGroup(
                       // input field
                       child: TextField(
