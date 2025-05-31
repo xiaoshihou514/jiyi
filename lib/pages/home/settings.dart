@@ -134,19 +134,25 @@ class _MapSettingsState extends State<MapSettings> {
 
   // local map provider related state
   final _localPatternController = TextEditingController();
+  bool _custom = false;
 
   @override
   void initState() {
     super.initState();
     l = widget.loc;
-    list = [l.settings_map_local, l.settings_map_osm, l.settings_map_other];
+    list = [
+      l.settings_map_local,
+      l.settings_map_osm,
+      l.settings_map_amap,
+      l.settings_map_amap_satelite,
+      l.settings_map_other,
+    ];
     _setting = MapSetting.local(l);
     _initMapSettings();
   }
 
   Future<void> _initMapSettings() async {
     final settings = await ss.read(key: ss.MAP_SETTINGS);
-    print(settings);
     if (settings != null) {
       setState(() {
         _setting = MapSetting.fromJson(settings);
@@ -170,12 +176,12 @@ class _MapSettingsState extends State<MapSettings> {
             ),
             IconButton(
               onPressed: () async {
-                if ((_setting.path?.isNotEmpty ?? false) &&
-                    (_setting.pattern?.isNotEmpty ?? false)) {
-                  _setting.urlFmt = _setting.urlFmt = path.join(
-                    _setting.path!,
-                    _localPatternController.text,
-                  );
+                if (!_setting.isLocal ||
+                    ((_setting.path?.isNotEmpty ?? false) &&
+                        (_setting.pattern?.isNotEmpty ?? false))) {
+                  _setting.urlFmt = _setting.isLocal
+                      ? path.join(_setting.path!, _localPatternController.text)
+                      : _setting.urlFmt;
                   await ss.write(
                     key: ss.MAP_SETTINGS,
                     value: _setting.toJson(),
@@ -232,8 +238,10 @@ class _MapSettingsState extends State<MapSettings> {
                 _setting.name = value!;
                 if (_setting.name == l.settings_map_local) {
                   _setting.isLocal = true;
+                } else if (_setting.name == l.settings_map_custom) {
+                  _custom = true;
                 } else {
-                  _setting.isLocal = false;
+                  _usePreset(_setting.name);
                 }
               }),
               items: list
@@ -245,15 +253,24 @@ class _MapSettingsState extends State<MapSettings> {
             ),
           ],
         ),
-        _setting.isLocal
-            ? _localProviderSettings()
-            : _networkProviderSettings(),
+
+        if (_setting.name == l.settings_map_local)
+          _localProviderSettings()
+        else if (_custom)
+          _networkProviderSettings()
+        else
+          Container(),
+
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [Container()],
         ),
       ],
     );
+  }
+
+  Widget _networkProviderSettings() {
+    return Placeholder();
   }
 
   Widget _localProviderSettings() {
@@ -342,6 +359,9 @@ class _MapSettingsState extends State<MapSettings> {
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [Text(l.settings_map_pull_desc), Container()],
+        ),
+        Wrap(
           children: [
             _buildRichButton(
               () => _download(
@@ -420,7 +440,7 @@ class _MapSettingsState extends State<MapSettings> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
-            spacing: 5.em,
+            spacing: 3.em,
             children: [
               Icon(icon, color: DefaultColors.bg),
               text,
@@ -429,10 +449,6 @@ class _MapSettingsState extends State<MapSettings> {
         ),
       ),
     );
-  }
-
-  Widget _networkProviderSettings() {
-    return Placeholder();
   }
 
   Future<void> _choose() async {
@@ -460,5 +476,42 @@ class _MapSettingsState extends State<MapSettings> {
     }
   }
 
-  void _download(String prefix) {}
+  void _usePreset(String name) {
+    if (name == l.settings_map_osm) {
+      _setting = MapSetting(
+        isLocal: false,
+        isOSM: true,
+        urlFmt: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+        name: l.settings_map_osm,
+        maxZoom: 16,
+      );
+    } else if (name == l.settings_map_amap) {
+      _setting = MapSetting(
+        isLocal: false,
+        isOSM: false,
+        urlFmt:
+            'https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=2&style=8&x={x}&y={y}&z={z}',
+        subdomains: ["1", "2", "3", "4"],
+        name: l.settings_map_amap,
+        maxZoom: 18,
+      );
+    } else if (name == l.settings_map_amap_satelite) {
+      _setting = MapSetting(
+        isLocal: false,
+        isOSM: false,
+        urlFmt:
+            'https://webst0{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',
+        subdomains: ["1", "2", "3", "4"],
+        name: l.settings_map_amap_satelite,
+        maxZoom: 18,
+        useInversionFilter: false,
+      );
+    }
+  }
+
+  void _download(String prefix) {
+    for (int i = 4; i < 11; i++) {
+      // download the thing
+    }
+  }
 }

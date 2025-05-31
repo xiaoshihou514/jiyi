@@ -12,18 +12,23 @@ class MapSetting {
   String urlFmt;
   String name;
   int maxZoom;
+  bool useInversionFilter;
+  // network specific
+  List<String>? subdomains;
   //  local specific
   String? path;
   String? pattern;
 
   MapSetting({
+    required this.isLocal,
     required this.isOSM,
     required this.urlFmt,
-    required this.isLocal,
     required this.name,
     required this.maxZoom,
     this.path,
     this.pattern,
+    this.subdomains,
+    this.useInversionFilter = true,
   });
 
   factory MapSetting.fromJson(String json) =>

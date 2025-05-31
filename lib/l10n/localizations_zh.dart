@@ -87,10 +87,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_map_local => '本地地图';
 
   @override
-  String get settings_map_osm => '在线OpenStreetMap地图';
+  String get settings_map_osm => 'OpenStreetMap';
 
   @override
-  String get settings_map_custom => '其他地图源';
+  String get settings_map_amap => '高德地图（闭源）';
+
+  @override
+  String get settings_map_amap_satelite => '高德地图卫星图（闭源）';
+
+  @override
+  String get settings_map_custom => '其他在线地图源';
 
   @override
   String get settings_map_other => '其他地图';
@@ -108,14 +114,17 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_map_save_success => '地图设置已保存';
 
   @override
-  String get settings_map_settings_dne => '未配置地图源，请在设置配置';
+  String get settings_map_settings_dne => '您还未配置地图源，请在设置配置';
 
   @override
   String get settings_map_loc_missing_field => '有些参数还未设置，请检查后重试';
 
   @override
+  String get settings_map_pull_desc => '你可以从以下网站下载已打包的栅格文件';
+
+  @override
   String settings_map_loc_down_src(Object src) {
-    return '自$src下载';
+    return '自$src下载地图';
   }
 
   @override
@@ -125,13 +134,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_reset_mk => '重置主密钥';
 
   @override
-  String get settings_reset_mk_desc => '重置主密钥，在下次打开应用时重新输入';
+  String get settings_reset_mk_desc => '在下次打开应用时重新输入主密钥';
 
   @override
   String get settings_reset_spath => '重置储存路径';
 
   @override
-  String get settings_reset_spath_desc => '重置储存路径，在下次打开应用时重新输入';
+  String get settings_reset_spath_desc => '在下次打开应用时重新输入储存路径';
 
   @override
   String get settings_reset_success => '已重置';

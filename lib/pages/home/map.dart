@@ -74,20 +74,22 @@ class _MapViewState extends State<MapView> {
       TileLayer(
         urlTemplate: s.urlFmt,
 
-        tileBuilder: (BuildContext ctx, Widget target, TileImage tile) {
-          return ColorFiltered(
-            // https://github.com/mlaily/NegativeScreen/blob/4608df1669b2fcfede8f25a0c6d5407521d54f09/NegativeScreen/Configuration.cs#L103
-            colorFilter: const ColorFilter.matrix([
-              // dart-format: off
-              1 / 3, -2 / 3, -2 / 3, 0, 255,
-              -2 / 3, 1 / 3, -2 / 3, 0, 255,
-              -2 / 3, -2 / 3, 1 / 3, 0, 255,
-              0, 0, 0, 1, 0,
-              // dart-format: on
-            ]),
-            child: target,
-          );
-        },
+        tileBuilder: s.useInversionFilter
+            ? (BuildContext ctx, Widget target, TileImage tile) {
+                return ColorFiltered(
+                  // https://github.com/mlaily/NegativeScreen/blob/4608df1669b2fcfede8f25a0c6d5407521d54f09/NegativeScreen/Configuration.cs#L103
+                  colorFilter: const ColorFilter.matrix([
+                    // dart-format: off
+                    1 / 3, -2 / 3, -2 / 3, 0, 255,
+                    -2 / 3, 1 / 3, -2 / 3, 0, 255,
+                    -2 / 3, -2 / 3, 1 / 3, 0, 255,
+                    0, 0, 0, 1, 0,
+                    // dart-format: on
+                  ]),
+                  child: target,
+                );
+              }
+            : null,
         tileProvider: FileTileProvider(),
       ),
     ];
@@ -124,40 +126,36 @@ class _MapViewState extends State<MapView> {
       future: _cacheStoreFuture,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return FlutterMap(
-            options: MapOptions(
-              initialCenter: LatLng(35, 110),
-              initialZoom: 4,
-              minZoom: 4,
-            ),
-            children: [
-              TileLayer(
-                urlTemplate:
-                    // 'https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}',
-                    // 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                    '/home/xiaoshihou/Playground/github/jiyi/map/{z}/{x}-{y}.png',
-                // subdomains: ["1", "2", "3", "4"],
-                // userAgentPackageName: 'com.github.xiaoshihou.jiyi',
-                tileBuilder: (BuildContext ctx, Widget target, TileImage tile) {
-                  return ColorFiltered(
-                    // https://github.com/mlaily/NegativeScreen/blob/4608df1669b2fcfede8f25a0c6d5407521d54f09/NegativeScreen/Configuration.cs#L103
-                    colorFilter: const ColorFilter.matrix([
-                      // dart-format: off
-                      1 / 3, -2 / 3, -2 / 3, 0, 255,
-                      -2 / 3, 1 / 3, -2 / 3, 0, 255,
-                      -2 / 3, -2 / 3, 1 / 3, 0, 255,
-                      0, 0, 0, 1, 0,
-                      // dart-format: on
-                    ]),
-                    child: target,
-                  );
-                },
-                tileProvider: CachedTileProvider(
-                  store: FileCacheStore(
-                    path.join(snapshot.data!, "MapTiles", s.name),
-                  ),
+          var layers = <Widget>[
+            TileLayer(
+              urlTemplate: s.urlFmt,
+              subdomains: s.subdomains ?? [],
+              userAgentPackageName: 'com.github.xiaoshihou.jiyi',
+              tileBuilder: s.useInversionFilter
+                  ? (BuildContext ctx, Widget target, TileImage tile) {
+                      return ColorFiltered(
+                        // https://github.com/mlaily/NegativeScreen/blob/4608df1669b2fcfede8f25a0c6d5407521d54f09/NegativeScreen/Configuration.cs#L103
+                        colorFilter: const ColorFilter.matrix([
+                          // dart-format: off
+                          1 / 3, -2 / 3, -2 / 3, 0, 255,
+                          -2 / 3, 1 / 3, -2 / 3, 0, 255,
+                          -2 / 3, -2 / 3, 1 / 3, 0, 255,
+                          0, 0, 0, 1, 0,
+                          // dart-format: on
+                        ]),
+                        child: target,
+                      );
+                    }
+                  : null,
+              tileProvider: CachedTileProvider(
+                store: FileCacheStore(
+                  path.join(snapshot.data!, "MapTiles", s.name),
                 ),
               ),
+            ),
+          ];
+          if (s.isOSM) {
+            layers.add(
               RichAttributionWidget(
                 popupBackgroundColor: DefaultColors.shade_3,
                 attributions: [
@@ -171,7 +169,17 @@ class _MapViewState extends State<MapView> {
                   ),
                 ],
               ),
-            ],
+            );
+          }
+
+          return FlutterMap(
+            options: MapOptions(
+              initialCenter: LatLng(35, 110),
+              initialZoom: 4,
+              minZoom: 4,
+              maxZoom: s.maxZoom.toDouble(),
+            ),
+            children: layers,
           );
         }
         if (snapshot.hasError) {

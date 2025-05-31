@@ -253,13 +253,25 @@ abstract class AppLocalizations {
   /// No description provided for @settings_map_osm.
   ///
   /// In zh, this message translates to:
-  /// **'在线OpenStreetMap地图'**
+  /// **'OpenStreetMap'**
   String get settings_map_osm;
+
+  /// No description provided for @settings_map_amap.
+  ///
+  /// In zh, this message translates to:
+  /// **'高德地图（闭源）'**
+  String get settings_map_amap;
+
+  /// No description provided for @settings_map_amap_satelite.
+  ///
+  /// In zh, this message translates to:
+  /// **'高德地图卫星图（闭源）'**
+  String get settings_map_amap_satelite;
 
   /// No description provided for @settings_map_custom.
   ///
   /// In zh, this message translates to:
-  /// **'其他地图源'**
+  /// **'其他在线地图源'**
   String get settings_map_custom;
 
   /// No description provided for @settings_map_other.
@@ -295,7 +307,7 @@ abstract class AppLocalizations {
   /// No description provided for @settings_map_settings_dne.
   ///
   /// In zh, this message translates to:
-  /// **'未配置地图源，请在设置配置'**
+  /// **'您还未配置地图源，请在设置配置'**
   String get settings_map_settings_dne;
 
   /// No description provided for @settings_map_loc_missing_field.
@@ -304,10 +316,16 @@ abstract class AppLocalizations {
   /// **'有些参数还未设置，请检查后重试'**
   String get settings_map_loc_missing_field;
 
+  /// No description provided for @settings_map_pull_desc.
+  ///
+  /// In zh, this message translates to:
+  /// **'你可以从以下网站下载已打包的栅格文件'**
+  String get settings_map_pull_desc;
+
   /// No description provided for @settings_map_loc_down_src.
   ///
   /// In zh, this message translates to:
-  /// **'自{src}下载'**
+  /// **'自{src}下载地图'**
   String settings_map_loc_down_src(Object src);
 
   /// No description provided for @settings_reset.
@@ -325,7 +343,7 @@ abstract class AppLocalizations {
   /// No description provided for @settings_reset_mk_desc.
   ///
   /// In zh, this message translates to:
-  /// **'重置主密钥，在下次打开应用时重新输入'**
+  /// **'在下次打开应用时重新输入主密钥'**
   String get settings_reset_mk_desc;
 
   /// No description provided for @settings_reset_spath.
@@ -337,7 +355,7 @@ abstract class AppLocalizations {
   /// No description provided for @settings_reset_spath_desc.
   ///
   /// In zh, this message translates to:
-  /// **'重置储存路径，在下次打开应用时重新输入'**
+  /// **'在下次打开应用时重新输入储存路径'**
   String get settings_reset_spath_desc;
 
   /// No description provided for @settings_reset_success.
