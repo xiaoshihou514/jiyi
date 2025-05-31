@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+part "metadata.g.dart";
+
 @JsonSerializable()
 class Metadata {
   final DateTime timestamp;

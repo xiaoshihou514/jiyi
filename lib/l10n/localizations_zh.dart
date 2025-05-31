@@ -90,7 +90,33 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_map_osm => '在线OpenStreetMap地图';
 
   @override
+  String get settings_map_custom => '其他地图源';
+
+  @override
   String get settings_map_other => '其他地图';
+
+  @override
+  String get settings_map_loc_path => '原始栅格文件路径';
+
+  @override
+  String get settings_map_loc_pattern => '查找规则（例：{z}/{x}-{y}.png）';
+
+  @override
+  String get settings_map_max_zoom => '最大缩放比例';
+
+  @override
+  String get settings_map_save_success => '地图设置已保存';
+
+  @override
+  String get settings_map_settings_dne => '未配置地图源，请在设置配置';
+
+  @override
+  String get settings_map_loc_missing_field => '有些参数还未设置，请检查后重试';
+
+  @override
+  String settings_map_loc_down_src(Object src) {
+    return '自$src下载';
+  }
 
   @override
   String get settings_reset => '重置应用状态';

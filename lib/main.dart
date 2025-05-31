@@ -6,11 +6,12 @@ import 'pages/app.dart';
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  print(await ss.read(key: ss.MASTER_KEY_KEY));
-  print(await ss.read(key: ss.STORAGE_PATH_KEY));
+  print(await ss.read(key: ss.MASTER_KEY));
+  print(await ss.read(key: ss.STORAGE_PATH));
+  ss.delete(key: ss.MAP_SETTINGS);
 
-  final String? masterKey = await ss.read(key: ss.MASTER_KEY_KEY);
-  final String? storagePath = await ss.read(key: ss.STORAGE_PATH_KEY);
+  final String? masterKey = await ss.read(key: ss.MASTER_KEY);
+  final String? storagePath = await ss.read(key: ss.STORAGE_PATH);
 
   runApp(App(masterKey, storagePath));
 }

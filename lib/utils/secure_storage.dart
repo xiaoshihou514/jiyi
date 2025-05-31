@@ -1,9 +1,10 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-// ignore: non_constant_identifier_names
-final String MASTER_KEY_KEY = "JIYI_MASTER_KEY";
-// ignore: non_constant_identifier_names
-final String STORAGE_PATH_KEY = "JIYI_STORAGE";
+// ignore_for_file: non_constant_identifier_names
+final String MASTER_KEY = "JIYI_MASTER_KEY";
+final String STORAGE_PATH = "JIYI_STORAGE";
+final String MAP_SETTINGS = "JIYI_MAP_SETTINGS";
+
 final storage = FlutterSecureStorage();
 
 Future<String?> read({required String key}) => storage.read(key: key);

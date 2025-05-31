@@ -1,9 +1,16 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:jiyi/l10n/localizations.dart';
 
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/utils/em.dart';
+import 'package:jiyi/utils/map_setting.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
+import 'package:numberpicker/numberpicker.dart';
+import 'package:path/path.dart' as path;
+import 'package:permission_handler/permission_handler.dart';
 
 class Settings extends StatelessWidget {
   const Settings({super.key});
@@ -25,9 +32,11 @@ class Settings extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           spacing: 3.em,
           children: [
-            _title(l.settings_map),
             MapSettings(l),
-            _title(l.settings_reset),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [_title(l.settings_reset), Container()],
+            ),
             _buildDangerSetting(
               l.settings_reset_mk_desc,
               l.settings_reset_mk,
@@ -91,7 +100,7 @@ class Settings extends StatelessWidget {
 
   Future<void> _resetMasterKey(BuildContext context) async {
     final l = AppLocalizations.of(context)!;
-    await ss.delete(key: ss.MASTER_KEY_KEY);
+    await ss.delete(key: ss.MASTER_KEY);
     if (context.mounted) {
       ScaffoldMessenger.of(
         context,
@@ -101,7 +110,7 @@ class Settings extends StatelessWidget {
 
   Future<void> _resetStoragePath(BuildContext context) async {
     final l = AppLocalizations.of(context)!;
-    await ss.delete(key: ss.STORAGE_PATH_KEY);
+    await ss.delete(key: ss.STORAGE_PATH);
     if (context.mounted) {
       ScaffoldMessenger.of(
         context,
@@ -119,29 +128,93 @@ class MapSettings extends StatefulWidget {
 }
 
 class _MapSettingsState extends State<MapSettings> {
-  late final List<String> list;
-  late String dropdownValue;
+  late List<String> list;
+  late final AppLocalizations l;
+  late MapSetting _setting;
+
+  // local map provider related state
+  final _localPatternController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    final l = widget.loc;
-    list = [l.settings_map_local, l.settings_map_osm];
-    dropdownValue = list.first;
+    l = widget.loc;
+    list = [l.settings_map_local, l.settings_map_osm, l.settings_map_other];
+    _setting = MapSetting.local(l);
+    _initMapSettings();
+  }
+
+  Future<void> _initMapSettings() async {
+    final settings = await ss.read(key: ss.MAP_SETTINGS);
+    print(settings);
+    if (settings != null) {
+      setState(() {
+        _setting = MapSetting.fromJson(settings);
+        _localPatternController.text = _setting.pattern ?? "";
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final l = widget.loc;
-
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            Text.rich(
+              TextSpan(
+                text: l.settings_map,
+                style: TextStyle(fontSize: 8.em, fontWeight: FontWeight.bold),
+              ),
+            ),
+            IconButton(
+              onPressed: () async {
+                if ((_setting.path?.isNotEmpty ?? false) &&
+                    (_setting.pattern?.isNotEmpty ?? false)) {
+                  _setting.urlFmt = _setting.urlFmt = path.join(
+                    _setting.path!,
+                    _localPatternController.text,
+                  );
+                  await ss.write(
+                    key: ss.MAP_SETTINGS,
+                    value: _setting.toJson(),
+                  );
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(l.settings_map_save_success)),
+                    );
+                  }
+                } else if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(l.settings_map_loc_missing_field)),
+                  );
+                }
+              },
+              iconSize: 6.em,
+              alignment: Alignment.center,
+              icon: Container(
+                decoration: BoxDecoration(
+                  color: DefaultColors.info,
+                  borderRadius: BorderRadius.circular(40),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 2.em,
+                    vertical: 1.em,
+                  ),
+                  child: Icon(Icons.save, color: DefaultColors.bg),
+                ),
+              ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
             Text.rich(TextSpan(text: l.settings_map_provider)),
             DropdownButton(
-              value: dropdownValue,
+              value: _setting.name,
               icon: Icon(Icons.arrow_drop_down, size: 5.em),
               style: TextStyle(
                 color: DefaultColors.fg,
@@ -155,8 +228,14 @@ class _MapSettingsState extends State<MapSettings> {
                 width: 1.2,
                 color: DefaultColors.fg,
               ),
-              onChanged: (String? value) =>
-                  setState(() => dropdownValue = value!),
+              onChanged: (String? value) => setState(() {
+                _setting.name = value!;
+                if (_setting.name == l.settings_map_local) {
+                  _setting.isLocal = true;
+                } else {
+                  _setting.isLocal = false;
+                }
+              }),
               items: list
                   .map(
                     (String value) =>
@@ -166,7 +245,220 @@ class _MapSettingsState extends State<MapSettings> {
             ),
           ],
         ),
+        _setting.isLocal
+            ? _localProviderSettings()
+            : _networkProviderSettings(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [Container()],
+        ),
       ],
     );
   }
+
+  Widget _localProviderSettings() {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(l.settings_map_loc_path),
+            _buildRichButton(
+              _choose,
+              Icons.folder_open,
+              Text.rich(
+                (_setting.path ?? "").isEmpty
+                    ? TextSpan(
+                        text: l.st_hint,
+                        style: TextStyle(
+                          fontSize: 5.em,
+                          color: DefaultColors.bg,
+                          fontFamily: "朱雀仿宋",
+                        ),
+                      )
+                    : TextSpan(
+                        text: _setting.path!,
+                        style: TextStyle(
+                          fontSize: 3.em,
+                          color: DefaultColors.bg,
+                          fontFamily: "朱雀仿宋",
+                        ),
+                      ),
+              ),
+              DefaultColors.constant,
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(l.settings_map_loc_pattern),
+            SizedBox(
+              height: 6.em,
+              width: 50.em,
+              child: Theme(
+                data: Theme.of(context).copyWith(
+                  textSelectionTheme: TextSelectionThemeData(
+                    selectionColor: DefaultColors.shade_3,
+                    selectionHandleColor: DefaultColors.shade_4,
+                  ),
+                ),
+                child: TextField(
+                  controller: _localPatternController,
+                  style: TextStyle(color: DefaultColors.fg, fontSize: 3.em),
+                  cursorColor: DefaultColors.shade_6,
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(vertical: 1.em),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: DefaultColors.fg),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: DefaultColors.fg),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(l.settings_map_max_zoom),
+            NumberPicker(
+              textStyle: TextStyle(
+                decoration: TextDecoration.none,
+                color: DefaultColors.shade_4,
+                fontFamily: "朱雀仿宋",
+                fontSize: 5.em,
+              ),
+              selectedTextStyle: TextStyle(color: DefaultColors.fg),
+              value: _setting.maxZoom,
+              minValue: 4,
+              maxValue: 20,
+              onChanged: (value) => setState(() => _setting.maxZoom = value),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildRichButton(
+              () => _download(
+                "https://codeberg.org/xiaoshihou/openstreetmap_raw_raster_tiles_download_2025_5/media/branch/main/",
+              ),
+              Icons.download,
+              Text.rich(
+                TextSpan(
+                  text: l.settings_map_loc_down_src("Codeberg"),
+                  style: TextStyle(
+                    fontSize: 5.em,
+                    color: DefaultColors.bg,
+                    fontFamily: "朱雀仿宋",
+                  ),
+                ),
+              ),
+              DefaultColors.keyword,
+            ),
+            _buildRichButton(
+              () => _download(
+                "https://gitlab.com/xiaoshihou/openstreetmap_raw_raster_tiles_download_2025_5/-/raw/main/",
+              ),
+              Icons.download,
+              Text.rich(
+                TextSpan(
+                  text: l.settings_map_loc_down_src("Gitlab"),
+                  style: TextStyle(
+                    fontSize: 5.em,
+                    color: DefaultColors.bg,
+                    fontFamily: "朱雀仿宋",
+                  ),
+                ),
+              ),
+              DefaultColors.keyword,
+            ),
+            _buildRichButton(
+              () => _download(
+                "https://github.com/xiaoshihou514/openstreetmap_raw_raster_tiles_download_2025_5/raw/refs/heads/main/",
+              ),
+              Icons.download,
+              Text.rich(
+                TextSpan(
+                  text: l.settings_map_loc_down_src("Github"),
+                  style: TextStyle(
+                    fontSize: 5.em,
+                    color: DefaultColors.bg,
+                    fontFamily: "朱雀仿宋",
+                  ),
+                ),
+              ),
+              DefaultColors.keyword,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  IconButton _buildRichButton(
+    void Function() callback,
+    IconData icon,
+    Text text,
+    Color bg,
+  ) {
+    return IconButton(
+      onPressed: callback,
+      iconSize: 6.em,
+      alignment: Alignment.center,
+      icon: Container(
+        decoration: BoxDecoration(
+          color: bg,
+          borderRadius: BorderRadius.circular(40),
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 2.em, vertical: 1.em),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            spacing: 5.em,
+            children: [
+              Icon(icon, color: DefaultColors.bg),
+              text,
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _networkProviderSettings() {
+    return Placeholder();
+  }
+
+  Future<void> _choose() async {
+    if (!Platform.isLinux) {
+      if (!await Permission.storage.status.isGranted) {
+        await Permission.storage.request();
+      }
+      if (!await Permission.manageExternalStorage.status.isGranted) {
+        await Permission.manageExternalStorage.request();
+      }
+    }
+
+    String? selectedDirectory = await FilePicker.platform.getDirectoryPath(
+      lockParentWindow: true,
+    );
+
+    if (selectedDirectory != null) {
+      setState(() {
+        _setting.urlFmt = path.join(
+          selectedDirectory,
+          _localPatternController.text,
+        );
+        _setting.path = selectedDirectory;
+      });
+    }
+  }
+
+  void _download(String prefix) {}
 }

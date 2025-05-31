@@ -34,7 +34,7 @@ class _StoragePage extends State<StoragePage> {
   Future<void> _writeStoragePath() async {
     try {
       setState(() => _writing = true);
-      ss.write(key: ss.STORAGE_PATH_KEY, value: _storagePath);
+      ss.write(key: ss.STORAGE_PATH, value: _storagePath);
       setState(() => _writing = false);
     } catch (e) {
       _error = e.toString();

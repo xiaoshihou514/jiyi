@@ -118,7 +118,11 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
         backgroundColor: DefaultColors.bg,
         body: TabBarView(
           controller: _tabController,
-          children: [Calendar(), MapView(), Settings()],
+          children: [
+            Calendar(),
+            MapView(AppLocalizations.of(context)!),
+            Settings(),
+          ],
         ),
         appBar: AppBar(
           backgroundColor: DefaultColors.bg,

@@ -36,7 +36,7 @@ class _MasterKeyPage extends State<MasterKeyPage> {
   Future<void> _writeMasterKey() async {
     try {
       setState(() => _writing = true);
-      ss.write(key: ss.MASTER_KEY_KEY, value: _controller.text);
+      ss.write(key: ss.MASTER_KEY, value: _controller.text);
       setState(() => _writing = false);
     } catch (e) {
       _error = e.toString();

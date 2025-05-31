@@ -256,11 +256,59 @@ abstract class AppLocalizations {
   /// **'在线OpenStreetMap地图'**
   String get settings_map_osm;
 
+  /// No description provided for @settings_map_custom.
+  ///
+  /// In zh, this message translates to:
+  /// **'其他地图源'**
+  String get settings_map_custom;
+
   /// No description provided for @settings_map_other.
   ///
   /// In zh, this message translates to:
   /// **'其他地图'**
   String get settings_map_other;
+
+  /// No description provided for @settings_map_loc_path.
+  ///
+  /// In zh, this message translates to:
+  /// **'原始栅格文件路径'**
+  String get settings_map_loc_path;
+
+  /// No description provided for @settings_map_loc_pattern.
+  ///
+  /// In zh, this message translates to:
+  /// **'查找规则（例：\'{z}/{x}-{y}.png\'）'**
+  String get settings_map_loc_pattern;
+
+  /// No description provided for @settings_map_max_zoom.
+  ///
+  /// In zh, this message translates to:
+  /// **'最大缩放比例'**
+  String get settings_map_max_zoom;
+
+  /// No description provided for @settings_map_save_success.
+  ///
+  /// In zh, this message translates to:
+  /// **'地图设置已保存'**
+  String get settings_map_save_success;
+
+  /// No description provided for @settings_map_settings_dne.
+  ///
+  /// In zh, this message translates to:
+  /// **'未配置地图源，请在设置配置'**
+  String get settings_map_settings_dne;
+
+  /// No description provided for @settings_map_loc_missing_field.
+  ///
+  /// In zh, this message translates to:
+  /// **'有些参数还未设置，请检查后重试'**
+  String get settings_map_loc_missing_field;
+
+  /// No description provided for @settings_map_loc_down_src.
+  ///
+  /// In zh, this message translates to:
+  /// **'自{src}下载'**
+  String settings_map_loc_down_src(Object src);
 
   /// No description provided for @settings_reset.
   ///

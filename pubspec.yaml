@@ -33,7 +33,7 @@ dependencies:
   url_launcher: ^6.3.1
   latlong2: ^0.9.1
   archive: ^4.0.7
-  dio_cache_interceptor: ^4.0.3
+  numberpicker: ^2.1.2
 
 dev_dependencies:
   flutter_test:
