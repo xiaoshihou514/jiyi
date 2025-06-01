@@ -8,7 +8,6 @@ Future main() async {
 
   print(await ss.read(key: ss.MASTER_KEY));
   print(await ss.read(key: ss.STORAGE_PATH));
-  ss.delete(key: ss.MAP_SETTINGS);
 
   final String? masterKey = await ss.read(key: ss.MASTER_KEY);
   final String? storagePath = await ss.read(key: ss.STORAGE_PATH);

@@ -319,7 +319,7 @@ abstract class AppLocalizations {
   /// No description provided for @settings_map_pull_desc.
   ///
   /// In zh, this message translates to:
-  /// **'你可以从以下网站下载已打包的栅格文件'**
+  /// **'你可以从以下网站下载已打包的栅格文件（最大支持10倍放大）'**
   String get settings_map_pull_desc;
 
   /// No description provided for @settings_map_loc_down_src.
@@ -363,6 +363,36 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'已重置'**
   String get settings_reset_success;
+
+  /// No description provided for @download_title.
+  ///
+  /// In zh, this message translates to:
+  /// **'栅格文件下载'**
+  String get download_title;
+
+  /// No description provided for @download_perc.
+  ///
+  /// In zh, this message translates to:
+  /// **'{a}.zip：{b}%'**
+  String download_perc(Object a, Object b);
+
+  /// No description provided for @download_extracting.
+  ///
+  /// In zh, this message translates to:
+  /// **'解压中'**
+  String get download_extracting;
+
+  /// No description provided for @download_done.
+  ///
+  /// In zh, this message translates to:
+  /// **'完成'**
+  String get download_done;
+
+  /// No description provided for @download_exit.
+  ///
+  /// In zh, this message translates to:
+  /// **'完成'**
+  String get download_exit;
 }
 
 class _AppLocalizationsDelegate

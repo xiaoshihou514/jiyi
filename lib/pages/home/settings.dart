@@ -511,6 +511,12 @@ class _MapSettingsState extends State<MapSettings> {
   }
 
   void _download(String prefix) {
-    showDownloadDialog(context, prefix, _setting.path!, _setting.maxZoom);
+    if (_setting.path?.isNotEmpty ?? false) {
+      showDownloadDialog(context, prefix, _setting.path!, _setting.maxZoom);
+    } else if (context.mounted) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l.settings_map_loc_missing_field)));
+    }
   }
 }

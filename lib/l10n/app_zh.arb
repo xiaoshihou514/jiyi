@@ -41,12 +41,18 @@
   "settings_map_save_success": "地图设置已保存",
   "settings_map_settings_dne": "您还未配置地图源，请在设置配置",
   "settings_map_loc_missing_field": "有些参数还未设置，请检查后重试",
-  "settings_map_pull_desc": "你可以从以下网站下载已打包的栅格文件",
+  "settings_map_pull_desc": "你可以从以下网站下载已打包的栅格文件（最大支持10倍放大）",
   "settings_map_loc_down_src": "自{src}下载地图",
   "settings_reset": "重置应用状态",
   "settings_reset_mk": "重置主密钥",
   "settings_reset_mk_desc": "在下次打开应用时重新输入主密钥",
   "settings_reset_spath": "重置储存路径",
   "settings_reset_spath_desc": "在下次打开应用时重新输入储存路径",
-  "settings_reset_success": "已重置"
+  "settings_reset_success": "已重置",
+
+  "download_title": "栅格文件下载",
+  "download_perc": "{a}.zip：{b}%",
+  "download_extracting": "解压中",
+  "download_done": "完成",
+  "download_exit": "完成"
 }

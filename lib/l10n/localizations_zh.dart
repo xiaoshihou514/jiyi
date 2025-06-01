@@ -120,7 +120,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_map_loc_missing_field => '有些参数还未设置，请检查后重试';
 
   @override
-  String get settings_map_pull_desc => '你可以从以下网站下载已打包的栅格文件';
+  String get settings_map_pull_desc => '你可以从以下网站下载已打包的栅格文件（最大支持10倍放大）';
 
   @override
   String settings_map_loc_down_src(Object src) {
@@ -144,4 +144,21 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get settings_reset_success => '已重置';
+
+  @override
+  String get download_title => '栅格文件下载';
+
+  @override
+  String download_perc(Object a, Object b) {
+    return '$a.zip：$b%';
+  }
+
+  @override
+  String get download_extracting => '解压中';
+
+  @override
+  String get download_done => '完成';
+
+  @override
+  String get download_exit => '完成';
 }

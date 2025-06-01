@@ -1,9 +1,3 @@
 <resources>
   <string name="app_name">记忆</string>
-  <string name="flutter_downloader_notification_started">已开始下载</string>
-  <string name="flutter_downloader_notification_in_progress">正在下载</string>
-  <string name="flutter_downloader_notification_canceled">下载被取消</string>
-  <string name="flutter_downloader_notification_failed">下载失败</string>
-  <string name="flutter_downloader_notification_complete">下载完成</string>
-  <string name="flutter_downloader_notification_paused">已暂停下载</string>
 </resources>

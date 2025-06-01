@@ -34,7 +34,7 @@ dependencies:
   latlong2: ^0.9.1
   archive: ^4.0.7
   numberpicker: ^2.1.2
-  flutter_downloader: ^1.12.0
+  background_downloader: ^9.2.2
 
 dev_dependencies:
   flutter_test:
