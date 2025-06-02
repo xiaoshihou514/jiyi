@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiyi/pages/home/calendar.dart';
@@ -84,12 +85,16 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
   }
 
   Future<void> _maybeUnlock() async {
-    // final AuthResult result = await Authenticator.authenticate(
-    //   context,
-    //   AppLocalizations.of(context)!.auth_unlock_reason,
-    // );
-    final AuthResult result = AuthResult.success;
-    print("skipping auth...");
+    late final AuthResult result;
+    if (kDebugMode) {
+      result = AuthResult.success;
+      debugPrint("skipping auth...");
+    } else {
+      result = await Authenticator.authenticate(
+        context,
+        AppLocalizations.of(context)!.auth_unlock_reason,
+      );
+    }
     switch (result) {
       case AuthResult.success:
         // successfully authorized

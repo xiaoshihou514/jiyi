@@ -148,30 +148,26 @@ class _RecordPageState extends State<RecordPage> {
                 // tape title
                 Positioned(
                   top: 8.em,
-                  child: Text.rich(
-                    TextSpan(
-                      text: _startTime.toString(),
-                      style: TextStyle(
-                        fontSize: 4.em,
-                        fontFamily: "851手写杂书体",
-                        decoration: TextDecoration.none,
-                        color: DefaultColors.info,
-                      ),
+                  child: Text(
+                    _startTime.toString(),
+                    style: TextStyle(
+                      fontSize: 4.em,
+                      fontFamily: "851手写杂书体",
+                      decoration: TextDecoration.none,
+                      color: DefaultColors.info,
                     ),
                   ),
                 ),
                 // record time
                 Positioned(
                   bottom: 2.5.em,
-                  child: Text.rich(
-                    TextSpan(
-                      text: _printDuration(_duration),
-                      style: TextStyle(
-                        fontSize: 6.em,
-                        fontFamily: "digital7-mono",
-                        decoration: TextDecoration.none,
-                        color: DefaultColors.bg,
-                      ),
+                  child: Text(
+                    _printDuration(_duration),
+                    style: TextStyle(
+                      fontSize: 6.em,
+                      fontFamily: "digital7-mono",
+                      decoration: TextDecoration.none,
+                      color: DefaultColors.bg,
                     ),
                   ),
                 ),
@@ -308,37 +304,31 @@ class _RecordPageState extends State<RecordPage> {
       builder: (context) => AlertDialog(
         backgroundColor: DefaultColors.bg,
         icon: Icon(Icons.mic_off, color: DefaultColors.error),
-        title: Text.rich(
-          TextSpan(
-            text: AppLocalizations.of(context)!.mic_error_title,
-            style: TextStyle(
-              fontSize: 8.em,
-              color: DefaultColors.keyword,
-              fontFamily: "朱雀仿宋",
-            ),
+        title: Text(
+          AppLocalizations.of(context)!.mic_error_title,
+          style: TextStyle(
+            fontSize: 8.em,
+            color: DefaultColors.keyword,
+            fontFamily: "朱雀仿宋",
           ),
         ),
-        content: Text.rich(
-          TextSpan(
-            text: msg,
-            style: TextStyle(
-              fontSize: 6.em,
-              color: DefaultColors.fg,
-              fontFamily: "朱雀仿宋",
-            ),
+        content: Text(
+          msg,
+          style: TextStyle(
+            fontSize: 6.em,
+            color: DefaultColors.fg,
+            fontFamily: "朱雀仿宋",
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => {Navigator.pop(context)},
-            child: Text.rich(
-              TextSpan(
-                text: AppLocalizations.of(context)!.mic_error_ok,
-                style: TextStyle(
-                  fontSize: 6.em,
-                  color: DefaultColors.constant,
-                  fontFamily: "朱雀仿宋",
-                ),
+            child: Text(
+              AppLocalizations.of(context)!.mic_error_ok,
+              style: TextStyle(
+                fontSize: 6.em,
+                color: DefaultColors.constant,
+                fontFamily: "朱雀仿宋",
               ),
             ),
           ),

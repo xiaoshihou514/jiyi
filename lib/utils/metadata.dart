@@ -9,6 +9,7 @@ class Metadata {
   final Duration length;
   final String title;
   final LatLng coord;
+  // TODO
   final String transcript;
 
   Metadata({

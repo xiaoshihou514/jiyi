@@ -94,15 +94,13 @@ class _DownloadUnzipDialogState extends State<DownloadUnzipDialog> {
                 onPressed: () => {
                   if (mounted) {Navigator.of(context).pop(false)},
                 },
-                child: Text.rich(
-                  TextSpan(
-                    text: l.download_exit,
-                    style: TextStyle(
-                      decoration: TextDecoration.none,
-                      color: DefaultColors.constant,
-                      fontFamily: "朱雀仿宋",
-                      fontSize: 5.em,
-                    ),
+                child: Text(
+                  l.download_exit,
+                  style: TextStyle(
+                    decoration: TextDecoration.none,
+                    color: DefaultColors.constant,
+                    fontFamily: "朱雀仿宋",
+                    fontSize: 5.em,
                   ),
                 ),
               ),

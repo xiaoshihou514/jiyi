@@ -108,24 +108,17 @@ class _MasterKeyPage extends State<MasterKeyPage> {
                       :
                         // desktop / tablet
                         EdgeInsets.zero,
-                  child: Text.rich(
-                    TextSpan(
-                      text: l.mk_title,
-                      style: TextStyle(
-                        fontSize: 15.em,
-                        color: DefaultColors.keyword,
-                      ),
+                  child: Text(
+                    l.mk_title,
+                    style: TextStyle(
+                      fontSize: 15.em,
+                      color: DefaultColors.keyword,
                     ),
                   ),
                 ),
 
                 // desc
-                Text.rich(
-                  TextSpan(
-                    text: l.mk_desc,
-                    style: TextStyle(fontSize: 8.em),
-                  ),
-                ),
+                Text(l.mk_desc, style: TextStyle(fontSize: 8.em)),
 
                 // override cursor related colors
                 Theme(
@@ -197,13 +190,11 @@ class _MasterKeyPage extends State<MasterKeyPage> {
                 Row(
                   children: [
                     Icon(Icons.warning, color: DefaultColors.error),
-                    Text.rich(
-                      TextSpan(
-                        text: l.mk_warn_title,
-                        style: TextStyle(
-                          fontSize: 8.em,
-                          color: DefaultColors.error,
-                        ),
+                    Text(
+                      l.mk_warn_title,
+                      style: TextStyle(
+                        fontSize: 8.em,
+                        color: DefaultColors.error,
                       ),
                     ),
                   ],

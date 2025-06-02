@@ -87,8 +87,8 @@ class _WelcomePageState extends State<WelcomePage> {
                 ).animate().fadeIn(delay: delay_1, duration: duration_1),
 
                 // "welcome_1": "你所记录的",
-                Text.rich(
-                  TextSpan(text: l.welcome_1),
+                Text(
+                  l.welcome_1,
                 ).animate().fadeIn(delay: delay_1, duration: duration_1),
               ],
             ),
@@ -110,12 +110,12 @@ class _WelcomePageState extends State<WelcomePage> {
                     ),
 
                 // "welcome_2_1": "就是",
-                Text.rich(
-                  TextSpan(text: l.welcome_2_1),
+                Text(
+                  l.welcome_2_1,
                 ).animate().fadeIn(delay: delay_2_1, duration: duration_2_1),
 
                 // "welcome_2_2": "你的回忆",
-                Text.rich(TextSpan(text: l.welcome_2_2))
+                Text(l.welcome_2_2)
                     .animate()
                     .fadeIn(delay: delay_2_2, duration: duration_2_2)
                     .tint(color: DefaultColors.special),
@@ -132,8 +132,8 @@ class _WelcomePageState extends State<WelcomePage> {
                 ).animate().fadeIn(delay: delay_3, duration: duration_3),
 
                 // "welcome_3": "让心事沉入琥珀",
-                Text.rich(
-                  TextSpan(text: l.welcome_3),
+                Text(
+                  l.welcome_3,
                 ).animate().fadeIn(delay: delay_3, duration: duration_3),
               ],
             ),
@@ -142,12 +142,12 @@ class _WelcomePageState extends State<WelcomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // "welcome_4_1": "封存",
-                Text.rich(
-                  TextSpan(text: l.welcome_4_1),
+                Text(
+                  l.welcome_4_1,
                 ).animate().fadeIn(delay: delay_4_1, duration: duration_4_1),
                 // "welcome_4_2": "此刻"
-                Text.rich(
-                  TextSpan(text: l.welcome_4_2),
+                Text(
+                  l.welcome_4_2,
                 ).animate().fadeIn(delay: delay_4_2, duration: duration_4_2),
               ],
             ),

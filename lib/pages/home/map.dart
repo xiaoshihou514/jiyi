@@ -53,14 +53,12 @@ class _MapViewState extends State<MapView> {
         }
         if (snapshot.hasError) {
           return Center(
-            child: Text.rich(
-              TextSpan(
-                text: snapshot.error.toString(),
-                style: TextStyle(
-                  fontSize: 15.em,
-                  color: DefaultColors.fg,
-                  fontFamily: "朱雀仿宋",
-                ),
+            child: Text(
+              snapshot.error.toString(),
+              style: TextStyle(
+                fontSize: 15.em,
+                color: DefaultColors.fg,
+                fontFamily: "朱雀仿宋",
               ),
             ),
           );
@@ -158,14 +156,12 @@ class _MapViewState extends State<MapView> {
         }
         if (snapshot.hasError) {
           return Center(
-            child: Text.rich(
-              TextSpan(
-                text: snapshot.error.toString(),
-                style: TextStyle(
-                  fontSize: 15.em,
-                  color: DefaultColors.fg,
-                  fontFamily: "朱雀仿宋",
-                ),
+            child: Text(
+              snapshot.error.toString(),
+              style: TextStyle(
+                fontSize: 15.em,
+                color: DefaultColors.fg,
+                fontFamily: "朱雀仿宋",
               ),
             ),
           );

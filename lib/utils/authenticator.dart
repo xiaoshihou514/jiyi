@@ -78,17 +78,12 @@ class _PasswordDialogState extends State<PasswordDialog>
                     mainAxisSize: MainAxisSize.min,
                     spacing: 2.em,
                     children: [
-                      Text.rich(
-                        TextSpan(
-                          text: widget.username,
-                          style: TextStyle(fontSize: 4.em),
-                        ),
-                      ),
+                      Text(widget.username, style: TextStyle(fontSize: 4.em)),
                       widget.avatar != null
                           ? CircleAvatar(
-                            backgroundImage: FileImage(widget.avatar!),
-                            radius: 10.em,
-                          )
+                              backgroundImage: FileImage(widget.avatar!),
+                              radius: 10.em,
+                            )
                           : Icon(size: 10.em, Icons.account_circle),
                     ],
                   ),
@@ -96,13 +91,11 @@ class _PasswordDialogState extends State<PasswordDialog>
                     mainAxisSize: MainAxisSize.min,
                     spacing: 3.em,
                     children: [
-                      Text.rich(
-                        TextSpan(
-                          text: l.auth_unlock_reason,
-                          style: TextStyle(
-                            fontSize: 5.em,
-                            color: DefaultColors.keyword,
-                          ),
+                      Text(
+                        l.auth_unlock_reason,
+                        style: TextStyle(
+                          fontSize: 5.em,
+                          color: DefaultColors.keyword,
                         ),
                       ),
                       SizedBox(
@@ -131,29 +124,26 @@ class _PasswordDialogState extends State<PasswordDialog>
                                       ? Icons.visibility_off
                                       : Icons.visibility,
                                 ),
-                                onPressed:
-                                    () => setState(
-                                      () => _showPassword = !_showPassword,
-                                    ),
+                                onPressed: () => setState(
+                                  () => _showPassword = !_showPassword,
+                                ),
                               ),
                               fillColor: DefaultColors.bg,
                               filled: true,
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
                                 borderSide: BorderSide(
-                                  color:
-                                      _enteredIncorrectPass
-                                          ? DefaultColors.error
-                                          : Colors.transparent,
+                                  color: _enteredIncorrectPass
+                                      ? DefaultColors.error
+                                      : Colors.transparent,
                                 ),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
                                 borderSide: BorderSide(
-                                  color:
-                                      _enteredIncorrectPass
-                                          ? DefaultColors.error
-                                          : Colors.transparent,
+                                  color: _enteredIncorrectPass
+                                      ? DefaultColors.error
+                                      : Colors.transparent,
                                 ),
                               ),
                             ),
@@ -176,33 +166,28 @@ class _PasswordDialogState extends State<PasswordDialog>
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextButton(
-                    onPressed:
-                        () => {
-                          if (mounted) {Navigator.of(context).pop(false)},
-                        },
-                    child: Text.rich(
-                      TextSpan(
-                        text: l.auth_linux_cancel,
-                        style: TextStyle(
-                          fontSize: 4.em,
-                          decoration: TextDecoration.none,
-                          color: DefaultColors.constant,
-                          fontFamily: "朱雀仿宋",
-                        ),
+                    onPressed: () => {
+                      if (mounted) {Navigator.of(context).pop(false)},
+                    },
+                    child: Text(
+                      l.auth_linux_cancel,
+                      style: TextStyle(
+                        fontSize: 4.em,
+                        decoration: TextDecoration.none,
+                        color: DefaultColors.constant,
+                        fontFamily: "朱雀仿宋",
                       ),
                     ),
                   ),
                   TextButton(
                     onPressed: _submit,
-                    child: Text.rich(
-                      TextSpan(
-                        text: l.auth_linux_enter,
-                        style: TextStyle(
-                          fontSize: 4.em,
-                          decoration: TextDecoration.none,
-                          color: DefaultColors.constant,
-                          fontFamily: "朱雀仿宋",
-                        ),
+                    child: Text(
+                      l.auth_linux_enter,
+                      style: TextStyle(
+                        fontSize: 4.em,
+                        decoration: TextDecoration.none,
+                        color: DefaultColors.constant,
+                        fontFamily: "朱雀仿宋",
                       ),
                     ),
                   ),
@@ -249,8 +234,8 @@ abstract class Authenticator {
     return (await showDialog<bool>(
           context: context,
           barrierDismissible: false,
-          builder:
-              (context) => PasswordDialog(username: username, avatar: avatar),
+          builder: (context) =>
+              PasswordDialog(username: username, avatar: avatar),
         )) ??
         false;
   }

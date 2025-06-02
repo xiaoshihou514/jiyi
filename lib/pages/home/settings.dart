@@ -51,14 +51,9 @@ class Settings extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text.rich(
-                  TextSpan(
-                    text: l.settings_reset,
-                    style: TextStyle(
-                      fontSize: 8.em,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                Text(
+                  l.settings_reset,
+                  style: TextStyle(fontSize: 8.em, fontWeight: FontWeight.bold),
                 ),
                 Container(),
               ],
@@ -82,7 +77,7 @@ class Settings extends StatelessWidget {
   Widget _buildDangerSetting(String desc, String btn, void Function() action) {
     return _smartRow(
       children: [
-        Text.rich(TextSpan(text: desc)),
+        Text(desc),
         TextButton(
           onPressed: action,
           style: ButtonStyle(
@@ -186,11 +181,9 @@ class _MapSettingsState extends State<MapSettings> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text.rich(
-              TextSpan(
-                text: l.settings_map,
-                style: TextStyle(fontSize: 8.em, fontWeight: FontWeight.bold),
-              ),
+            Text(
+              l.settings_map,
+              style: TextStyle(fontSize: 8.em, fontWeight: FontWeight.bold),
             ),
             IconButton(
               onPressed: () async {
@@ -236,7 +229,7 @@ class _MapSettingsState extends State<MapSettings> {
         ),
         _smartRow(
           children: [
-            Text.rich(TextSpan(text: l.settings_map_provider)),
+            Text(l.settings_map_provider),
             DropdownButton(
               value: _setting.name,
               icon: Icon(Icons.arrow_drop_down, size: 5.em),
@@ -298,25 +291,23 @@ class _MapSettingsState extends State<MapSettings> {
             _buildRichButton(
               _choose,
               Icons.folder_open,
-              Text.rich(
-                (_setting.path ?? "").isEmpty
-                    ? TextSpan(
-                        text: l.st_hint,
-                        style: TextStyle(
-                          fontSize: 5.em,
-                          color: DefaultColors.bg,
-                          fontFamily: "朱雀仿宋",
-                        ),
-                      )
-                    : TextSpan(
-                        text: _setting.path!,
-                        style: TextStyle(
-                          fontSize: 3.em,
-                          color: DefaultColors.bg,
-                          fontFamily: "朱雀仿宋",
-                        ),
+              (_setting.path ?? "").isEmpty
+                  ? Text(
+                      l.st_hint,
+                      style: TextStyle(
+                        fontSize: 5.em,
+                        color: DefaultColors.bg,
+                        fontFamily: "朱雀仿宋",
                       ),
-              ),
+                    )
+                  : Text(
+                      _setting.path!,
+                      style: TextStyle(
+                        fontSize: 3.em,
+                        color: DefaultColors.bg,
+                        fontFamily: "朱雀仿宋",
+                      ),
+                    ),
               DefaultColors.constant,
             ),
           ],
@@ -384,14 +375,12 @@ class _MapSettingsState extends State<MapSettings> {
                 "https://codeberg.org/xiaoshihou/openstreetmap_raw_raster_tiles_download_2025_5/media/branch/main/",
               ),
               Icons.download,
-              Text.rich(
-                TextSpan(
-                  text: l.settings_map_loc_down_src("Codeberg"),
-                  style: TextStyle(
-                    fontSize: 5.em,
-                    color: DefaultColors.bg,
-                    fontFamily: "朱雀仿宋",
-                  ),
+              Text(
+                l.settings_map_loc_down_src("Codeberg"),
+                style: TextStyle(
+                  fontSize: 5.em,
+                  color: DefaultColors.bg,
+                  fontFamily: "朱雀仿宋",
                 ),
               ),
               DefaultColors.keyword,
@@ -401,14 +390,12 @@ class _MapSettingsState extends State<MapSettings> {
                 "https://gitlab.com/xiaoshihou/openstreetmap_raw_raster_tiles_download_2025_5/-/raw/main/",
               ),
               Icons.download,
-              Text.rich(
-                TextSpan(
-                  text: l.settings_map_loc_down_src("Gitlab"),
-                  style: TextStyle(
-                    fontSize: 5.em,
-                    color: DefaultColors.bg,
-                    fontFamily: "朱雀仿宋",
-                  ),
+              Text(
+                l.settings_map_loc_down_src("Gitlab"),
+                style: TextStyle(
+                  fontSize: 5.em,
+                  color: DefaultColors.bg,
+                  fontFamily: "朱雀仿宋",
                 ),
               ),
               DefaultColors.keyword,
@@ -418,14 +405,12 @@ class _MapSettingsState extends State<MapSettings> {
                 "https://github.com/xiaoshihou514/openstreetmap_raw_raster_tiles_download_2025_5/raw/refs/heads/main/",
               ),
               Icons.download,
-              Text.rich(
-                TextSpan(
-                  text: l.settings_map_loc_down_src("Github"),
-                  style: TextStyle(
-                    fontSize: 5.em,
-                    color: DefaultColors.bg,
-                    fontFamily: "朱雀仿宋",
-                  ),
+              Text(
+                l.settings_map_loc_down_src("Github"),
+                style: TextStyle(
+                  fontSize: 5.em,
+                  color: DefaultColors.bg,
+                  fontFamily: "朱雀仿宋",
                 ),
               ),
               DefaultColors.keyword,

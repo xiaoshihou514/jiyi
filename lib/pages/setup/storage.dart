@@ -124,24 +124,17 @@ class _StoragePage extends State<StoragePage> {
                       :
                         // desktop / tablet
                         EdgeInsets.zero,
-                  child: Text.rich(
-                    TextSpan(
-                      text: l.st_title,
-                      style: TextStyle(
-                        fontSize: 15.em,
-                        color: DefaultColors.keyword,
-                      ),
+                  child: Text(
+                    l.st_title,
+                    style: TextStyle(
+                      fontSize: 15.em,
+                      color: DefaultColors.keyword,
                     ),
                   ),
                 ),
 
                 // desc
-                Text.rich(
-                  TextSpan(
-                    text: l.st_desc,
-                    style: TextStyle(fontSize: 8.em),
-                  ),
-                ),
+                Text(l.st_desc, style: TextStyle(fontSize: 8.em)),
 
                 // button
                 Center(
@@ -173,14 +166,12 @@ class _StoragePage extends State<StoragePage> {
                                   Icons.folder_open,
                                   color: DefaultColors.bg,
                                 ),
-                                Text.rich(
-                                  TextSpan(
-                                    text: l.st_hint,
-                                    style: TextStyle(
-                                      fontSize: 8.em,
-                                      color: DefaultColors.bg,
-                                      fontFamily: "朱雀仿宋",
-                                    ),
+                                Text(
+                                  l.st_hint,
+                                  style: TextStyle(
+                                    fontSize: 8.em,
+                                    color: DefaultColors.bg,
+                                    fontFamily: "朱雀仿宋",
                                   ),
                                 ),
                               ],
@@ -190,13 +181,11 @@ class _StoragePage extends State<StoragePage> {
                       ),
 
                       // hint
-                      Text.rich(
-                        TextSpan(
-                          text: _choosen
-                              ? l.st_path_prefix + _storagePath
-                              : l.st_path_placeholder,
-                          style: TextStyle(fontSize: 4.em),
-                        ),
+                      Text(
+                        _choosen
+                            ? l.st_path_prefix + _storagePath
+                            : l.st_path_placeholder,
+                        style: TextStyle(fontSize: 4.em),
                       ),
                     ],
                   ),
