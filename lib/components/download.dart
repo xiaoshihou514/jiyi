@@ -1,5 +1,6 @@
+import 'dart:io';
 import 'dart:math';
-import 'package:background_downloader/background_downloader.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:archive/archive_io.dart';
 
@@ -46,31 +47,29 @@ class _DownloadUnzipDialogState extends State<DownloadUnzipDialog> {
   }
 
   Future<void> _startDownload() async {
-    for (int i = 4; i <= widget.maxZoom; i++) {
-      final task = DownloadTask(
-        url: "${widget.prefix}/$i.zip",
-        filename: "$i.zip",
-        baseDirectory: BaseDirectory.temporary,
-        updates: Updates.statusAndProgress,
-        requiresWiFi: true,
-        retries: 5,
-        allowPause: true,
-      );
+    final tmp = await getTemporaryDirectory();
 
-      FileDownloader()
+    for (int i = 4; i <= widget.maxZoom; i++) {
+      if (Directory(path.join(widget.dest, "$i")).existsSync()) {
+        setState(() => progress[i - 4] = (DStage.done, 100));
+        continue;
+      }
+      Dio()
           .download(
-            task,
-            onProgress: (x) => setState(
-              () => progress[i - 4] = (progress[i - 4].$1, _ntrunc(x)),
-            ),
-            onStatus: (_) {},
+            "${widget.prefix}/$i.zip",
+            '${tmp.path}/$i.zip',
+            onReceiveProgress: (int received, int total) {
+              setState(
+                () => progress[i - 4] = (
+                  progress[i - 4].$1,
+                  _ntrunc(received / total),
+                ),
+              );
+            },
           )
           .then((_) async {
             setState(() => progress[i - 4] = (DStage.unzipping, 100));
-            await extractFileToDisk(
-              path.join((await getTemporaryDirectory()).path, "$i.zip"),
-              widget.dest,
-            );
+            await extractFileToDisk(path.join(tmp.path, "$i.zip"), widget.dest);
             setState(() => progress[i - 4] = (DStage.done, 100));
           });
     }

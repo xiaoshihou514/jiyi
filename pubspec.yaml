@@ -25,16 +25,19 @@ dependencies:
   path: ^1.9.1
   wav: ^1.4.0
   json_annotation: ^4.9.0
-  flutter_map_marker_cluster: any
-  flutter_map: any
-  flutter_map_cache: any
-  http_cache_file_store: any
+  flutter_map_marker_cluster:
+    git:
+      url: https://github.com/lpongetti/flutter_map_marker_cluster.git
+      ref: master
+  flutter_map: ^8.1.1
+  flutter_map_cache: ^2.0.0
+  http_cache_file_store: ^2.0.1
   path_provider: ^2.1.5
   url_launcher: ^6.3.1
   latlong2: ^0.9.1
   archive: ^4.0.7
   numberpicker: ^2.1.2
-  background_downloader: ^9.2.2
+  dio: ^5.8.0+1
 
 dev_dependencies:
   flutter_test:

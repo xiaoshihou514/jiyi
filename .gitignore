@@ -43,3 +43,7 @@ app.*.map.json
 /android/app/release
 
 /map/
+/AppDir/
+/appimage-build/
+*.AppImage
+*.AppImage.zsync

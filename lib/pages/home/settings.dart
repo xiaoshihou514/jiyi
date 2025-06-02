@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiyi/components/download.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:path/path.dart' as path;
@@ -9,9 +10,22 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
-import 'package:jiyi/utils/em.dart';
 import 'package:jiyi/utils/map_setting.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
+
+extension on num {
+  double get em => (ScreenUtil().screenWidth > ScreenUtil().screenHeight)
+      ? sh / 128
+      : sw / 96;
+}
+
+bool isMobile = ScreenUtil().screenWidth < ScreenUtil().screenHeight;
+Widget _smartCol({required List<Widget> children}) => isMobile
+    ? Wrap(children: children)
+    : Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: children,
+      );
 
 class Settings extends StatelessWidget {
   const Settings({super.key});
@@ -61,9 +75,8 @@ class Settings extends StatelessWidget {
     ),
   );
 
-  Row _buildDangerSetting(String desc, String btn, void Function() action) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget _buildDangerSetting(String desc, String btn, void Function() action) {
+    return _smartCol(
       children: [
         Text.rich(TextSpan(text: desc)),
         TextButton(
@@ -166,8 +179,7 @@ class _MapSettingsState extends State<MapSettings> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        _smartCol(
           children: [
             Text.rich(
               TextSpan(
@@ -177,11 +189,12 @@ class _MapSettingsState extends State<MapSettings> {
             ),
             IconButton(
               onPressed: () async {
+                _setting.pattern = _localPatternController.text;
                 if (!_setting.isLocal ||
-                    ((_setting.path?.isNotEmpty ?? false) &&
-                        (_setting.pattern?.isNotEmpty ?? false))) {
+                    ((_setting.path ?? "").isNotEmpty &&
+                        (_setting.pattern ?? "").isNotEmpty)) {
                   _setting.urlFmt = _setting.isLocal
-                      ? path.join(_setting.path!, _localPatternController.text)
+                      ? path.join(_setting.path!, _setting.pattern!)
                       : _setting.urlFmt;
                   await ss.write(
                     key: ss.MAP_SETTINGS,
@@ -216,8 +229,7 @@ class _MapSettingsState extends State<MapSettings> {
             ),
           ],
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        _smartCol(
           children: [
             Text.rich(TextSpan(text: l.settings_map_provider)),
             DropdownButton(
@@ -262,10 +274,7 @@ class _MapSettingsState extends State<MapSettings> {
         else
           Container(),
 
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [Container()],
-        ),
+        Wrap(children: [Container()]),
       ],
     );
   }
@@ -277,8 +286,7 @@ class _MapSettingsState extends State<MapSettings> {
   Widget _localProviderSettings() {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        _smartCol(
           children: [
             Text(l.settings_map_loc_path),
             _buildRichButton(
@@ -307,8 +315,7 @@ class _MapSettingsState extends State<MapSettings> {
             ),
           ],
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        _smartCol(
           children: [
             Text(l.settings_map_loc_pattern),
             SizedBox(
@@ -323,10 +330,15 @@ class _MapSettingsState extends State<MapSettings> {
                 ),
                 child: TextField(
                   controller: _localPatternController,
-                  style: TextStyle(color: DefaultColors.fg, fontSize: 3.em),
+                  style: TextStyle(
+                    color: DefaultColors.fg,
+                    fontSize: isMobile ? 4.em : 3.em,
+                  ),
                   cursorColor: DefaultColors.shade_6,
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(vertical: 1.em),
+                    contentPadding: isMobile
+                        ? null
+                        : EdgeInsets.symmetric(vertical: 1.em),
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: DefaultColors.fg),
                     ),
@@ -358,10 +370,7 @@ class _MapSettingsState extends State<MapSettings> {
             ),
           ],
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [Text(l.settings_map_pull_desc), Container()],
-        ),
+        Wrap(children: [Text(l.settings_map_pull_desc), Container()]),
         Wrap(
           children: [
             _buildRichButton(
@@ -439,7 +448,7 @@ class _MapSettingsState extends State<MapSettings> {
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 2.em, vertical: 1.em),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             spacing: 3.em,
             children: [
@@ -511,7 +520,7 @@ class _MapSettingsState extends State<MapSettings> {
   }
 
   void _download(String prefix) {
-    if (_setting.path?.isNotEmpty ?? false) {
+    if ((_setting.path ?? "").isNotEmpty) {
       showDownloadDialog(context, prefix, _setting.path!, _setting.maxZoom);
     } else if (context.mounted) {
       ScaffoldMessenger.of(

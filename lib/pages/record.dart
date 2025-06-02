@@ -20,10 +20,9 @@ import 'package:wav/wav_file.dart';
 import 'package:wav/wav_format.dart';
 
 extension on num {
-  double get em =>
-      (ScreenUtil().screenWidth > ScreenUtil().screenHeight)
-          ? sh / 100
-          : sw / 96;
+  double get em => (ScreenUtil().screenWidth > ScreenUtil().screenHeight)
+      ? sh / 100
+      : sw / 96;
 }
 
 class RecordPage extends StatefulWidget {
@@ -69,11 +68,10 @@ class _RecordPageState extends State<RecordPage> {
     }
   }
 
-  bool get _isMobile => ScreenUtil().screenWidth < ScreenUtil().screenHeight;
-
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
+    bool isMobile = ScreenUtil().screenWidth < ScreenUtil().screenHeight;
 
     return Scaffold(
       backgroundColor: DefaultColors.bg,
@@ -81,7 +79,7 @@ class _RecordPageState extends State<RecordPage> {
         padding: EdgeInsets.all(8.em),
         child: Column(
           children: [
-            Spacer(flex: _isMobile ? 1 : 3),
+            Spacer(flex: isMobile ? 1 : 3),
             Stack(
               alignment: AlignmentDirectional.center,
               children: [
@@ -90,7 +88,7 @@ class _RecordPageState extends State<RecordPage> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 2.em),
                   child: Container(
-                    width: _isMobile ? 46.em : 50.em,
+                    width: isMobile ? 46.em : 50.em,
                     height: 18.05.em,
                     decoration: BoxDecoration(
                       color: DefaultColors.bg,
@@ -198,9 +196,9 @@ class _RecordPageState extends State<RecordPage> {
                 done
                     ? Spinner(Icons.sync, DefaultColors.keyword, 20.em)
                     : IconButton(
-                      onPressed: _done,
-                      icon: Icon(Icons.stop, size: 20.em),
-                    ),
+                        onPressed: _done,
+                        icon: Icon(Icons.stop, size: 20.em),
+                      ),
               ],
             ),
           ],
@@ -307,46 +305,45 @@ class _RecordPageState extends State<RecordPage> {
     }
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            backgroundColor: DefaultColors.bg,
-            icon: Icon(Icons.mic_off, color: DefaultColors.error),
-            title: Text.rich(
-              TextSpan(
-                text: AppLocalizations.of(context)!.mic_error_title,
-                style: TextStyle(
-                  fontSize: 8.em,
-                  color: DefaultColors.keyword,
-                  fontFamily: "朱雀仿宋",
-                ),
-              ),
+      builder: (context) => AlertDialog(
+        backgroundColor: DefaultColors.bg,
+        icon: Icon(Icons.mic_off, color: DefaultColors.error),
+        title: Text.rich(
+          TextSpan(
+            text: AppLocalizations.of(context)!.mic_error_title,
+            style: TextStyle(
+              fontSize: 8.em,
+              color: DefaultColors.keyword,
+              fontFamily: "朱雀仿宋",
             ),
-            content: Text.rich(
+          ),
+        ),
+        content: Text.rich(
+          TextSpan(
+            text: msg,
+            style: TextStyle(
+              fontSize: 6.em,
+              color: DefaultColors.fg,
+              fontFamily: "朱雀仿宋",
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => {Navigator.pop(context)},
+            child: Text.rich(
               TextSpan(
-                text: msg,
+                text: AppLocalizations.of(context)!.mic_error_ok,
                 style: TextStyle(
                   fontSize: 6.em,
-                  color: DefaultColors.fg,
+                  color: DefaultColors.constant,
                   fontFamily: "朱雀仿宋",
                 ),
               ),
             ),
-            actions: [
-              TextButton(
-                onPressed: () => {Navigator.pop(context)},
-                child: Text.rich(
-                  TextSpan(
-                    text: AppLocalizations.of(context)!.mic_error_ok,
-                    style: TextStyle(
-                      fontSize: 6.em,
-                      color: DefaultColors.constant,
-                      fontFamily: "朱雀仿宋",
-                    ),
-                  ),
-                ),
-              ),
-            ],
           ),
+        ],
+      ),
     );
   }
 }
