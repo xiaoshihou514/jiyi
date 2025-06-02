@@ -20,7 +20,7 @@ extension on num {
 }
 
 bool isMobile = ScreenUtil().screenWidth < ScreenUtil().screenHeight;
-Widget _smartCol({required List<Widget> children}) => isMobile
+Widget _smartRow({required List<Widget> children}) => isMobile
     ? Wrap(children: children)
     : Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -50,7 +50,18 @@ class Settings extends StatelessWidget {
             MapSettings(l),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [_title(l.settings_reset), Container()],
+              children: [
+                Text.rich(
+                  TextSpan(
+                    text: l.settings_reset,
+                    style: TextStyle(
+                      fontSize: 8.em,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Container(),
+              ],
             ),
             _buildDangerSetting(
               l.settings_reset_mk_desc,
@@ -68,15 +79,8 @@ class Settings extends StatelessWidget {
     );
   }
 
-  Widget _title(String title) => Text.rich(
-    TextSpan(
-      text: title,
-      style: TextStyle(fontSize: 8.em, fontWeight: FontWeight.bold),
-    ),
-  );
-
   Widget _buildDangerSetting(String desc, String btn, void Function() action) {
-    return _smartCol(
+    return _smartRow(
       children: [
         Text.rich(TextSpan(text: desc)),
         TextButton(
@@ -179,7 +183,8 @@ class _MapSettingsState extends State<MapSettings> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _smartCol(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text.rich(
               TextSpan(
@@ -229,7 +234,7 @@ class _MapSettingsState extends State<MapSettings> {
             ),
           ],
         ),
-        _smartCol(
+        _smartRow(
           children: [
             Text.rich(TextSpan(text: l.settings_map_provider)),
             DropdownButton(
@@ -251,6 +256,7 @@ class _MapSettingsState extends State<MapSettings> {
                 _setting.name = value!;
                 if (_setting.name == l.settings_map_local) {
                   _setting.isLocal = true;
+                  _setting.useInversionFilter = true;
                 } else if (_setting.name == l.settings_map_custom) {
                   _custom = true;
                 } else {
@@ -286,7 +292,7 @@ class _MapSettingsState extends State<MapSettings> {
   Widget _localProviderSettings() {
     return Column(
       children: [
-        _smartCol(
+        _smartRow(
           children: [
             Text(l.settings_map_loc_path),
             _buildRichButton(
@@ -315,7 +321,7 @@ class _MapSettingsState extends State<MapSettings> {
             ),
           ],
         ),
-        _smartCol(
+        _smartRow(
           children: [
             Text(l.settings_map_loc_pattern),
             SizedBox(

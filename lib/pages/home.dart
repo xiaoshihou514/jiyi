@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiyi/pages/home/calendar.dart';
 import 'package:jiyi/pages/home/map.dart';
 import 'package:jiyi/pages/home/settings.dart';
+import 'package:jiyi/pages/search.dart';
 
 import 'package:jiyi/utils/em.dart';
 import 'package:jiyi/l10n/localizations.dart';
@@ -142,31 +143,56 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
           ),
         ),
         floatingActionButton: _tabController.index == 0
-            ? IconButton(
-                onPressed: () => {
-                  Navigator.push(
-                    context,
-                    SmoothRouter.builder(
-                      RecordPage(encryption, widget.storagePath),
-                    ),
-                  ),
-                },
-                icon: Container(
-                  width: isMobile ? 25.em : 10.em,
-                  height: isMobile ? 25.em : 10.em,
-                  decoration: BoxDecoration(
-                    color: DefaultColors.special,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Icon(
-                    Icons.mic,
-                    color: DefaultColors.bg,
-                    size: isMobile ? 20.em : 7.5.em,
-                  ),
-                ),
-              )
+            ? _floatingBtns(isMobile)
             : null,
       ),
+    );
+  }
+
+  Widget _floatingBtns(bool isMobile) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        IconButton(
+          onPressed: () => {
+            Navigator.push(context, SmoothRouter.builder(Search())),
+          },
+          icon: Container(
+            width: isMobile ? 20.em : 10.em,
+            height: isMobile ? 20.em : 10.em,
+            decoration: BoxDecoration(
+              color: DefaultColors.keyword,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(
+              Icons.search,
+              color: DefaultColors.bg,
+              size: isMobile ? 15.em : 7.5.em,
+            ),
+          ),
+        ),
+        IconButton(
+          onPressed: () => {
+            Navigator.push(
+              context,
+              SmoothRouter.builder(RecordPage(encryption, widget.storagePath)),
+            ),
+          },
+          icon: Container(
+            width: isMobile ? 20.em : 10.em,
+            height: isMobile ? 20.em : 10.em,
+            decoration: BoxDecoration(
+              color: DefaultColors.special,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(
+              Icons.mic,
+              color: DefaultColors.bg,
+              size: isMobile ? 15.em : 7.5.em,
+            ),
+          ),
+        ),
+      ],
     );
   }
 

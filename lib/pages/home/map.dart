@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/utils/em.dart';
@@ -94,20 +95,7 @@ class _MapViewState extends State<MapView> {
       ),
     ];
     if (s.isOSM) {
-      layers.add(
-        RichAttributionWidget(
-          popupBackgroundColor: DefaultColors.shade_3,
-          attributions: [
-            // Suggested attribution for the OpenStreetMap public tile server
-            TextSourceAttribution(
-              'OpenStreetMap contributors',
-              textStyle: TextStyle(color: DefaultColors.fg),
-              onTap: () =>
-                  launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
-            ),
-          ],
-        ),
-      );
+      layers.add(_osmAttribution());
     }
 
     return FlutterMap(
@@ -155,21 +143,7 @@ class _MapViewState extends State<MapView> {
             ),
           ];
           if (s.isOSM) {
-            layers.add(
-              RichAttributionWidget(
-                popupBackgroundColor: DefaultColors.shade_3,
-                attributions: [
-                  // Suggested attribution for the OpenStreetMap public tile server
-                  TextSourceAttribution(
-                    'OpenStreetMap contributors',
-                    textStyle: TextStyle(color: DefaultColors.fg),
-                    onTap: () => launchUrl(
-                      Uri.parse('https://openstreetmap.org/copyright'),
-                    ),
-                  ),
-                ],
-              ),
-            );
+            layers.add(_osmAttribution());
           }
 
           return FlutterMap(
@@ -198,6 +172,48 @@ class _MapViewState extends State<MapView> {
         }
         return const Center(child: CircularProgressIndicator());
       },
+    );
+  }
+
+  Widget _osmAttribution() {
+    return RichAttributionWidget(
+      popupBackgroundColor: DefaultColors.shade_3,
+      attributions: [
+        // Suggested attribution for the OpenStreetMap public tile server
+        TextSourceAttribution(
+          'OpenStreetMap contributors',
+          textStyle: TextStyle(color: DefaultColors.fg),
+          onTap: () =>
+              launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
+        ),
+      ],
+    );
+  }
+
+  Widget _markers(List<Marker> markers) {
+    return MarkerClusterLayerWidget(
+      options: MarkerClusterLayerOptions(
+        maxClusterRadius: 45,
+        size: const Size(40, 40),
+        alignment: Alignment.center,
+        padding: const EdgeInsets.all(50),
+        maxZoom: 15,
+        markers: markers,
+        builder: (context, markers) {
+          return Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.blue,
+            ),
+            child: Center(
+              child: Text(
+                markers.length.toString(),
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

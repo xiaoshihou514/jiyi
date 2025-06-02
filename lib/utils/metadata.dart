@@ -1,16 +1,21 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:latlong2/latlong.dart';
 
 part "metadata.g.dart";
 
 @JsonSerializable()
 class Metadata {
-  final DateTime timestamp;
+  final DateTime time;
   final Duration length;
-  final String? title;
+  final String title;
+  final LatLng coord;
+  final String transcript;
 
   Metadata({
-    required this.timestamp,
+    required this.time,
     required this.length,
     required this.title,
+    required this.coord,
+    required this.transcript,
   });
 }
