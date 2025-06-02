@@ -10,7 +10,9 @@ Metadata _$MetadataFromJson(Map<String, dynamic> json) => Metadata(
       time: DateTime.parse(json['time'] as String),
       length: Duration(microseconds: (json['length'] as num).toInt()),
       title: json['title'] as String,
-      coord: LatLng.fromJson(json['coord'] as Map<String, dynamic>),
+      latitude: (json['latitude'] as num).toDouble(),
+      longitude: (json['longitude'] as num).toDouble(),
+      cover: json['cover'] as String,
       transcript: json['transcript'] as String,
     );
 
@@ -18,6 +20,8 @@ Map<String, dynamic> _$MetadataToJson(Metadata instance) => <String, dynamic>{
       'time': instance.time.toIso8601String(),
       'length': instance.length.inMicroseconds,
       'title': instance.title,
-      'coord': instance.coord,
+      'latitude': instance.latitude,
+      'longitude': instance.longitude,
+      'cover': instance.cover,
       'transcript': instance.transcript,
     };

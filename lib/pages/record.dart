@@ -3,21 +3,26 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator_platform_interface/geolocator_platform_interface.dart';
 import 'package:flutter_recorder/flutter_recorder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:jiyi/components/spinner.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:jiyi/utils/encryption.dart';
+import 'package:jiyi/utils/secure_storage.dart' as ss;
+import 'package:latlong2/latlong.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:path/path.dart' as path;
+import 'package:wav/wav_file.dart';
+import 'package:wav/wav_format.dart';
 
 import 'package:jiyi/components/soundviz.dart';
 import 'package:jiyi/components/tape.dart';
+import 'package:jiyi/components/spinner.dart';
+import 'package:jiyi/utils/io.dart';
+import 'package:jiyi/utils/metadata.dart';
 import 'package:jiyi/components/tapewheel.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/utils/stop_model.dart';
 import 'package:jiyi/pages/default_colors.dart';
-import 'package:wav/wav_file.dart';
-import 'package:wav/wav_format.dart';
 
 extension on num {
   double get em => (ScreenUtil().screenWidth > ScreenUtil().screenHeight)
@@ -27,8 +32,7 @@ extension on num {
 
 class RecordPage extends StatefulWidget {
   final String storagePath;
-  final Encryption encryption;
-  const RecordPage(this.encryption, this.storagePath, {super.key});
+  const RecordPage(this.storagePath, {super.key});
 
   @override
   State<RecordPage> createState() => _RecordPageState();
@@ -48,6 +52,7 @@ class _RecordPageState extends State<RecordPage> {
   // io stuff
   final List<double> _bytes = List.empty(growable: true);
   bool _cancelled = false;
+  final GeolocatorPlatform _geo = GeolocatorPlatform.instance;
 
   // done animation
   bool done = false;
@@ -231,10 +236,28 @@ class _RecordPageState extends State<RecordPage> {
     _stop.value = true;
 
     // do this in another thread
+    final coord = await _getLoc();
     await compute(encryptAndWrite, {
       'bytes': _bytes,
-      'path': path.join(widget.storagePath, "${_startTime.toString()}.cd"),
-      'encryption': widget.encryption,
+      'enc': Encryption.instance,
+      'base_path': IO.STORAGE,
+      'md': Metadata(
+        time: _startTime,
+        length: _duration,
+        title: _startTime.toString(),
+        latitude: coord.latitude,
+        longitude: coord.longitude,
+        cover: context.mounted
+            ? (await showDialog<String>(
+                    // ignore: use_build_context_synchronously
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) => SingleCharInput(),
+                  ) ??
+                  "❔")
+            : "❔",
+        transcript: "TODO", // TODO: implement transcription using local STT
+      ).dyn,
     });
 
     _cleanup();
@@ -243,15 +266,16 @@ class _RecordPageState extends State<RecordPage> {
 
   static Future<void> encryptAndWrite(Map<String, dynamic> params) async {
     final bytes = params['bytes'] as List<double>;
-    final path = params['path'] as String;
-    final encryption = params['encryption'] as Encryption;
+    final md = Metadata.fromDyn(params['md'] as Map<String, dynamic>);
+    Encryption.initByInstance(params['enc']);
+    IO.STORAGE = params['base_path'];
 
-    final wav = Wav([Float64List.fromList(bytes)], 44100, WavFormat.pcm32bit);
-    final wavData = wav.write();
-
-    final encrypted = await encryption.encrypt(wavData);
-
-    await File(path).writeAsBytes(encrypted.toList(growable: false));
+    final data = Wav(
+      [Float64List.fromList(bytes)],
+      44100,
+      WavFormat.pcm32bit,
+    ).write();
+    await IO.save(data, md);
   }
 
   void _cleanup() {
@@ -295,6 +319,19 @@ class _RecordPageState extends State<RecordPage> {
     return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 
+  Future<LatLng> _getLoc() async {
+    bool serviceEnabled = await _geo.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      await _geo.openLocationSettings();
+    }
+    LocationPermission permission = await _geo.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await _geo.requestPermission();
+    }
+    final pos = await _geo.getCurrentPosition();
+    return LatLng(pos.altitude, pos.longitude);
+  }
+
   void _micError(String msg) {
     if (!mounted) {
       return;
@@ -333,6 +370,95 @@ class _RecordPageState extends State<RecordPage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class SingleCharInput extends StatefulWidget {
+  const SingleCharInput({super.key});
+
+  @override
+  State<SingleCharInput> createState() => _SingleCharInputState();
+}
+
+class _SingleCharInputState extends State<SingleCharInput> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    Navigator.pop(
+      context,
+      _controller.text.length == 1 ? _controller.text : "❔",
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+
+    return AlertDialog(
+      backgroundColor: DefaultColors.shade_2,
+      title: Text(
+        l.cover_desc,
+        style: TextStyle(
+          decoration: TextDecoration.none,
+          color: DefaultColors.info,
+          fontFamily: "朱雀仿宋",
+          fontSize: 4.em,
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => _submit(),
+          child: Text(
+            l.download_exit,
+            style: TextStyle(
+              decoration: TextDecoration.none,
+              color: DefaultColors.constant,
+              fontFamily: "朱雀仿宋",
+              fontSize: 3.em,
+            ),
+          ),
+        ),
+      ],
+      content: Padding(
+        padding: EdgeInsets.all(1.em),
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            textSelectionTheme: TextSelectionThemeData(
+              selectionColor: DefaultColors.shade_3,
+              selectionHandleColor: DefaultColors.shade_4,
+            ),
+          ),
+          child: TextField(
+            controller: _controller,
+            maxLength: 1,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              decoration: TextDecoration.none,
+              color: DefaultColors.fg,
+              fontFamily: "朱雀仿宋",
+              fontSize: 3.em,
+            ),
+            autofocus: true,
+            decoration: InputDecoration(
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: DefaultColors.fg),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: DefaultColors.fg),
+              ),
+            ),
+            cursorColor: DefaultColors.shade_6,
+            onSubmitted: (_) => _submit(),
+          ),
+        ),
       ),
     );
   }

@@ -1,17 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:jiyi/pages/home/calendar.dart';
 import 'package:jiyi/pages/home/map.dart';
 import 'package:jiyi/pages/home/settings.dart';
 import 'package:jiyi/pages/search.dart';
-
 import 'package:jiyi/utils/em.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/utils/authenticator.dart';
 import 'package:jiyi/pages/record.dart';
 import 'package:jiyi/utils/encryption.dart';
+import 'package:jiyi/utils/io.dart';
 import 'package:jiyi/utils/smooth_router.dart';
 
 class HomePage extends StatefulWidget {
@@ -31,7 +32,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
   bool unlocked = false;
-  late Encryption encryption;
   late TabController _tabController;
 
   _HomePage();
@@ -180,7 +180,7 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
           onPressed: () => {
             Navigator.push(
               context,
-              SmoothRouter.builder(RecordPage(encryption, widget.storagePath)),
+              SmoothRouter.builder(RecordPage(widget.storagePath)),
             ),
           },
           icon: Container(
@@ -202,7 +202,7 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
   }
 
   Future<void> _setupEncryption() async {
-    encryption = Encryption();
-    await encryption.init(widget.masterKey, widget.storagePath);
+    await Encryption.init(widget.masterKey, widget.storagePath);
+    await IO.init();
   }
 }

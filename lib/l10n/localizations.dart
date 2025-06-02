@@ -393,6 +393,12 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'完成'**
   String get download_exit;
+
+  /// No description provided for @cover_desc.
+  ///
+  /// In zh, this message translates to:
+  /// **'输入一个字符作为封面：'**
+  String get cover_desc;
 }
 
 class _AppLocalizationsDelegate

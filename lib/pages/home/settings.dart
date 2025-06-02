@@ -453,7 +453,7 @@ class _MapSettingsState extends State<MapSettings> {
   }
 
   Future<void> _choose() async {
-    if (!Platform.isLinux) {
+    if (Platform.isAndroid) {
       if (!await Permission.storage.status.isGranted) {
         await Permission.storage.request();
       }

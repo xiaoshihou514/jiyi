@@ -161,4 +161,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get download_exit => '完成';
+
+  @override
+  String get cover_desc => '输入一个字符作为封面：';
 }

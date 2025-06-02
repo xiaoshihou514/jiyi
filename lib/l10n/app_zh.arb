@@ -54,5 +54,7 @@
   "download_perc": "{a}.zip：{b}%",
   "download_extracting": "解压中",
   "download_done": "完成",
-  "download_exit": "完成"
+  "download_exit": "完成",
+
+  "cover_desc": "输入一个字符作为封面："
 }
