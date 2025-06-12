@@ -237,9 +237,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get metadata_import => '导入';
 
   @override
-  String get metadata_file_required => '请选择音频文件';
-
-  @override
   String get metadata_duration_missing => '无法获取音频时长，请重新选择文件';
 
   @override

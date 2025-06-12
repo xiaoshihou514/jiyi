@@ -22,8 +22,11 @@ extension on num {
 }
 
 bool isMobile = ScreenUtil().screenWidth < ScreenUtil().screenHeight;
-Widget _smartRow({required List<Widget> children}) => isMobile
-    ? Wrap(children: children)
+Widget _flex({required List<Widget> children}) => isMobile
+    ? Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: children,
+      )
     : Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: children,
@@ -82,7 +85,7 @@ class Settings extends StatelessWidget {
   }
 
   Widget _buildDangerSetting(String desc, String btn, void Function() action) {
-    return _smartRow(
+    return _flex(
       children: [
         Text(desc),
         TextButton(
@@ -249,7 +252,7 @@ class _MapSettingsState extends State<MapSettings> {
             ),
           ],
         ),
-        _smartRow(
+        _flex(
           children: [
             Text(l.settings_map_provider),
             DropdownButton(
@@ -308,7 +311,7 @@ class _MapSettingsState extends State<MapSettings> {
   Widget _localProviderSettings() {
     return Column(
       children: [
-        _smartRow(
+        _flex(
           children: [
             Text(l.settings_map_loc_path),
             _buildRichButton(
@@ -335,7 +338,7 @@ class _MapSettingsState extends State<MapSettings> {
             ),
           ],
         ),
-        _smartRow(
+        _flex(
           children: [
             Text(l.settings_map_loc_pattern),
             SizedBox(

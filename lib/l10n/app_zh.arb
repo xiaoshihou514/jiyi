@@ -81,7 +81,6 @@
   "metadata_cover_required": "请输入一个字符",
   "metadata_cancel": "取消",
   "metadata_import": "导入",
-  "metadata_file_required": "请选择音频文件",
   "metadata_duration_missing": "无法获取音频时长，请重新选择文件",
   "metadata_save_error": "导入失败：{msg}"
 }

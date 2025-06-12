@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_soloud/flutter_soloud.dart';
 import 'package:intl/intl.dart';
 
@@ -9,10 +10,16 @@ import 'package:jiyi/components/spinner.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/utils/anno.dart';
-import 'package:jiyi/utils/em.dart';
 import 'package:jiyi/utils/encryption.dart';
 import 'package:jiyi/utils/metadata.dart';
 import 'package:jiyi/utils/io.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+extension on num {
+  double get em => (ScreenUtil().screenWidth > ScreenUtil().screenHeight)
+      ? sh / 128
+      : sw / 90;
+}
 
 @DeepSeek()
 class MetadataInputDialog extends StatefulWidget {
@@ -59,7 +66,18 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
 
   Future<void> _pickAudioFile() async {
     final l = AppLocalizations.of(context)!;
+
+    if (Platform.isAndroid) {
+      if (!await Permission.storage.status.isGranted) {
+        await Permission.storage.request();
+      }
+      if (!await Permission.manageExternalStorage.status.isGranted) {
+        await Permission.manageExternalStorage.request();
+      }
+    }
+
     final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
       allowedExtensions: ["mp3", "wav", "ogg", "flac"],
       allowMultiple: false,
     );

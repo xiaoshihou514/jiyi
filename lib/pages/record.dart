@@ -8,9 +8,11 @@ import 'package:flutter_recorder/flutter_recorder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:jiyi/utils/encryption.dart';
+import 'package:jiyi/utils/notifier.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
 import 'package:latlong2/latlong.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:wav/wav_file.dart';
 import 'package:wav/wav_format.dart';
 
@@ -261,7 +263,10 @@ class _RecordPageState extends State<RecordPage> {
     });
 
     _cleanup();
-    if (mounted) Navigator.pop(context);
+    if (mounted) {
+      context.read<Notifier>().trigger();
+      Navigator.pop(context);
+    }
   }
 
   static Future<void> encryptAndWrite(Map<String, dynamic> params) async {

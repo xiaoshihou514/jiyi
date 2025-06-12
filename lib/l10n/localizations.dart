@@ -538,12 +538,6 @@ abstract class AppLocalizations {
   /// **'导入'**
   String get metadata_import;
 
-  /// No description provided for @metadata_file_required.
-  ///
-  /// In zh, this message translates to:
-  /// **'请选择音频文件'**
-  String get metadata_file_required;
-
   /// No description provided for @metadata_duration_missing.
   ///
   /// In zh, this message translates to:
