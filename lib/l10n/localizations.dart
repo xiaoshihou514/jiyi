@@ -364,6 +364,18 @@ abstract class AppLocalizations {
   /// **'已重置'**
   String get settings_reset_success;
 
+  /// No description provided for @settings_reset_index.
+  ///
+  /// In zh, this message translates to:
+  /// **'重置索引'**
+  String get settings_reset_index;
+
+  /// No description provided for @settings_reset_index_desc.
+  ///
+  /// In zh, this message translates to:
+  /// **'重新建立日志索引'**
+  String get settings_reset_index_desc;
+
   /// No description provided for @download_title.
   ///
   /// In zh, this message translates to:
@@ -399,6 +411,150 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'输入一个字符作为封面：'**
   String get cover_desc;
+
+  /// No description provided for @metadata_title.
+  ///
+  /// In zh, this message translates to:
+  /// **'导入音频元数据'**
+  String get metadata_title;
+
+  /// No description provided for @metadata_select_file.
+  ///
+  /// In zh, this message translates to:
+  /// **'选择音频文件'**
+  String get metadata_select_file;
+
+  /// No description provided for @metadata_no_file_selected.
+  ///
+  /// In zh, this message translates to:
+  /// **'未选择文件'**
+  String get metadata_no_file_selected;
+
+  /// No description provided for @metadata_duration.
+  ///
+  /// In zh, this message translates to:
+  /// **'时长'**
+  String get metadata_duration;
+
+  /// No description provided for @metadata_duration_error.
+  ///
+  /// In zh, this message translates to:
+  /// **'获取时长失败: {error}'**
+  String metadata_duration_error(Object error);
+
+  /// No description provided for @metadata_select_datetime.
+  ///
+  /// In zh, this message translates to:
+  /// **'选择日期和时间'**
+  String get metadata_select_datetime;
+
+  /// No description provided for @metadata_select_date.
+  ///
+  /// In zh, this message translates to:
+  /// **'选择日期'**
+  String get metadata_select_date;
+
+  /// No description provided for @metadata_select_time.
+  ///
+  /// In zh, this message translates to:
+  /// **'选择时间'**
+  String get metadata_select_time;
+
+  /// No description provided for @metadata_title_label.
+  ///
+  /// In zh, this message translates to:
+  /// **'标题'**
+  String get metadata_title_label;
+
+  /// No description provided for @metadata_title_required.
+  ///
+  /// In zh, this message translates to:
+  /// **'标题不能为空'**
+  String get metadata_title_required;
+
+  /// No description provided for @metadata_location_optional.
+  ///
+  /// In zh, this message translates to:
+  /// **'位置信息（可选）'**
+  String get metadata_location_optional;
+
+  /// No description provided for @metadata_latitude.
+  ///
+  /// In zh, this message translates to:
+  /// **'纬度'**
+  String get metadata_latitude;
+
+  /// No description provided for @metadata_latitude_hint.
+  ///
+  /// In zh, this message translates to:
+  /// **'例如: 34.0522'**
+  String get metadata_latitude_hint;
+
+  /// No description provided for @metadata_invalid_latitude.
+  ///
+  /// In zh, this message translates to:
+  /// **'无效纬度（-90~90）'**
+  String get metadata_invalid_latitude;
+
+  /// No description provided for @metadata_longitude.
+  ///
+  /// In zh, this message translates to:
+  /// **'经度'**
+  String get metadata_longitude;
+
+  /// No description provided for @metadata_longitude_hint.
+  ///
+  /// In zh, this message translates to:
+  /// **'例如: -118.2437'**
+  String get metadata_longitude_hint;
+
+  /// No description provided for @metadata_invalid_longitude.
+  ///
+  /// In zh, this message translates to:
+  /// **'无效经度（-180~180）'**
+  String get metadata_invalid_longitude;
+
+  /// No description provided for @metadata_cover_label.
+  ///
+  /// In zh, this message translates to:
+  /// **'封面（单个emoji）'**
+  String get metadata_cover_label;
+
+  /// No description provided for @metadata_cover_required.
+  ///
+  /// In zh, this message translates to:
+  /// **'请输入一个emoji'**
+  String get metadata_cover_required;
+
+  /// No description provided for @metadata_cancel.
+  ///
+  /// In zh, this message translates to:
+  /// **'取消'**
+  String get metadata_cancel;
+
+  /// No description provided for @metadata_import.
+  ///
+  /// In zh, this message translates to:
+  /// **'导入'**
+  String get metadata_import;
+
+  /// No description provided for @metadata_file_required.
+  ///
+  /// In zh, this message translates to:
+  /// **'请选择音频文件'**
+  String get metadata_file_required;
+
+  /// No description provided for @metadata_duration_missing.
+  ///
+  /// In zh, this message translates to:
+  /// **'无法获取音频时长，请重新选择文件'**
+  String get metadata_duration_missing;
+
+  /// No description provided for @metadata_save_error.
+  ///
+  /// In zh, this message translates to:
+  /// **'导入失败：{msg}'**
+  String metadata_save_error(Object msg);
 }
 
 class _AppLocalizationsDelegate

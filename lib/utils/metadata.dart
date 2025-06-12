@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:latlong2/latlong.dart';
 
 part "metadata.g.dart";
 
@@ -11,8 +10,9 @@ class Metadata {
   final String title;
   final double latitude;
   final double longitude;
+  // length = 1 emoji
   final String cover;
-  // TODO
+  // TODO: not used
   final String transcript;
 
   Metadata({
@@ -28,4 +28,7 @@ class Metadata {
   factory Metadata.fromDyn(Map<String, dynamic> dyn) => _$MetadataFromJson(dyn);
   Map<String, dynamic> get dyn => _$MetadataToJson(this);
   String get json => jsonEncode(dyn);
+
+  @override
+  String toString() => json;
 }

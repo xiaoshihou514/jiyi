@@ -4,8 +4,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiyi/components/download.dart';
+import 'package:jiyi/utils/io.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:jiyi/l10n/localizations.dart';
@@ -67,6 +69,11 @@ class Settings extends StatelessWidget {
               l.settings_reset_spath_desc,
               l.settings_reset_spath,
               () => _resetStoragePath(context),
+            ),
+            _buildDangerSetting(
+              l.settings_reset_index_desc,
+              l.settings_reset_index,
+              () => _resetIndex(context),
             ),
           ],
         ),
@@ -130,6 +137,16 @@ class Settings extends StatelessWidget {
       ).showSnackBar(SnackBar(content: Text(l.settings_reset_success)));
     }
   }
+
+  Future<void> _resetIndex(BuildContext context) async {
+    final l = AppLocalizations.of(context)!;
+    await IO.rebuild();
+    if (context.mounted) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l.settings_reset_success)));
+    }
+  }
 }
 
 class MapSettings extends StatefulWidget {
@@ -149,6 +166,8 @@ class _MapSettingsState extends State<MapSettings> {
   final _localPatternController = TextEditingController();
   bool _custom = false;
 
+  late String _defaultPath;
+
   @override
   void initState() {
     super.initState();
@@ -165,12 +184,15 @@ class _MapSettingsState extends State<MapSettings> {
   }
 
   Future<void> _initMapSettings() async {
+    _defaultPath = (await getApplicationDocumentsDirectory()).path;
     final settings = await ss.read(key: ss.MAP_SETTINGS);
     if (settings != null) {
       setState(() {
         _setting = MapSetting.fromJson(settings);
         _localPatternController.text = _setting.pattern ?? "";
       });
+    } else {
+      setState(() => _setting.path = _defaultPath);
     }
   }
 
@@ -250,6 +272,7 @@ class _MapSettingsState extends State<MapSettings> {
                 if (_setting.name == l.settings_map_local) {
                   _setting.isLocal = true;
                   _setting.useInversionFilter = true;
+                  _setting.path = _defaultPath;
                 } else if (_setting.name == l.settings_map_custom) {
                   _custom = true;
                 } else {
@@ -484,6 +507,7 @@ class _MapSettingsState extends State<MapSettings> {
         isOSM: true,
         urlFmt: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
         name: l.settings_map_osm,
+        path: _defaultPath,
         maxZoom: 16,
       );
     } else if (name == l.settings_map_amap) {

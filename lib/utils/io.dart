@@ -10,10 +10,14 @@ import 'package:jiyi/utils/metadata.dart';
 abstract class IO {
   // ignore: non_constant_identifier_names
   static late final String STORAGE;
-  static late final List<Metadata> index;
+  static late List<Metadata> index;
   static late final File indexFile;
+  static bool _init = false;
 
   static Future<void> init() async {
+    if (_init) {
+      return;
+    }
     STORAGE = (await ss.read(key: ss.STORAGE_PATH))!;
     indexFile = File(path.join(STORAGE, "index"));
     if (indexFile.existsSync()) {
@@ -23,13 +27,15 @@ abstract class IO {
           .then(utf8.decode)
           .then(jsonDecode)
           .then(
-            (data) => (data as List<Map<String, dynamic>>)
+            (data) => (data as List<dynamic>)
+                .cast<Map<String, dynamic>>()
                 .map(Metadata.fromDyn)
                 .toList(),
           );
     } else {
       await rebuild();
     }
+    _init = true;
   }
 
   static Future<void> rebuild() async {
@@ -55,20 +61,22 @@ abstract class IO {
 
   static Future<void> updateIndexOnDisk() async {
     await indexFile.writeAsBytes(
-      await Encryption.encrypt(Uint8List.fromList(jsonEncode(index).codeUnits)),
+      await Encryption.encrypt(
+        utf8.encode(jsonEncode(index.map((m) => m.dyn).toList())),
+      ),
       mode: FileMode.write,
       flush: true,
     );
   }
 
   static Future<void> save(Uint8List decrypted, Metadata md) async {
-    await Encryption.encrypt(decrypted).then(
-      (encrypted) =>
-          File(path.join(STORAGE, "${md.time}.cd")).writeAsBytes(encrypted),
-    );
-    await Encryption.encrypt(Uint8List.fromList(md.json.codeUnits)).then(
-      (encrypted) =>
-          File(path.join(STORAGE, "${md.time}.bq")).writeAsBytes(encrypted),
-    );
+    await File(
+      path.join(STORAGE, "${md.time.hashCode}.cd"),
+    ).writeAsBytes(await Encryption.encrypt(decrypted));
+    await File(
+      path.join(STORAGE, "${md.time.hashCode}.bq"),
+    ).writeAsBytes(await Encryption.encrypt(utf8.encode(md.json)), flush: true);
   }
+
+  static void addEntry(Metadata md) => index.add(md);
 }

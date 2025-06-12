@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:jiyi/components/md_input.dart';
 
 import 'package:jiyi/pages/home/calendar.dart';
 import 'package:jiyi/pages/home/map.dart';
@@ -158,46 +159,43 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        IconButton(
-          onPressed: () => {
-            Navigator.push(context, SmoothRouter.builder(Search())),
-          },
-          icon: Container(
-            width: isMobile ? 20.em : 10.em,
-            height: isMobile ? 20.em : 10.em,
-            decoration: BoxDecoration(
-              color: DefaultColors.keyword,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(
-              Icons.search,
-              color: DefaultColors.bg,
-              size: isMobile ? 15.em : 7.5.em,
-            ),
-          ),
-        ),
-        IconButton(
-          onPressed: () => {
-            Navigator.push(
-              context,
-              SmoothRouter.builder(RecordPage(widget.storagePath)),
-            ),
-          },
-          icon: Container(
-            width: isMobile ? 20.em : 10.em,
-            height: isMobile ? 20.em : 10.em,
-            decoration: BoxDecoration(
-              color: DefaultColors.special,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(
-              Icons.mic,
-              color: DefaultColors.bg,
-              size: isMobile ? 15.em : 7.5.em,
-            ),
-          ),
-        ),
+        _floatingBtn(isMobile, DefaultColors.func, Icons.upload, () {
+          showMetadataInputDialog(context);
+        }),
+        _floatingBtn(isMobile, DefaultColors.keyword, Icons.search, () {
+          Navigator.push(context, SmoothRouter.builder(Search()));
+        }),
+        _floatingBtn(isMobile, DefaultColors.special, Icons.mic, () {
+          Navigator.push(
+            context,
+            SmoothRouter.builder(RecordPage(widget.storagePath)),
+          );
+        }),
       ],
+    );
+  }
+
+  IconButton _floatingBtn(
+    bool isMobile,
+    Color color,
+    IconData icon,
+    VoidCallback cb,
+  ) {
+    return IconButton(
+      onPressed: cb,
+      icon: Container(
+        width: isMobile ? 20.em : 10.em,
+        height: isMobile ? 20.em : 10.em,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Icon(
+          icon,
+          color: DefaultColors.bg,
+          size: isMobile ? 15.em : 7.5.em,
+        ),
+      ),
     );
   }
 

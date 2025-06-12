@@ -49,6 +49,8 @@
   "settings_reset_spath": "重置储存路径",
   "settings_reset_spath_desc": "在下次打开应用时重新输入储存路径",
   "settings_reset_success": "已重置",
+  "settings_reset_index": "重置索引",
+  "settings_reset_index_desc": "重新建立日志索引",
 
   "download_title": "栅格文件下载",
   "download_perc": "{a}.zip：{b}%",
@@ -56,5 +58,30 @@
   "download_done": "完成",
   "download_exit": "完成",
 
-  "cover_desc": "输入一个字符作为封面："
+  "cover_desc": "输入一个字符作为封面：",
+
+  "metadata_title": "导入音频元数据",
+  "metadata_select_file": "选择音频文件",
+  "metadata_no_file_selected": "未选择文件",
+  "metadata_duration": "时长",
+  "metadata_duration_error": "获取时长失败: {error}",
+  "metadata_select_datetime": "选择日期和时间",
+  "metadata_select_date": "选择日期",
+  "metadata_select_time": "选择时间",
+  "metadata_title_label": "标题",
+  "metadata_title_required": "标题不能为空",
+  "metadata_location_optional": "位置信息（可选）",
+  "metadata_latitude": "纬度",
+  "metadata_latitude_hint": "例如: 34.0522",
+  "metadata_invalid_latitude": "无效纬度（-90~90）",
+  "metadata_longitude": "经度",
+  "metadata_longitude_hint": "例如: -118.2437",
+  "metadata_invalid_longitude": "无效经度（-180~180）",
+  "metadata_cover_label": "封面（单个emoji）",
+  "metadata_cover_required": "请输入一个emoji",
+  "metadata_cancel": "取消",
+  "metadata_import": "导入",
+  "metadata_file_required": "请选择音频文件",
+  "metadata_duration_missing": "无法获取音频时长，请重新选择文件",
+  "metadata_save_error": "导入失败：{msg}"
 }

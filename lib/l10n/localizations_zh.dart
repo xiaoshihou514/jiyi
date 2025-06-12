@@ -146,6 +146,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_reset_success => '已重置';
 
   @override
+  String get settings_reset_index => '重置索引';
+
+  @override
+  String get settings_reset_index_desc => '重新建立日志索引';
+
+  @override
   String get download_title => '栅格文件下载';
 
   @override
@@ -164,4 +170,80 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get cover_desc => '输入一个字符作为封面：';
+
+  @override
+  String get metadata_title => '导入音频元数据';
+
+  @override
+  String get metadata_select_file => '选择音频文件';
+
+  @override
+  String get metadata_no_file_selected => '未选择文件';
+
+  @override
+  String get metadata_duration => '时长';
+
+  @override
+  String metadata_duration_error(Object error) {
+    return '获取时长失败: $error';
+  }
+
+  @override
+  String get metadata_select_datetime => '选择日期和时间';
+
+  @override
+  String get metadata_select_date => '选择日期';
+
+  @override
+  String get metadata_select_time => '选择时间';
+
+  @override
+  String get metadata_title_label => '标题';
+
+  @override
+  String get metadata_title_required => '标题不能为空';
+
+  @override
+  String get metadata_location_optional => '位置信息（可选）';
+
+  @override
+  String get metadata_latitude => '纬度';
+
+  @override
+  String get metadata_latitude_hint => '例如: 34.0522';
+
+  @override
+  String get metadata_invalid_latitude => '无效纬度（-90~90）';
+
+  @override
+  String get metadata_longitude => '经度';
+
+  @override
+  String get metadata_longitude_hint => '例如: -118.2437';
+
+  @override
+  String get metadata_invalid_longitude => '无效经度（-180~180）';
+
+  @override
+  String get metadata_cover_label => '封面（单个emoji）';
+
+  @override
+  String get metadata_cover_required => '请输入一个emoji';
+
+  @override
+  String get metadata_cancel => '取消';
+
+  @override
+  String get metadata_import => '导入';
+
+  @override
+  String get metadata_file_required => '请选择音频文件';
+
+  @override
+  String get metadata_duration_missing => '无法获取音频时长，请重新选择文件';
+
+  @override
+  String metadata_save_error(Object msg) {
+    return '导入失败：$msg';
+  }
 }

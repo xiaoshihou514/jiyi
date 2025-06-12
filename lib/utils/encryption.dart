@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:jiyi/utils/anno.dart';
 import 'package:path/path.dart' as path;
 import 'package:pointycastle/key_derivators/argon2.dart';
 import 'package:pointycastle/pointycastle.dart';
@@ -12,13 +13,12 @@ class Encryption {
   // ignore: constant_identifier_names
   static const ENC_KEY_LEN = ChaCha20Poly1305.KEY_SIZE;
   static bool _init = false;
-  static final _srand = SecureRandom('Fortuna') as FortunaRandom;
   static late final Encryption _instance;
 
   final Uint8List encryptionKey;
-  final Uint8List nouce;
+  late final FortunaRandom rand;
 
-  Encryption({required this.encryptionKey, required this.nouce});
+  Encryption({required this.encryptionKey});
 
   static Encryption get instance => _instance;
 
@@ -57,11 +57,10 @@ class Encryption {
     final seed = Uint8List.fromList(
       List.generate(32, (i) => r.nextInt(1 << 10)),
     );
-    _srand.seed(KeyParameter(seed));
 
-    final nonce = _srand.nextBytes(ChaCha20Poly1305.NONCE_SIZE);
-
-    _instance = Encryption(encryptionKey: buf, nouce: nonce);
+    _instance = Encryption(encryptionKey: buf);
+    _instance.rand = SecureRandom('Fortuna') as FortunaRandom;
+    _instance.rand.seed(KeyParameter(seed));
     _init = true;
   }
 
@@ -79,28 +78,24 @@ class Encryption {
     return Encryption.instance._encrypt(data);
   }
 
+  @DeepSeek()
   Future<Uint8List> _encrypt(Uint8List data) async {
     final encEngine = AEADCipher("ChaCha20-Poly1305");
+    final nonce = rand.nextBytes(ChaCha20Poly1305.NONCE_SIZE);
     encEngine.init(
       true,
-      ParametersWithIV<KeyParameter>(KeyParameter(encryptionKey), nouce),
+      ParametersWithIV<KeyParameter>(KeyParameter(encryptionKey), nonce),
     );
 
     // input len + tag len
     final out = Uint8List(data.length + encEngine.mac.length);
 
     // encrypt
-    final processedLen = encEngine.processBytes(data, 0, data.length, out, 0);
+    int processedLen = encEngine.processBytes(data, 0, data.length, out, 0);
 
-    // append tag
-    final totalLen = processedLen + encEngine.doFinal(out, processedLen);
+    processedLen += encEngine.doFinal(out, processedLen);
 
-    // encrypted + tag + nouce
-    final result = BytesBuilder()
-      ..add(out.sublist(0, totalLen))
-      ..add(nouce);
-
-    return result.toBytes();
+    return Uint8List.fromList([...out.sublist(0, processedLen), ...nonce]);
   }
 
   static Future<Uint8List> decrypt(Uint8List data) async {
@@ -108,20 +103,26 @@ class Encryption {
     return instance._decrypt(data);
   }
 
+  @Grok()
   Future<Uint8List> _decrypt(Uint8List data) async {
-    final nonceSize = ChaCha20Poly1305.NONCE_SIZE;
+    // Extract nonce (last 12 bytes)
+    final nonceSize = ChaCha20Poly1305.NONCE_SIZE; // 12 bytes
     final nonce = data.sublist(data.length - nonceSize);
+
+    // Extract ciphertext + tag (everything except the nonce)
     final ciphertextWithTag = data.sublist(0, data.length - nonceSize);
 
+    // Initialize decryption engine
     final decEngine = AEADCipher("ChaCha20-Poly1305");
     decEngine.init(
-      false,
+      false, // Decryption mode
       ParametersWithIV<KeyParameter>(KeyParameter(encryptionKey), nonce),
     );
 
+    // Output buffer size: ciphertext length minus tag size (16 bytes)
     final out = Uint8List(ciphertextWithTag.length - decEngine.mac.length);
 
-    // decrypt
+    // Process the entire ciphertext + tag
     final len = decEngine.processBytes(
       ciphertextWithTag,
       0,
@@ -130,6 +131,10 @@ class Encryption {
       0,
     );
 
-    return out.sublist(0, len);
+    // Finalize decryption and verify tag
+    final finalLen = len + decEngine.doFinal(out, len);
+
+    // Return the decrypted data
+    return out.sublist(0, finalLen);
   }
 }
