@@ -14,7 +14,9 @@ import 'package:jiyi/utils/authenticator.dart';
 import 'package:jiyi/pages/record.dart';
 import 'package:jiyi/utils/encryption.dart';
 import 'package:jiyi/utils/io.dart';
+import 'package:jiyi/utils/notifier.dart';
 import 'package:jiyi/utils/smooth_router.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   final bool skipEncryption;
@@ -159,8 +161,11 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        _floatingBtn(isMobile, DefaultColors.func, Icons.upload, () {
-          showMetadataInputDialog(context);
+        _floatingBtn(isMobile, DefaultColors.func, Icons.upload, () async {
+          await showMetadataInputDialog(context);
+          if (mounted) {
+            context.read<Notifier>().trigger();
+          }
         }),
         _floatingBtn(isMobile, DefaultColors.keyword, Icons.search, () {
           Navigator.push(context, SmoothRouter.builder(Search()));

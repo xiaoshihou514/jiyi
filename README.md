@@ -1,3 +1,3 @@
-# jiyi
+# 记忆
 
-Cross platform encrypted audio logging app (Android & Linux)
+跨平台加密语音日志应用

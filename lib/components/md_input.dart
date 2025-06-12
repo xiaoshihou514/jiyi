@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_soloud/flutter_soloud.dart';
 import 'package:intl/intl.dart';
+
 import 'package:jiyi/components/spinner.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
@@ -165,7 +166,8 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
         style: TextStyle(
           color: DefaultColors.fg,
           fontSize: 4.5.em,
-        ), // 18.em / 4 = 4.5.em
+          fontFamily: "朱雀仿宋",
+        ),
       ),
       content: SingleChildScrollView(
         child: Form(
@@ -182,7 +184,7 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
                 ),
                 label: Text(
                   l.metadata_select_file,
-                  style: TextStyle(fontSize: 3.5.em), // 14.em / 4 = 3.5.em
+                  style: TextStyle(fontSize: 3.5.em, fontFamily: "朱雀仿宋"),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: DefaultColors.shade_2,
@@ -197,7 +199,11 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
               SizedBox(height: 2.em),
               Text(
                 _audioFile?.path ?? l.metadata_no_file_selected,
-                style: TextStyle(color: DefaultColors.shade_5, fontSize: 3.em),
+                style: TextStyle(
+                  color: DefaultColors.shade_5,
+                  fontSize: 3.em,
+                  fontFamily: "朱雀仿宋",
+                ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -206,11 +212,7 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
               if (_isLoadingDuration)
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 2.em),
-                  child: Spinner(
-                    Icons.sync,
-                    DefaultColors.keyword,
-                    2.5.em,
-                  ), // 10.em / 4 = 2.5.em
+                  child: Spinner(Icons.sync, DefaultColors.keyword, 2.5.em),
                 )
               else if (_audioDuration != null)
                 Padding(
@@ -224,7 +226,8 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
                         '${l.metadata_duration}: ${_formatDuration(_audioDuration!)}',
                         style: TextStyle(
                           color: DefaultColors.fg,
-                          fontSize: 3.5.em, // 14.em / 4 = 3.5.em
+                          fontSize: 3.5.em,
+                          fontFamily: "朱雀仿宋",
                         ),
                       ),
                     ],
@@ -237,7 +240,8 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
                     _durationError!,
                     style: TextStyle(
                       color: DefaultColors.error,
-                      fontSize: 3.5.em, // 14.em / 4 = 3.5.em
+                      fontSize: 3.5.em,
+                      fontFamily: "朱雀仿宋",
                     ),
                   ),
                 ),
@@ -261,7 +265,8 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
                   style: TextStyle(
                     color: DefaultColors.fg,
                     fontSize: 3.5.em,
-                  ), // 14.em / 4 = 3.5.em
+                    fontFamily: "朱雀仿宋",
+                  ),
                 ),
                 trailing: Icon(
                   Icons.calendar_today,
@@ -281,7 +286,8 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
                 style: TextStyle(
                   color: DefaultColors.fg,
                   fontSize: 3.5.em,
-                ), // 14.em / 4 = 3.5.em
+                  fontFamily: "朱雀仿宋",
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return l.metadata_title_required;
@@ -296,7 +302,8 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
                 style: TextStyle(
                   color: DefaultColors.fg,
                   fontWeight: FontWeight.bold,
-                  fontSize: 3.5.em, // 14.em / 4 = 3.5.em
+                  fontSize: 3.5.em,
+                  fontFamily: "朱雀仿宋",
                 ),
               ),
               SizedBox(height: 2.em),
@@ -314,7 +321,8 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
                       ),
                       style: TextStyle(
                         color: DefaultColors.fg,
-                        fontSize: 3.5.em, // 14.em / 4 = 3.5.em
+                        fontSize: 3.5.em,
+                        fontFamily: "朱雀仿宋",
                       ),
                       validator: (value) {
                         if (value != null && value.isNotEmpty) {
@@ -340,7 +348,8 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
                       ),
                       style: TextStyle(
                         color: DefaultColors.fg,
-                        fontSize: 3.5.em, // 14.em / 4 = 3.5.em
+                        fontSize: 3.5.em,
+                        fontFamily: "朱雀仿宋",
                       ),
                       validator: (value) {
                         if (value != null && value.isNotEmpty) {
@@ -366,7 +375,8 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
                 style: TextStyle(
                   color: DefaultColors.fg,
                   fontSize: 3.5.em,
-                ), // 14.em / 4 = 3.5.em
+                  fontFamily: "朱雀仿宋",
+                ),
                 maxLength: 1,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -387,7 +397,8 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
             style: TextStyle(
               color: DefaultColors.error,
               fontSize: 3.5.em,
-            ), // 14.em / 4 = 3.5.em
+              fontFamily: "朱雀仿宋",
+            ),
           ),
         ),
         _isSaving
@@ -409,7 +420,7 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
                     : () {},
                 child: Text(
                   l.metadata_import,
-                  style: TextStyle(fontSize: 3.5.em), // 14.em / 4 = 3.5.em
+                  style: TextStyle(fontSize: 3.5.em, fontFamily: "朱雀仿宋"),
                 ),
               ),
       ],
@@ -420,10 +431,15 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
     return InputDecoration(
       labelText: labelText,
       hintText: hintText,
-      labelStyle: TextStyle(color: DefaultColors.shade_5, fontSize: 3.5.em),
+      labelStyle: TextStyle(
+        color: DefaultColors.shade_5,
+        fontSize: 3.5.em,
+        fontFamily: "朱雀仿宋",
+      ),
       floatingLabelStyle: TextStyle(
         color: DefaultColors.func,
         fontSize: 3.5.em,
+        fontFamily: "朱雀仿宋",
       ),
       border: OutlineInputBorder(
         borderSide: BorderSide(color: DefaultColors.shade_4, width: 0.25.em),
@@ -497,8 +513,8 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
   }
 }
 
-void showMetadataInputDialog(BuildContext context) {
-  showDialog(
+Future<void> showMetadataInputDialog(BuildContext context) async {
+  await showDialog(
     context: context,
     builder: (context) => const MetadataInputDialog(),
   );

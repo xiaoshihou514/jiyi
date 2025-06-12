@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
+import 'package:jiyi/components/spinner.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/utils/em.dart';
+import 'package:jiyi/utils/io.dart';
 import 'package:jiyi/utils/map_setting.dart';
+import 'package:jiyi/utils/metadata.dart';
+import 'package:jiyi/utils/notifier.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
 import 'package:latlong2/latlong.dart';
 import 'package:http_cache_file_store/http_cache_file_store.dart';
 import 'package:flutter_map_cache/flutter_map_cache.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MapView extends StatefulWidget {
@@ -91,6 +96,7 @@ class _MapViewState extends State<MapView> {
             : null,
         tileProvider: FileTileProvider(),
       ),
+      _markerLayer(),
     ];
     if (s.isOSM) {
       layers.add(_osmAttribution());
@@ -139,6 +145,7 @@ class _MapViewState extends State<MapView> {
                 ),
               ),
             ),
+            _markerLayer(),
           ];
           if (s.isOSM) {
             layers.add(_osmAttribution());
@@ -171,6 +178,27 @@ class _MapViewState extends State<MapView> {
     );
   }
 
+  Widget _markerLayer() {
+    return Consumer<Notifier>(
+      builder: (context, counter, child) => FutureBuilder<List<Metadata>>(
+        future: IO.indexFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: Spinner(Icons.sync, DefaultColors.keyword, 40.em),
+            );
+          }
+          return _markers(
+            snapshot.data
+                    ?.map((m) => LatLng(m.latitude, m.longitude))
+                    .toList() ??
+                [],
+          );
+        },
+      ),
+    );
+  }
+
   Widget _osmAttribution() {
     return RichAttributionWidget(
       popupBackgroundColor: DefaultColors.shade_3,
@@ -186,25 +214,36 @@ class _MapViewState extends State<MapView> {
     );
   }
 
-  Widget _markers(List<Marker> markers) {
+  Widget _markers(List<LatLng> markers) {
     return MarkerClusterLayerWidget(
       options: MarkerClusterLayerOptions(
         maxClusterRadius: 45,
-        size: const Size(40, 40),
+        size: Size(5.em, 5.em),
         alignment: Alignment.center,
         padding: const EdgeInsets.all(50),
-        maxZoom: 15,
-        markers: markers,
+        maxZoom: double.infinity,
+        markers: markers.map((p) {
+          return Marker(
+            child: Icon(
+              Icons.pin_drop,
+              color: DefaultColors.keyword,
+              size: 8.em,
+            ),
+            point: p,
+          );
+        }).toList(),
         builder: (context, markers) {
           return Container(
+            height: 10.em,
+            width: 10.em,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              color: Colors.blue,
+              color: DefaultColors.keyword,
             ),
             child: Center(
               child: Text(
                 markers.length.toString(),
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: DefaultColors.bg),
               ),
             ),
           );

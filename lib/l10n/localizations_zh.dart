@@ -225,10 +225,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get metadata_invalid_longitude => '无效经度（-180~180）';
 
   @override
-  String get metadata_cover_label => '封面（单个emoji）';
+  String get metadata_cover_label => '封面（单个字符）';
 
   @override
-  String get metadata_cover_required => '请输入一个emoji';
+  String get metadata_cover_required => '请输入一个字符';
 
   @override
   String get metadata_cancel => '取消';

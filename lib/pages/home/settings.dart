@@ -508,7 +508,7 @@ class _MapSettingsState extends State<MapSettings> {
         urlFmt: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
         name: l.settings_map_osm,
         path: _defaultPath,
-        maxZoom: 16,
+        maxZoom: 19,
       );
     } else if (name == l.settings_map_amap) {
       _setting = MapSetting(

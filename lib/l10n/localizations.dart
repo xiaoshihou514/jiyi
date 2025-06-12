@@ -517,13 +517,13 @@ abstract class AppLocalizations {
   /// No description provided for @metadata_cover_label.
   ///
   /// In zh, this message translates to:
-  /// **'封面（单个emoji）'**
+  /// **'封面（单个字符）'**
   String get metadata_cover_label;
 
   /// No description provided for @metadata_cover_required.
   ///
   /// In zh, this message translates to:
-  /// **'请输入一个emoji'**
+  /// **'请输入一个字符'**
   String get metadata_cover_required;
 
   /// No description provided for @metadata_cancel.
