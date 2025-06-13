@@ -301,6 +301,7 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
                   '${l.metadata_title_label}*',
                   null,
                 ),
+                cursorColor: DefaultColors.func,
                 style: TextStyle(
                   color: DefaultColors.fg,
                   fontSize: 3.5.em,
@@ -329,6 +330,7 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
                 children: [
                   Expanded(
                     child: TextFormField(
+                      cursorColor: DefaultColors.func,
                       controller: _latController,
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
@@ -356,6 +358,7 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
                   SizedBox(width: 2.em),
                   Expanded(
                     child: TextFormField(
+                      cursorColor: DefaultColors.func,
                       controller: _lonController,
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
@@ -385,6 +388,7 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
               SizedBox(height: 4.em),
               // 封面emoji输入
               TextFormField(
+                cursorColor: DefaultColors.func,
                 controller: _coverController,
                 decoration: _buildInputDecoration(
                   '${l.metadata_cover_label}*',
@@ -487,14 +491,15 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
 
     setState(() => _isSaving = true);
 
+    var timestamp = DateTime(
+      _selectedDate!.year,
+      _selectedDate!.month,
+      _selectedDate!.day,
+      _selectedTime!.hour,
+      _selectedTime!.minute,
+    );
     final metadata = Metadata(
-      time: DateTime(
-        _selectedDate!.year,
-        _selectedDate!.month,
-        _selectedDate!.day,
-        _selectedTime!.hour,
-        _selectedTime!.minute,
-      ),
+      time: timestamp,
       length: _audioDuration!,
       title: _titleController.text,
       latitude: _latController.text.isNotEmpty
@@ -504,6 +509,8 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
           ? double.parse(_lonController.text)
           : 0.0,
       cover: _coverController.text,
+      path: (timestamp.toString() + DateTime.now().toString()).hashCode
+          .toString(),
       transcript: '',
     );
 

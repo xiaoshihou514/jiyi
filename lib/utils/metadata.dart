@@ -12,6 +12,7 @@ class Metadata {
   final double longitude;
   // length = 1 emoji
   final String cover;
+  final String path;
   // TODO: not used
   final String transcript;
 
@@ -22,6 +23,7 @@ class Metadata {
     required this.latitude,
     required this.longitude,
     required this.cover,
+    required this.path,
     required this.transcript,
   });
 

@@ -9,12 +9,17 @@ import 'package:jiyi/utils/encryption.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
 import 'package:jiyi/utils/metadata.dart';
 
+extension on DateTime {
+  DateTime get trim => DateTime(year, month, day);
+}
+
 abstract class IO {
   // ignore: non_constant_identifier_names
   static late final String STORAGE;
   static late List<Metadata> _index;
   static late final File indexFile;
   static bool _init = false;
+  static final Map<DateTime, List<File>> _entriesByDate = {};
 
   @DeepSeek()
   static Completer<List<Metadata>> completer = Completer();
@@ -41,6 +46,11 @@ abstract class IO {
             ),
       );
       _index = await indexFuture;
+      for (final md in _index) {
+        _entriesByDate
+            .putIfAbsent(md.time.trim, () => <File>[])
+            .add(File(path.join(STORAGE, md.path)));
+      }
     } else {
       await rebuild();
     }
@@ -49,8 +59,10 @@ abstract class IO {
 
   static Future<void> rebuild() async {
     final result = <Metadata>[];
-    completer = Completer();
-    indexFuture = completer.future;
+    if (completer.isCompleted) {
+      completer = Completer();
+      indexFuture = completer.future;
+    }
 
     if (indexFile.existsSync()) {
       indexFile.deleteSync();
@@ -65,6 +77,9 @@ abstract class IO {
           .then(utf8.decode)
           .then(jsonDecode)
           .then((data) => Metadata.fromDyn(data as Map<String, dynamic>));
+      _entriesByDate
+          .putIfAbsent(md.time.trim, () => <File>[])
+          .add(File(path.join(STORAGE, md.path)));
       result.add(md);
     }
     _index = result;
@@ -85,14 +100,20 @@ abstract class IO {
   }
 
   static Future<void> save(Uint8List decrypted, Metadata md) async {
-    final fname = (md.time.toString() + DateTime.now().toString()).hashCode;
     await File(
-      path.join(STORAGE, "$fname.cd"),
+      path.join(STORAGE, "${md.path}.cd"),
     ).writeAsBytes(await Encryption.encrypt(decrypted));
     await File(
-      path.join(STORAGE, "$fname.bq"),
+      path.join(STORAGE, "${md.path}.bq"),
     ).writeAsBytes(await Encryption.encrypt(utf8.encode(md.json)), flush: true);
   }
 
-  static void addEntry(Metadata md) => _index.add(md);
+  static void addEntry(Metadata md) {
+    _index.add(md);
+    _entriesByDate
+        .putIfAbsent(md.time.trim, () => <File>[])
+        .add(File(path.join(STORAGE, md.path)));
+  }
+
+  static List<File> entriesByDay(DateTime day) => _entriesByDate[day] ?? [];
 }

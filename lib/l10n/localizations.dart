@@ -409,8 +409,14 @@ abstract class AppLocalizations {
   /// No description provided for @cover_desc.
   ///
   /// In zh, this message translates to:
-  /// **'输入一个字符作为封面：'**
+  /// **'为日志添加标题和封面'**
   String get cover_desc;
+
+  /// No description provided for @cover_desc_hint.
+  ///
+  /// In zh, this message translates to:
+  /// **'输入一个emoji'**
+  String get cover_desc_hint;
 
   /// No description provided for @metadata_title.
   ///
@@ -549,6 +555,12 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'导入失败：{msg}'**
   String metadata_save_error(Object msg);
+
+  /// No description provided for @untitled_cd.
+  ///
+  /// In zh, this message translates to:
+  /// **'未命名磁带'**
+  String get untitled_cd;
 }
 
 class _AppLocalizationsDelegate

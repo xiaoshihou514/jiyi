@@ -7,9 +7,9 @@ import 'package:geolocator_platform_interface/geolocator_platform_interface.dart
 import 'package:flutter_recorder/flutter_recorder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:jiyi/utils/anno.dart';
 import 'package:jiyi/utils/encryption.dart';
 import 'package:jiyi/utils/notifier.dart';
-import 'package:jiyi/utils/secure_storage.dart' as ss;
 import 'package:latlong2/latlong.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -239,6 +239,17 @@ class _RecordPageState extends State<RecordPage> {
 
     // do this in another thread
     final coord = await _getLoc();
+
+    if (!mounted) return;
+    final l = AppLocalizations.of(context)!;
+    final titleAndCover =
+        await showDialog<(String, String)>(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => TitleAndCoverInput(),
+        ) ??
+        (l.untitled_cd, "❔");
+
     await compute(encryptAndWrite, {
       'bytes': _bytes,
       'enc': Encryption.instance,
@@ -246,18 +257,12 @@ class _RecordPageState extends State<RecordPage> {
       'md': Metadata(
         time: _startTime,
         length: _duration,
-        title: _startTime.toString(),
+        title: titleAndCover.$1,
         latitude: coord.latitude,
         longitude: coord.longitude,
-        cover: context.mounted
-            ? (await showDialog<String>(
-                    // ignore: use_build_context_synchronously
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (context) => SingleCharInput(),
-                  ) ??
-                  "❔")
-            : "❔",
+        cover: titleAndCover.$2,
+        path: (_startTime.toString() + DateTime.now().toString()).hashCode
+            .toString(),
         transcript: "TODO", // TODO: implement transcription using local STT
       ).dyn,
     });
@@ -380,26 +385,50 @@ class _RecordPageState extends State<RecordPage> {
   }
 }
 
-class SingleCharInput extends StatefulWidget {
-  const SingleCharInput({super.key});
+@DeepSeek()
+class TitleAndCoverInput extends StatefulWidget {
+  const TitleAndCoverInput({super.key});
 
   @override
-  State<SingleCharInput> createState() => _SingleCharInputState();
+  State<TitleAndCoverInput> createState() => _TitleAndCoverInputState();
 }
 
-class _SingleCharInputState extends State<SingleCharInput> {
-  final TextEditingController _controller = TextEditingController();
+class _TitleAndCoverInputState extends State<TitleAndCoverInput> {
+  final TextEditingController _coverController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
 
   @override
   void dispose() {
-    _controller.dispose();
+    _coverController.dispose();
+    _titleController.dispose();
     super.dispose();
   }
 
-  void _submit() {
-    Navigator.pop(
-      context,
-      _controller.text.length == 1 ? _controller.text : "❔",
+  void _submit(AppLocalizations l) {
+    Navigator.pop(context, (
+      _titleController.text.isEmpty ? l.untitled_cd : _titleController.text,
+      _coverController.text.length == 1 ? _coverController.text : "❔",
+    ));
+  }
+
+  InputDecoration _buildInputDecoration(String labelText, {String? hintText}) {
+    return InputDecoration(
+      labelText: labelText,
+      hintText: hintText,
+      labelStyle: TextStyle(color: DefaultColors.shade_5, fontSize: 3.5.em),
+      floatingLabelStyle: TextStyle(
+        color: DefaultColors.func,
+        fontSize: 3.5.em,
+      ),
+      border: OutlineInputBorder(
+        borderSide: BorderSide(color: DefaultColors.shade_4, width: 0.25.em),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: DefaultColors.shade_4, width: 0.25.em),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: DefaultColors.func, width: 0.5.em),
+      ),
     );
   }
 
@@ -408,63 +437,60 @@ class _SingleCharInputState extends State<SingleCharInput> {
     final l = AppLocalizations.of(context)!;
 
     return AlertDialog(
-      backgroundColor: DefaultColors.shade_2,
+      backgroundColor: DefaultColors.bg,
       title: Text(
         l.cover_desc,
         style: TextStyle(
-          decoration: TextDecoration.none,
-          color: DefaultColors.info,
-          fontFamily: "朱雀仿宋",
-          fontSize: 4.em,
+          color: DefaultColors.fg,
+          fontSize: 4.5.em,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // 标题输入
+            TextFormField(
+              controller: _titleController,
+              cursorColor: DefaultColors.func,
+              decoration: _buildInputDecoration(l.metadata_title_label),
+              style: TextStyle(color: DefaultColors.fg, fontSize: 4.em),
+              textInputAction: TextInputAction.next,
+            ),
+            SizedBox(height: 4.em),
+
+            // 封面emoji输入
+            TextFormField(
+              controller: _coverController,
+              cursorColor: DefaultColors.func,
+              decoration: _buildInputDecoration(
+                l.metadata_cover_label,
+                hintText: l.cover_desc_hint,
+              ),
+              style: TextStyle(
+                color: DefaultColors.fg,
+                fontSize: 4.em, // 放大emoji显示
+              ),
+              maxLength: 1,
+              textAlign: TextAlign.center,
+              textInputAction: TextInputAction.done,
+              onFieldSubmitted: (_) => _submit(l),
+            ),
+          ],
         ),
       ),
       actions: [
-        TextButton(
-          onPressed: () => _submit(),
-          child: Text(
-            l.download_exit,
-            style: TextStyle(
-              decoration: TextDecoration.none,
-              color: DefaultColors.constant,
-              fontFamily: "朱雀仿宋",
-              fontSize: 3.em,
-            ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: DefaultColors.func,
+            foregroundColor: DefaultColors.bg,
+            padding: EdgeInsets.symmetric(horizontal: 4.em, vertical: 2.em),
           ),
+          onPressed: () => _submit(l),
+          child: Text(l.download_done, style: TextStyle(fontSize: 3.5.em)),
         ),
       ],
-      content: Padding(
-        padding: EdgeInsets.all(1.em),
-        child: Theme(
-          data: Theme.of(context).copyWith(
-            textSelectionTheme: TextSelectionThemeData(
-              selectionColor: DefaultColors.shade_3,
-              selectionHandleColor: DefaultColors.shade_4,
-            ),
-          ),
-          child: TextField(
-            controller: _controller,
-            maxLength: 1,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              decoration: TextDecoration.none,
-              color: DefaultColors.fg,
-              fontFamily: "朱雀仿宋",
-              fontSize: 3.em,
-            ),
-            autofocus: true,
-            decoration: InputDecoration(
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: DefaultColors.fg),
-              ),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: DefaultColors.fg),
-              ),
-            ),
-            cursorColor: DefaultColors.shade_6,
-            onSubmitted: (_) => _submit(),
-          ),
-        ),
-      ),
     );
   }
 }

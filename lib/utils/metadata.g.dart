@@ -13,6 +13,7 @@ Metadata _$MetadataFromJson(Map<String, dynamic> json) => Metadata(
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['longitude'] as num).toDouble(),
       cover: json['cover'] as String,
+      path: json['path'] as String,
       transcript: json['transcript'] as String,
     );
 
@@ -23,5 +24,6 @@ Map<String, dynamic> _$MetadataToJson(Metadata instance) => <String, dynamic>{
       'latitude': instance.latitude,
       'longitude': instance.longitude,
       'cover': instance.cover,
+      'path': instance.path,
       'transcript': instance.transcript,
     };

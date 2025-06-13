@@ -169,7 +169,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get download_exit => '完成';
 
   @override
-  String get cover_desc => '输入一个字符作为封面：';
+  String get cover_desc => '为日志添加标题和封面';
+
+  @override
+  String get cover_desc_hint => '输入一个emoji';
 
   @override
   String get metadata_title => '导入音频元数据';
@@ -243,4 +246,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String metadata_save_error(Object msg) {
     return '导入失败：$msg';
   }
+
+  @override
+  String get untitled_cd => '未命名磁带';
 }
