@@ -561,6 +561,12 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'未命名磁带'**
   String get untitled_cd;
+
+  /// No description provided for @playlist_title.
+  ///
+  /// In zh, this message translates to:
+  /// **'当日记录（{len}）'**
+  String playlist_title(Object len);
 }
 
 class _AppLocalizationsDelegate

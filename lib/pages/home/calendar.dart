@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:jiyi/components/spinner.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/pages/player.dart';
@@ -11,7 +13,7 @@ import 'package:jiyi/utils/io.dart';
 import 'package:jiyi/utils/metadata.dart';
 import 'package:jiyi/utils/notifier.dart';
 import 'package:jiyi/utils/smooth_router.dart';
-import 'package:provider/provider.dart';
+import 'package:jiyi/utils/text_color.dart';
 
 @DeepSeek()
 class Calendar extends StatefulWidget {
@@ -131,7 +133,10 @@ class _CalendarState extends State<Calendar> {
           onPressed: () {
             if (context.mounted) {
               if (covers.length == 1) {
-                Navigator.push(context, SmoothRouter.builder(Player(date)));
+                Navigator.push(
+                  context,
+                  SmoothRouter.builder(Player(IO.metadataByDay(date).first)),
+                );
               } else {
                 Navigator.push(context, SmoothRouter.builder(Playlist(date)));
               }
@@ -148,7 +153,7 @@ class _CalendarState extends State<Calendar> {
                     width: size,
                     height: size,
                     decoration: BoxDecoration(
-                      color: _getStatusColor(shown[index]),
+                      color: getStatusColor(shown[index]),
                       shape: BoxShape.circle,
                       border: Border.all(color: DefaultColors.bg, width: 1.em),
                     ),
@@ -171,12 +176,5 @@ class _CalendarState extends State<Calendar> {
         ),
       ],
     );
-  }
-
-  Color _getStatusColor(String emoji) {
-    // 根据emoji生成一致的颜色
-    final hash = emoji.codeUnits.fold(0, (prev, code) => prev + code);
-    final hue = hash % 360;
-    return HSLColor.fromAHSL(1.0, hue.toDouble(), 0.7, 0.6).toColor();
   }
 }

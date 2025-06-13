@@ -249,4 +249,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get untitled_cd => '未命名磁带';
+
+  @override
+  String playlist_title(Object len) {
+    return '当日记录（$len）';
+  }
 }

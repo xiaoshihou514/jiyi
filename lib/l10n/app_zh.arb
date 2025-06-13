@@ -85,5 +85,7 @@
   "metadata_duration_missing": "无法获取音频时长，请重新选择文件",
   "metadata_save_error": "导入失败：{msg}",
 
-  "untitled_cd": "未命名磁带"
+  "untitled_cd": "未命名磁带",
+
+  "playlist_title": "当日记录（{len}）"
 }

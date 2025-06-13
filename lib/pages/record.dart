@@ -7,9 +7,6 @@ import 'package:geolocator_platform_interface/geolocator_platform_interface.dart
 import 'package:flutter_recorder/flutter_recorder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:jiyi/utils/anno.dart';
-import 'package:jiyi/utils/encryption.dart';
-import 'package:jiyi/utils/notifier.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +15,9 @@ import 'package:wav/wav_format.dart';
 
 import 'package:jiyi/components/soundviz.dart';
 import 'package:jiyi/components/tape.dart';
+import 'package:jiyi/utils/anno.dart';
+import 'package:jiyi/utils/encryption.dart';
+import 'package:jiyi/utils/notifier.dart';
 import 'package:jiyi/components/spinner.dart';
 import 'package:jiyi/utils/io.dart';
 import 'package:jiyi/utils/metadata.dart';

@@ -19,7 +19,7 @@ abstract class IO {
   static late List<Metadata> _index;
   static late final File indexFile;
   static bool _init = false;
-  static final Map<DateTime, List<File>> _entriesByDate = {};
+  static final Map<DateTime, List<Metadata>> _metadataByDate = {};
 
   @DeepSeek()
   static Completer<List<Metadata>> completer = Completer();
@@ -47,9 +47,7 @@ abstract class IO {
       );
       _index = await indexFuture;
       for (final md in _index) {
-        _entriesByDate
-            .putIfAbsent(md.time.trim, () => <File>[])
-            .add(File(path.join(STORAGE, md.path)));
+        _metadataByDate.putIfAbsent(md.time.trim, () => []).add(md);
       }
     } else {
       await rebuild();
@@ -77,9 +75,7 @@ abstract class IO {
           .then(utf8.decode)
           .then(jsonDecode)
           .then((data) => Metadata.fromDyn(data as Map<String, dynamic>));
-      _entriesByDate
-          .putIfAbsent(md.time.trim, () => <File>[])
-          .add(File(path.join(STORAGE, md.path)));
+      _metadataByDate.putIfAbsent(md.time.trim, () => []).add(md);
       result.add(md);
     }
     _index = result;
@@ -110,10 +106,15 @@ abstract class IO {
 
   static void addEntry(Metadata md) {
     _index.add(md);
-    _entriesByDate
-        .putIfAbsent(md.time.trim, () => <File>[])
-        .add(File(path.join(STORAGE, md.path)));
+    _metadataByDate.putIfAbsent(md.time.trim, () => []).add(md);
   }
 
-  static List<File> entriesByDay(DateTime day) => _entriesByDate[day] ?? [];
+  static Future<Uint8List> read(String entry) async {
+    return await Encryption.decrypt(
+      await File(path.join(STORAGE, "$entry.cd")).readAsBytes(),
+    );
+  }
+
+  static List<Metadata> metadataByDay(DateTime day) =>
+      _metadataByDate[day] ?? [];
 }
