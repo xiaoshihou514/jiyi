@@ -45,6 +45,7 @@ dependencies:
   flutter_soloud: ^3.1.10
   provider: ^6.1.5
   audioplayers: ^6.4.0
+  icons_launcher: ^3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -60,6 +61,14 @@ flutter_app_name_localization:
     - locale: "en"
       name: "jiyi"
 
+icons_launcher:
+  image_path: "assets/icon.png"
+  platforms:
+    android:
+      enable: true
+    linux:
+      enable: true
+
 flutter:
   uses-material-design: true
   generate: true
@@ -67,10 +76,10 @@ flutter:
   fonts:
     - family: 851手写杂书体
       fonts:
-        - asset: fonts/851手写杂书体.ttf
+        - asset: assets/fonts/851手写杂书体.ttf
     - family: 朱雀仿宋
       fonts:
-        - asset: fonts/朱雀仿宋.ttf
+        - asset: assets/fonts/朱雀仿宋.ttf
     - family: digital7-mono
       fonts:
-        - asset: fonts/digital-7-mono.ttf
+        - asset: assets/fonts/digital-7-mono.ttf

@@ -639,6 +639,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
+  icons_launcher:
+    dependency: "direct main"
+    description:
+      name: icons_launcher
+      sha256: "2949eef3d336028d89133f69ef221d877e09deed04ebd8e738ab4a427850a7a2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.1"
+  image:
+    dependency: transitive
+    description:
+      name: image
+      sha256: "4e973fcf4caae1a4be2fa0a13157aa38a8f9cb049db6529aa00b4d71abc4d928"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.5.4"
   infinite_listview:
     dependency: transitive
     description:
@@ -1212,6 +1228,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.1"
+  universal_io:
+    dependency: transitive
+    description:
+      name: universal_io
+      sha256: "1722b2dcc462b4b2f3ee7d188dad008b6eb4c40bbd03a3de451d82c78bba9aad"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.2"
   url_launcher:
     dependency: "direct main"
     description:
