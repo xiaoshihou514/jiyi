@@ -7,4 +7,9 @@ class StopModel with ChangeNotifier {
     value = !value;
     notifyListeners();
   }
+
+  void set(bool newValue) {
+    value = newValue;
+    notifyListeners();
+  }
 }

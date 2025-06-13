@@ -6,34 +6,20 @@ import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/pages/player.dart';
 import 'package:jiyi/utils/anno.dart';
 import 'package:jiyi/utils/em.dart';
-import 'package:jiyi/utils/io.dart';
 import 'package:jiyi/utils/metadata.dart';
 import 'package:jiyi/utils/smooth_router.dart';
 import 'package:jiyi/utils/text_color.dart';
 
 @DeepSeek()
 class Playlist extends StatefulWidget {
-  final DateTime _day;
-  const Playlist(this._day, {super.key});
+  final List<Metadata> _mds;
+  const Playlist(this._mds, {super.key});
 
   @override
   State<Playlist> createState() => _PlaylistState();
 }
 
 class _PlaylistState extends State<Playlist> {
-  List<Metadata> _entries = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _loadEntries();
-  }
-
-  Future<void> _loadEntries() async {
-    final entries = IO.metadataByDay(widget._day);
-    setState(() => _entries = entries);
-  }
-
   String _formatDuration(Duration duration) {
     final hours = duration.inHours;
     final minutes = duration.inMinutes.remainder(60);
@@ -47,7 +33,6 @@ class _PlaylistState extends State<Playlist> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
-    final dateStr = DateFormat('yyyy.MM.dd').format(widget._day);
 
     return Scaffold(
       backgroundColor: DefaultColors.bg,
@@ -58,13 +43,6 @@ class _PlaylistState extends State<Playlist> {
           icon: Padding(
             padding: EdgeInsets.all(2.em),
             child: Icon(Icons.arrow_back, color: DefaultColors.fg, size: 8.em),
-          ),
-        ),
-        title: Padding(
-          padding: EdgeInsets.only(top: 4.em),
-          child: Text(
-            dateStr,
-            style: TextStyle(color: DefaultColors.fg, fontSize: 8.em),
           ),
         ),
       ),
@@ -78,8 +56,9 @@ class _PlaylistState extends State<Playlist> {
                 Icon(Icons.list, color: DefaultColors.func, size: 10.em),
                 SizedBox(width: 4.em),
                 Text(
-                  l.playlist_title(_entries.length),
+                  l.playlist_title(widget._mds.length),
                   style: TextStyle(
+                    fontFamily: "朱雀仿宋",
                     color: DefaultColors.fg,
                     fontSize: 8.em,
                     fontWeight: FontWeight.bold,
@@ -93,11 +72,11 @@ class _PlaylistState extends State<Playlist> {
           Expanded(
             child: ListView.separated(
               padding: EdgeInsets.symmetric(horizontal: 6.em),
-              itemCount: _entries.length,
+              itemCount: widget._mds.length,
               separatorBuilder: (_, __) =>
                   Divider(height: 4.em, color: DefaultColors.shade_3),
               itemBuilder: (context, index) {
-                final entry = _entries[index];
+                final entry = widget._mds[index];
                 return _buildLogItem(entry, index + 1);
               },
             ),
@@ -126,7 +105,11 @@ class _PlaylistState extends State<Playlist> {
             alignment: Alignment.center,
             child: Text(
               '$number',
-              style: TextStyle(color: DefaultColors.shade_5, fontSize: 6.em),
+              style: TextStyle(
+                fontFamily: "朱雀仿宋",
+                color: DefaultColors.shade_5,
+                fontSize: 6.em,
+              ),
             ),
           ),
 
@@ -141,7 +124,10 @@ class _PlaylistState extends State<Playlist> {
               border: Border.all(color: DefaultColors.shade_4, width: 0.5.em),
             ),
             child: Center(
-              child: Text(entry.cover, style: TextStyle(fontSize: 7.5.em)),
+              child: Text(
+                entry.cover,
+                style: TextStyle(fontFamily: "朱雀仿宋", fontSize: 7.5.em),
+              ),
             ),
           ),
 
@@ -151,8 +137,9 @@ class _PlaylistState extends State<Playlist> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  entry.title.isNotEmpty ? entry.title : '未命名记录',
+                  entry.title,
                   style: TextStyle(
+                    fontFamily: "朱雀仿宋",
                     color: DefaultColors.fg,
                     fontSize: 7.em,
                     fontWeight: FontWeight.bold,
@@ -164,6 +151,7 @@ class _PlaylistState extends State<Playlist> {
                 Text(
                   '$timeStr · ${_formatDuration(entry.length)}',
                   style: TextStyle(
+                    fontFamily: "朱雀仿宋",
                     color: DefaultColors.shade_5,
                     fontSize: 6.em,
                   ),

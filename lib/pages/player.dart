@@ -1,6 +1,5 @@
-import 'dart:io';
-import 'dart:typed_data';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiyi/components/soundviz.dart';
@@ -10,10 +9,10 @@ import 'package:jiyi/components/tapewheel.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/utils/anno.dart';
 import 'package:jiyi/utils/em.dart';
+import 'package:jiyi/utils/encryption.dart';
 import 'package:jiyi/utils/metadata.dart';
 import 'package:jiyi/utils/io.dart';
 import 'package:jiyi/utils/stop_model.dart';
-import 'package:path_provider/path_provider.dart';
 
 @DeepSeek()
 class Player extends StatefulWidget {
@@ -29,9 +28,9 @@ class _PlayerState extends State<Player> {
   final AudioPlayer _audioPlayer = AudioPlayer();
   Duration _position = Duration.zero;
   Duration _duration = Duration.zero;
-  bool _isPlaying = false;
   bool _isLoading = true;
   String? _error;
+  bool _cancelled = false;
 
   @override
   void initState() {
@@ -40,33 +39,38 @@ class _PlayerState extends State<Player> {
 
     // 设置位置监听器
     _audioPlayer.onPositionChanged.listen((position) {
-      setState(() => _position = position);
+      if (!_cancelled) {
+        setState(() => _position = position);
+      }
     });
 
     // 设置时长监听器
     _audioPlayer.onDurationChanged.listen((duration) {
-      setState(() => _duration = duration);
+      if (!_cancelled) {
+        setState(() => _duration = duration);
+      }
     });
 
     // 设置播放状态监听器
     _audioPlayer.onPlayerStateChanged.listen((state) {
-      setState(() {
-        _isPlaying = state == PlayerState.playing;
-        _stop.value = !_isPlaying; // 同步暂停状态到磁带动画
-      });
+      if (!_cancelled) {
+        setState(() => _stop.set(state != PlayerState.playing));
+      }
     });
   }
 
   Future<void> _initPlayer() async {
     try {
       // 读取音频文件
-      final audioData = await IO.read(widget._md.path);
-
-      // 创建临时文件播放
-      final tempFile = await _createTempFile(audioData);
+      final audioData = await compute(_read, {
+        'base_path': IO.STORAGE,
+        'enc': Encryption.instance,
+        'file': widget._md.path,
+      });
 
       // 设置音频源并准备播放
-      await _audioPlayer.setSourceDeviceFile(tempFile.path);
+      await _audioPlayer.setSourceBytes(audioData);
+      await _audioPlayer.resume();
 
       setState(() {
         _isLoading = false;
@@ -80,15 +84,15 @@ class _PlayerState extends State<Player> {
     }
   }
 
-  Future<File> _createTempFile(Uint8List data) async {
-    final tempDir = await getTemporaryDirectory();
-    final tempFile = File('${tempDir.path}/temp_audio.mp3');
-    await tempFile.writeAsBytes(data);
-    return tempFile;
+  static Future<Uint8List> _read(Map<String, dynamic> params) async {
+    Encryption.initByInstance(params['enc']);
+    IO.STORAGE = params['base_path'];
+    return await IO.read(params['file'] as String);
   }
 
   @override
   void dispose() {
+    _cancelled = true;
     _audioPlayer.dispose();
     super.dispose();
   }
@@ -100,6 +104,16 @@ class _PlayerState extends State<Player> {
 
     return Scaffold(
       backgroundColor: DefaultColors.bg,
+      appBar: AppBar(
+        backgroundColor: DefaultColors.bg,
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: Padding(
+            padding: EdgeInsets.all(2.em),
+            child: Icon(Icons.arrow_back, color: DefaultColors.fg, size: 8.em),
+          ),
+        ),
+      ),
       body: Padding(
         padding: EdgeInsets.all(8.em),
         child: Column(
@@ -240,18 +254,15 @@ class _PlayerState extends State<Player> {
               ),
 
             // 控制按钮
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  onPressed: _togglePause,
-                  icon: Icon(
-                    _isPlaying ? Icons.pause : Icons.play_arrow,
-                    size: 20.em,
-                    color: DefaultColors.fg,
-                  ),
+            Center(
+              child: IconButton(
+                onPressed: _togglePause,
+                icon: Icon(
+                  _stop.value ? Icons.play_arrow : Icons.pause,
+                  size: 20.em,
+                  color: DefaultColors.fg,
                 ),
-              ],
+              ),
             ),
           ],
         ),
@@ -267,7 +278,8 @@ class _PlayerState extends State<Player> {
   }
 
   void _togglePause() async {
-    if (_isPlaying) {
+    _stop.flip();
+    if (_stop.value) {
       await _audioPlayer.pause();
     } else {
       await _audioPlayer.resume();

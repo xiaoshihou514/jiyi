@@ -132,14 +132,14 @@ class _CalendarState extends State<Calendar> {
         IconButton(
           onPressed: () {
             if (context.mounted) {
-              if (covers.length == 1) {
-                Navigator.push(
-                  context,
-                  SmoothRouter.builder(Player(IO.metadataByDay(date).first)),
-                );
-              } else {
-                Navigator.push(context, SmoothRouter.builder(Playlist(date)));
-              }
+              Navigator.push(
+                context,
+                SmoothRouter.builder(
+                  covers.length == 1
+                      ? Player(IO.metadataByDay(date).first)
+                      : Playlist(IO.metadataByDay(date)),
+                ),
+              );
             }
           },
           icon: SizedBox(

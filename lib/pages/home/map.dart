@@ -4,12 +4,15 @@ import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:jiyi/components/spinner.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
+import 'package:jiyi/pages/player.dart';
+import 'package:jiyi/pages/playlist.dart';
 import 'package:jiyi/utils/em.dart';
 import 'package:jiyi/utils/io.dart';
 import 'package:jiyi/utils/map_setting.dart';
 import 'package:jiyi/utils/metadata.dart';
 import 'package:jiyi/utils/notifier.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
+import 'package:jiyi/utils/smooth_router.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:http_cache_file_store/http_cache_file_store.dart';
 import 'package:flutter_map_cache/flutter_map_cache.dart';
@@ -17,6 +20,19 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+class RichMarker extends Marker {
+  final Metadata md;
+  final double lat;
+  final double lng;
+  final Widget view;
+  RichMarker(
+    this.md, {
+    required this.lat,
+    required this.lng,
+    required this.view,
+  }) : super(point: LatLng(lat, lng), child: view);
+}
 
 class MapView extends StatefulWidget {
   final AppLocalizations loc;
@@ -188,12 +204,7 @@ class _MapViewState extends State<MapView> {
               child: Spinner(Icons.sync, DefaultColors.keyword, 40.em),
             );
           }
-          return _markers(
-            snapshot.data
-                    ?.map((m) => LatLng(m.latitude, m.longitude))
-                    .toList() ??
-                [],
-          );
+          return _markers(snapshot.data ?? []);
         },
       ),
     );
@@ -214,7 +225,7 @@ class _MapViewState extends State<MapView> {
     );
   }
 
-  Widget _markers(List<LatLng> markers) {
+  Widget _markers(List<Metadata> markers) {
     return MarkerClusterLayerWidget(
       options: MarkerClusterLayerOptions(
         maxClusterRadius: 45,
@@ -222,28 +233,51 @@ class _MapViewState extends State<MapView> {
         alignment: Alignment.center,
         padding: const EdgeInsets.all(50),
         maxZoom: double.infinity,
-        markers: markers.map((p) {
-          return Marker(
-            child: Icon(
-              Icons.pin_drop,
-              color: DefaultColors.keyword,
-              size: 8.em,
+        markers: markers.map((md) {
+          return RichMarker(
+            md,
+            lat: md.latitude,
+            lng: md.longitude,
+            view: IconButton(
+              onPressed: () {
+                if (context.mounted) {
+                  Navigator.push(context, SmoothRouter.builder(Player(md)));
+                }
+              },
+              icon: Icon(
+                Icons.pin_drop,
+                color: DefaultColors.keyword,
+                size: 8.em,
+              ),
             ),
-            point: p,
           );
         }).toList(),
         builder: (context, markers) {
-          return Container(
-            height: 10.em,
-            width: 10.em,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: DefaultColors.keyword,
-            ),
-            child: Center(
-              child: Text(
-                markers.length.toString(),
-                style: TextStyle(color: DefaultColors.bg),
+          return IconButton(
+            onPressed: () {
+              if (context.mounted) {
+                Navigator.push(
+                  context,
+                  SmoothRouter.builder(
+                    Playlist(
+                      markers.cast<RichMarker>().map((m) => m.md).toList(),
+                    ),
+                  ),
+                );
+              }
+            },
+            icon: Container(
+              height: 10.em,
+              width: 10.em,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: DefaultColors.keyword,
+              ),
+              child: Center(
+                child: Text(
+                  markers.length.toString(),
+                  style: TextStyle(color: DefaultColors.bg),
+                ),
               ),
             ),
           );
