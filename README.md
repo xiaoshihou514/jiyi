@@ -1,8 +1,19 @@
-# 记忆
+<div align="center">
+    <h1>记忆</h1>
+</div>
 
-跨平台加密语音日志应用
+记忆是一款跨平台加密语音日志应用
+
+- _你的心声值得保护_：在当今云端服务越来越多的情况下，隐私问题成了一个黑盒。记忆的所有功能均为本地运行，充分保护您的隐私。
+- _听见过去的自己_：在繁忙的生活中，手写日记似乎成了一种奢侈。打开手机录一小段话，记录当前的自己。
+- _看见过去的足迹_：走遍世界，在世界的各个角落留下声音！记忆支持记录录音时的地理位置，帮你可视化你的旅途。
 
 ![](https://github.com/user-attachments/assets/0943329e-faa0-4786-9a47-cce64bd72ede)
+
+## 技术栈
+
+- 加密系统：[Argon2](https://en.wikipedia.org/wiki/Argon2)，[ChaCha20-Poly1305](https://en.wikipedia.org/wiki/ChaCha20-Poly1305)
+- 语音识别系统：[新一代Kaldi（sherpa-onnx）](https://github.com/k2-fsa/sherpa-onnx)
 
 ## 构建
 
