@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiyi/components/spinner.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
@@ -36,6 +37,8 @@ class RichMarker extends Marker {
     required this.view,
   }) : super(point: LatLng(lat, lng), child: view);
 }
+
+bool isMobile = ScreenUtil().screenWidth < ScreenUtil().screenHeight;
 
 class MapView extends StatefulWidget {
   final AppLocalizations loc;
@@ -197,7 +200,7 @@ class _MapViewState extends State<MapView> {
   Widget _markers(List<Metadata> markers) => MarkerClusterLayerWidget(
     options: MarkerClusterLayerOptions(
       maxClusterRadius: 45,
-      size: Size(8.em, 8.em),
+      size: isMobile ? Size(18.em, 18.em) : Size(8.em, 8.em),
       alignment: Alignment.center,
       padding: const EdgeInsets.all(50),
       maxZoom: double.infinity,
@@ -215,7 +218,7 @@ class _MapViewState extends State<MapView> {
             icon: Icon(
               Icons.pin_drop,
               color: DefaultColors.keyword,
-              size: 8.em,
+              size: isMobile ? 18.em : 8.em,
             ),
           ),
         );

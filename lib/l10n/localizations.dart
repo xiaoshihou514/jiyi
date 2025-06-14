@@ -645,6 +645,12 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'未找到匹配结果'**
   String get search_no_results;
+
+  /// No description provided for @decryption_err.
+  ///
+  /// In zh, this message translates to:
+  /// **'解密失败：{err}，请检查主密钥是否正确'**
+  String decryption_err(Object err);
 }
 
 class _AppLocalizationsDelegate

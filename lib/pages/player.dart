@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -243,7 +245,10 @@ class _PlayerState extends State<Player> {
                   child: Slider(
                     min: 0,
                     max: _duration.inSeconds.toDouble(),
-                    value: _position.inSeconds.toDouble(),
+                    value: min(
+                      _position.inSeconds.toDouble(),
+                      _duration.inSeconds.toDouble(),
+                    ),
                     onChanged: (value) async {
                       await _audioPlayer.seek(Duration(seconds: value.toInt()));
                     },

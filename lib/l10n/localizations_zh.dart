@@ -296,4 +296,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get search_no_results => '未找到匹配结果';
+
+  @override
+  String decryption_err(Object err) {
+    return '解密失败：$err，请检查主密钥是否正确';
+  }
 }

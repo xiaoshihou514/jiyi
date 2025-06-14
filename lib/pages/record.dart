@@ -428,7 +428,7 @@ class _TitleAndCoverInputState extends State<TitleAndCoverInput> {
   void _submit(AppLocalizations l) {
     Navigator.pop(context, (
       _titleController.text.isEmpty ? l.untitled_cd : _titleController.text,
-      _coverController.text.length == 1 ? _coverController.text : "❔",
+      _coverController.text.isEmpty ? "❔" : _coverController.text,
     ));
   }
 

@@ -44,6 +44,7 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(() => setState(() {}));
+    _setupEncryption();
   }
 
   @override
@@ -61,7 +62,6 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
     if (!unlocked) {
       _maybeUnlock();
     }
-    _setupEncryption();
 
     return unlocked
         ? _page
@@ -205,7 +205,19 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
   }
 
   Future<void> _setupEncryption() async {
-    await Encryption.init(widget.masterKey, widget.storagePath);
-    await IO.init();
+    try {
+      await Encryption.init(widget.masterKey, widget.storagePath);
+      await IO.init();
+    } catch (e) {
+      if (mounted) {
+        final l = AppLocalizations.of(context)!;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l.decryption_err(e.toString())),
+            duration: Durations.long1,
+          ),
+        );
+      }
+    }
   }
 }

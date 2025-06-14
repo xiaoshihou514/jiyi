@@ -283,13 +283,16 @@ class _TTSSettingsState extends State<TTSSettings> {
   }
 
   // Layout component remains the same...
-  Widget _flex({required List<Widget> children}) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 2.em),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: children,
-      ),
-    );
-  }
+  Widget _flex({required List<Widget> children}) => isMobile
+      ? Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: children,
+        )
+      : Padding(
+          padding: EdgeInsets.symmetric(vertical: 2.em),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: children,
+          ),
+        );
 }
