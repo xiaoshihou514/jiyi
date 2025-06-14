@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -167,6 +168,8 @@ class _MapSettingsState extends State<MapSettings> {
 
   // local map provider related state
   final _localPatternController = TextEditingController();
+  final _customPatternController = TextEditingController();
+  final _customHeaderController = TextEditingController();
   bool _custom = false;
 
   late String _defaultPath;
@@ -180,7 +183,7 @@ class _MapSettingsState extends State<MapSettings> {
       l.settings_map_osm,
       l.settings_map_amap,
       l.settings_map_amap_satelite,
-      l.settings_map_other,
+      l.settings_map_custom,
     ];
     _setting = MapSetting.local(l);
     _initMapSettings();
@@ -193,6 +196,11 @@ class _MapSettingsState extends State<MapSettings> {
       setState(() {
         _setting = MapSetting.fromJson(settings);
         _localPatternController.text = _setting.pattern ?? "";
+        _custom = _setting.name.startsWith(l.settings_map_custom);
+        if (_custom) {
+          _customPatternController.text = _setting.urlFmt;
+          _customHeaderController.text = _setting.header ?? "";
+        }
       });
     } else {
       setState(() => _setting.path = _defaultPath);
@@ -213,7 +221,21 @@ class _MapSettingsState extends State<MapSettings> {
             IconButton(
               onPressed: () async {
                 _setting.pattern = _localPatternController.text;
-                if (!_setting.isLocal ||
+                if (_custom) {
+                  _setting.urlFmt = _customPatternController.text;
+                  _setting.header = _customHeaderController.text.isEmpty
+                      ? "{}"
+                      : _customHeaderController.text;
+                  final s = _setting.dyn;
+                  s["name"] =
+                      "${l.settings_map_custom}${_setting.urlFmt.hashCode}";
+                  await ss.write(key: ss.MAP_SETTINGS, value: jsonEncode(s));
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(l.settings_map_save_success)),
+                    );
+                  }
+                } else if (!_setting.isLocal ||
                     ((_setting.path ?? "").isNotEmpty &&
                         (_setting.pattern ?? "").isNotEmpty)) {
                   _setting.urlFmt = _setting.isLocal
@@ -256,7 +278,9 @@ class _MapSettingsState extends State<MapSettings> {
           children: [
             Text(l.settings_map_provider),
             DropdownButton(
-              value: _setting.name,
+              value: _setting.name.startsWith(l.settings_map_custom)
+                  ? l.settings_map_custom
+                  : _setting.name,
               icon: Icon(Icons.arrow_drop_down, size: 5.em),
               style: TextStyle(
                 color: DefaultColors.fg,
@@ -305,7 +329,101 @@ class _MapSettingsState extends State<MapSettings> {
   }
 
   Widget _networkProviderSettings() {
-    return Placeholder();
+    return Column(
+      children: [
+        _flex(
+          children: [
+            Text(l.settings_map_custom_desc),
+            SizedBox(
+              height: 6.em,
+              width: 50.em,
+              child: Theme(
+                data: Theme.of(context).copyWith(
+                  textSelectionTheme: TextSelectionThemeData(
+                    selectionColor: DefaultColors.shade_3,
+                    selectionHandleColor: DefaultColors.shade_4,
+                  ),
+                ),
+                child: TextField(
+                  controller: _customPatternController,
+                  style: TextStyle(
+                    color: DefaultColors.fg,
+                    fontSize: isMobile ? 4.em : 3.em,
+                  ),
+                  cursorColor: DefaultColors.shade_6,
+                  decoration: InputDecoration(
+                    contentPadding: isMobile
+                        ? null
+                        : EdgeInsets.symmetric(vertical: 1.em),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: DefaultColors.fg),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: DefaultColors.fg),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        _flex(
+          children: [
+            Text(l.settings_map_custom_headers),
+            SizedBox(
+              height: 6.em,
+              width: 50.em,
+              child: Theme(
+                data: Theme.of(context).copyWith(
+                  textSelectionTheme: TextSelectionThemeData(
+                    selectionColor: DefaultColors.shade_3,
+                    selectionHandleColor: DefaultColors.shade_4,
+                  ),
+                ),
+                child: TextField(
+                  controller: _customHeaderController,
+                  style: TextStyle(
+                    color: DefaultColors.fg,
+                    fontSize: isMobile ? 4.em : 3.em,
+                  ),
+                  cursorColor: DefaultColors.shade_6,
+                  decoration: InputDecoration(
+                    contentPadding: isMobile
+                        ? null
+                        : EdgeInsets.symmetric(vertical: 1.em),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: DefaultColors.fg),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: DefaultColors.fg),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(l.settings_map_max_zoom),
+            NumberPicker(
+              textStyle: TextStyle(
+                decoration: TextDecoration.none,
+                color: DefaultColors.shade_4,
+                fontFamily: "朱雀仿宋",
+                fontSize: 5.em,
+              ),
+              selectedTextStyle: TextStyle(color: DefaultColors.fg),
+              value: _setting.maxZoom,
+              minValue: 4,
+              maxValue: 20,
+              onChanged: (value) => setState(() => _setting.maxZoom = value),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   Widget _localProviderSettings() {

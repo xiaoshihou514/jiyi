@@ -17,6 +17,7 @@ MapSetting _$MapSettingFromJson(Map<String, dynamic> json) => MapSetting(
       subdomains: (json['subdomains'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
+      header: json['header'] as String?,
       useInversionFilter: json['useInversionFilter'] as bool? ?? true,
     );
 
@@ -29,6 +30,7 @@ Map<String, dynamic> _$MapSettingToJson(MapSetting instance) =>
       'maxZoom': instance.maxZoom,
       'useInversionFilter': instance.useInversionFilter,
       if (instance.subdomains case final value?) 'subdomains': value,
+      if (instance.header case final value?) 'header': value,
       if (instance.path case final value?) 'path': value,
       if (instance.pattern case final value?) 'pattern': value,
     };

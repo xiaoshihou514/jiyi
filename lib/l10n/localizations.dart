@@ -274,12 +274,6 @@ abstract class AppLocalizations {
   /// **'其他在线地图源'**
   String get settings_map_custom;
 
-  /// No description provided for @settings_map_other.
-  ///
-  /// In zh, this message translates to:
-  /// **'其他地图'**
-  String get settings_map_other;
-
   /// No description provided for @settings_map_loc_path.
   ///
   /// In zh, this message translates to:
@@ -327,6 +321,18 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'自{src}下载地图'**
   String settings_map_loc_down_src(Object src);
+
+  /// No description provided for @settings_map_custom_desc.
+  ///
+  /// In zh, this message translates to:
+  /// **'链接模板（例：https://tile.me/\'{z}/{x}/{y}\'/?key=APIKEY）'**
+  String get settings_map_custom_desc;
+
+  /// No description provided for @settings_map_custom_headers.
+  ///
+  /// In zh, this message translates to:
+  /// **'HTTP请求头（例：\'{\"key\": \"xxx\"}\'）'**
+  String get settings_map_custom_headers;
 
   /// No description provided for @settings_reset.
   ///

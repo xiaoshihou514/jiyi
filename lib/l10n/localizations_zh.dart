@@ -99,9 +99,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_map_custom => '其他在线地图源';
 
   @override
-  String get settings_map_other => '其他地图';
-
-  @override
   String get settings_map_loc_path => '原始栅格文件路径';
 
   @override
@@ -126,6 +123,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String settings_map_loc_down_src(Object src) {
     return '自$src下载地图';
   }
+
+  @override
+  String get settings_map_custom_desc =>
+      '链接模板（例：https://tile.me/{z}/{x}/{y}/?key=APIKEY）';
+
+  @override
+  String get settings_map_custom_headers => 'HTTP请求头（例：{\"key\": \"xxx\"}）';
 
   @override
   String get settings_reset => '重置应用状态';

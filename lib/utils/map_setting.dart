@@ -15,6 +15,7 @@ class MapSetting {
   bool useInversionFilter;
   // network specific
   List<String>? subdomains;
+  String? header;
   //  local specific
   String? path;
   String? pattern;
@@ -28,6 +29,7 @@ class MapSetting {
     this.path,
     this.pattern,
     this.subdomains,
+    this.header,
     this.useInversionFilter = true,
   });
 
@@ -35,7 +37,8 @@ class MapSetting {
       _$MapSettingFromJson(jsonDecode(json));
 
   /// Connect the generated [_$PersonToJson] function to the `toJson` method.
-  String toJson() => jsonEncode(_$MapSettingToJson(this));
+  String toJson() => jsonEncode(dyn);
+  Map<String, dynamic> get dyn => _$MapSettingToJson(this);
 
   factory MapSetting.local(AppLocalizations l) => MapSetting(
     isOSM: true,
