@@ -1,6 +1,10 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:jiyi/utils/secure_storage.dart' as ss;
+import 'package:jiyi/utils/tts.dart';
+import 'package:jiyi/utils/tts_setting.dart';
+import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_soloud/flutter_soloud.dart';
@@ -14,6 +18,7 @@ import 'package:jiyi/utils/encryption.dart';
 import 'package:jiyi/utils/metadata.dart';
 import 'package:jiyi/utils/io.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:wav/wav_file.dart';
 
 extension on num {
   double get em => (ScreenUtil().screenWidth > ScreenUtil().screenHeight)
@@ -78,7 +83,7 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
 
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ["mp3", "wav", "ogg", "flac"],
+      allowedExtensions: ["wav"],
       allowMultiple: false,
     );
 
@@ -498,43 +503,58 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
       _selectedTime!.hour,
       _selectedTime!.minute,
     );
-    final metadata = Metadata(
-      time: timestamp,
-      length: _audioDuration!,
-      title: _titleController.text,
-      latitude: _latController.text.isNotEmpty
-          ? double.parse(_latController.text)
-          : 0.0,
-      longitude: _lonController.text.isNotEmpty
-          ? double.parse(_lonController.text)
-          : 0.0,
-      cover: _coverController.text,
-      path: (timestamp.toString() + DateTime.now().toString()).hashCode
-          .toString(),
-      transcript: '',
-    );
 
-    await compute(_write, {
+    final settings = await ss.read(key: ss.TTS_MODEL_SETTINGS);
+    final model = settings == null ? null : TtsSetting.fromJson(settings).model;
+    final metadata = await compute(_import, {
+      'model': model,
       'file': _audioFile!,
       'enc': Encryption.instance,
       'base_path': IO.STORAGE,
-      'md': metadata,
+      'md': Metadata(
+        time: timestamp,
+        length: _audioDuration!,
+        title: _titleController.text,
+        latitude: _latController.text.isNotEmpty
+            ? double.parse(_latController.text)
+            : 0.0,
+        longitude: _lonController.text.isNotEmpty
+            ? double.parse(_lonController.text)
+            : 0.0,
+        cover: _coverController.text,
+        path: (timestamp.toString() + DateTime.now().toString()).hashCode
+            .toString(),
+        transcript: '',
+      ).dyn,
     });
+
     IO.addEntry(metadata);
     await IO.updateIndexOnDisk();
+
     if (mounted) {
       Navigator.pop(context);
     }
   }
 
-  static Future<void> _write(Map<String, dynamic> params) async {
+  static Future<Metadata> _import(Map<String, dynamic> params) async {
     final file = params['file'] as File;
     final md = params['md'];
     Encryption.initByInstance(params['enc']);
     IO.STORAGE = params['base_path'];
 
-    final bytes = await file.readAsBytes();
-    await IO.save(bytes, md);
+    final wav = await Wav.readFile(file.path);
+    md["transcript"] = await Tts.fromWAV(
+      params['model'] as so.OnlineModelConfig,
+      Float32List.fromList(wav.channels.first.toList()),
+      wav.samplesPerSecond,
+    );
+    print("transcript:");
+    print(md["transcript"]);
+    print("EOF");
+
+    final metadata = Metadata.fromDyn(md);
+    await IO.save(await file.readAsBytes(), metadata);
+    return metadata;
   }
 }
 

@@ -46,6 +46,7 @@ dependencies:
   provider: ^6.1.5
   audioplayers: ^6.4.0
   icons_launcher: ^3.0.1
+  sherpa_onnx: ^1.12.1
 
 dev_dependencies:
   flutter_test:

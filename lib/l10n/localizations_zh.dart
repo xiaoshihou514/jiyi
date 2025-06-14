@@ -156,6 +156,33 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_reset_index_desc => '重新建立日志索引';
 
   @override
+  String get settings_tts_model => '语音转文字设置';
+
+  @override
+  String get settings_tts_saved => '语音转文字设置已保存';
+
+  @override
+  String get settings_tts_encoder => '编码器模型路径';
+
+  @override
+  String get settings_tts_decoder => '解码器模型路径';
+
+  @override
+  String get settings_tts_joiner => '拼接器模型路径';
+
+  @override
+  String get settings_tts_tokens => '词元文件路径';
+
+  @override
+  String get settings_tts_model_type => '模型类型（例：zipformer）';
+
+  @override
+  String get settings_tts_picker_desc => '选择模型';
+
+  @override
+  String get settings_tts_download_desc => '请自行从sherpa-onnx下载模型';
+
+  @override
   String get download_title => '栅格文件下载';
 
   @override
@@ -179,7 +206,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cover_desc_hint => '输入一个emoji';
 
   @override
-  String get metadata_title => '导入音频元数据';
+  String get metadata_title => '导入（WAV文件，pcm_s16le格式）';
 
   @override
   String get metadata_select_file => '选择音频文件';

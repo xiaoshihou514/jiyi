@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:jiyi/utils/tts.dart';
+import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 import 'package:geolocator_platform_interface/geolocator_platform_interface.dart';
 import 'package:flutter_recorder/flutter_recorder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,6 +26,8 @@ import 'package:jiyi/utils/metadata.dart';
 import 'package:jiyi/components/tapewheel.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/utils/stop_model.dart';
+import 'package:jiyi/utils/secure_storage.dart' as ss;
+import 'package:jiyi/utils/tts_setting.dart';
 import 'package:jiyi/pages/default_colors.dart';
 
 extension on num {
@@ -31,6 +35,9 @@ extension on num {
       ? sh / 100
       : sw / 96;
 }
+
+// ignore: constant_identifier_names
+const SAMPLE_RATE = 44100;
 
 class RecordPage extends StatefulWidget {
   final String storagePath;
@@ -250,7 +257,11 @@ class _RecordPageState extends State<RecordPage> {
         ) ??
         (l.untitled_cd, "❔");
 
-    await compute(encryptAndWrite, {
+    final settings = await ss.read(key: ss.TTS_MODEL_SETTINGS);
+    final model = settings == null ? null : TtsSetting.fromJson(settings).model;
+
+    final metadata = await compute(_save, {
+      'model': model,
       'bytes': _bytes,
       'enc': Encryption.instance,
       'base_path': IO.STORAGE,
@@ -263,9 +274,11 @@ class _RecordPageState extends State<RecordPage> {
         cover: titleAndCover.$2,
         path: (_startTime.toString() + DateTime.now().toString()).hashCode
             .toString(),
-        transcript: "TODO", // TODO: implement transcription using local STT
+        transcript: "",
       ).dyn,
     });
+    IO.addEntry(metadata);
+    await IO.updateIndexOnDisk();
 
     _cleanup();
     if (mounted) {
@@ -274,18 +287,29 @@ class _RecordPageState extends State<RecordPage> {
     }
   }
 
-  static Future<void> encryptAndWrite(Map<String, dynamic> params) async {
+  static Future<Metadata> _save(Map<String, dynamic> params) async {
     final bytes = params['bytes'] as List<double>;
-    final md = Metadata.fromDyn(params['md'] as Map<String, dynamic>);
+    final md = params['md'] as Map<String, dynamic>;
     Encryption.initByInstance(params['enc']);
     IO.STORAGE = params['base_path'];
 
     final data = Wav(
       [Float64List.fromList(bytes)],
-      44100,
+      SAMPLE_RATE,
       WavFormat.pcm32bit,
     ).write();
-    await IO.save(data, md);
+
+    md["transcript"] = Tts.fromWAV(
+      params['model'] as so.OnlineModelConfig?,
+      Float32List.fromList(bytes),
+      SAMPLE_RATE,
+    );
+    print("transcript:");
+    print(md["transcript"]);
+    print("EOF");
+    final metadata = Metadata.fromDyn(md);
+    await IO.save(data, metadata);
+    return metadata;
   }
 
   void _cleanup() {

@@ -382,6 +382,60 @@ abstract class AppLocalizations {
   /// **'重新建立日志索引'**
   String get settings_reset_index_desc;
 
+  /// No description provided for @settings_tts_model.
+  ///
+  /// In zh, this message translates to:
+  /// **'语音转文字设置'**
+  String get settings_tts_model;
+
+  /// No description provided for @settings_tts_saved.
+  ///
+  /// In zh, this message translates to:
+  /// **'语音转文字设置已保存'**
+  String get settings_tts_saved;
+
+  /// No description provided for @settings_tts_encoder.
+  ///
+  /// In zh, this message translates to:
+  /// **'编码器模型路径'**
+  String get settings_tts_encoder;
+
+  /// No description provided for @settings_tts_decoder.
+  ///
+  /// In zh, this message translates to:
+  /// **'解码器模型路径'**
+  String get settings_tts_decoder;
+
+  /// No description provided for @settings_tts_joiner.
+  ///
+  /// In zh, this message translates to:
+  /// **'拼接器模型路径'**
+  String get settings_tts_joiner;
+
+  /// No description provided for @settings_tts_tokens.
+  ///
+  /// In zh, this message translates to:
+  /// **'词元文件路径'**
+  String get settings_tts_tokens;
+
+  /// No description provided for @settings_tts_model_type.
+  ///
+  /// In zh, this message translates to:
+  /// **'模型类型（例：zipformer）'**
+  String get settings_tts_model_type;
+
+  /// No description provided for @settings_tts_picker_desc.
+  ///
+  /// In zh, this message translates to:
+  /// **'选择模型'**
+  String get settings_tts_picker_desc;
+
+  /// No description provided for @settings_tts_download_desc.
+  ///
+  /// In zh, this message translates to:
+  /// **'请自行从sherpa-onnx下载模型'**
+  String get settings_tts_download_desc;
+
   /// No description provided for @download_title.
   ///
   /// In zh, this message translates to:
@@ -427,7 +481,7 @@ abstract class AppLocalizations {
   /// No description provided for @metadata_title.
   ///
   /// In zh, this message translates to:
-  /// **'导入音频元数据'**
+  /// **'导入（WAV文件，pcm_s16le格式）'**
   String get metadata_title;
 
   /// No description provided for @metadata_select_file.
