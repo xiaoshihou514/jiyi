@@ -197,7 +197,7 @@ class _MapViewState extends State<MapView> {
   Widget _markers(List<Metadata> markers) => MarkerClusterLayerWidget(
     options: MarkerClusterLayerOptions(
       maxClusterRadius: 45,
-      size: Size(5.em, 5.em),
+      size: Size(8.em, 8.em),
       alignment: Alignment.center,
       padding: const EdgeInsets.all(50),
       maxZoom: double.infinity,
@@ -235,8 +235,6 @@ class _MapViewState extends State<MapView> {
             }
           },
           icon: Container(
-            height: 10.em,
-            width: 10.em,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               color: DefaultColors.keyword,

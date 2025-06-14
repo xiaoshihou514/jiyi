@@ -97,5 +97,9 @@
 
   "untitled_cd": "未命名磁带",
 
-  "playlist_title": "当日记录（{len}）"
+  "playlist_title": "当日记录（{len}）",
+
+  "search_hint": "搜索标题或内容...",
+  "search_results_count": "找到{n}个匹配{needle}的结果",
+  "search_no_results": "未找到匹配结果"
 }

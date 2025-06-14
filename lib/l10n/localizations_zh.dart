@@ -285,4 +285,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String playlist_title(Object len) {
     return '当日记录（$len）';
   }
+
+  @override
+  String get search_hint => '搜索标题或内容...';
+
+  @override
+  String search_results_count(Object n, Object needle) {
+    return '找到$n个匹配$needle的结果';
+  }
+
+  @override
+  String get search_no_results => '未找到匹配结果';
 }

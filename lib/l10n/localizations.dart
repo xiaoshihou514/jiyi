@@ -627,6 +627,24 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'当日记录（{len}）'**
   String playlist_title(Object len);
+
+  /// No description provided for @search_hint.
+  ///
+  /// In zh, this message translates to:
+  /// **'搜索标题或内容...'**
+  String get search_hint;
+
+  /// No description provided for @search_results_count.
+  ///
+  /// In zh, this message translates to:
+  /// **'找到{n}个匹配{needle}的结果'**
+  String search_results_count(Object n, Object needle);
+
+  /// No description provided for @search_no_results.
+  ///
+  /// In zh, this message translates to:
+  /// **'未找到匹配结果'**
+  String get search_no_results;
 }
 
 class _AppLocalizationsDelegate

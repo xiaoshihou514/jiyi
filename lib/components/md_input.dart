@@ -276,7 +276,7 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
                 title: Text(
                   _selectedDate == null || _selectedTime == null
                       ? l.metadata_select_datetime
-                      : DateFormat.yMd().add_jm().format(
+                      : DateFormat("yyyy-MM-dd HH:mm").format(
                           DateTime(
                             _selectedDate!.year,
                             _selectedDate!.month,
@@ -543,14 +543,11 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
     IO.STORAGE = params['base_path'];
 
     final wav = await Wav.readFile(file.path);
-    md["transcript"] = await Tts.fromWAV(
+    md["transcript"] = Tts.fromWAV(
       params['model'] as so.OnlineModelConfig,
       Float32List.fromList(wav.channels.first.toList()),
       wav.samplesPerSecond,
     );
-    print("transcript:");
-    print(md["transcript"]);
-    print("EOF");
 
     final metadata = Metadata.fromDyn(md);
     await IO.save(await file.readAsBytes(), metadata);

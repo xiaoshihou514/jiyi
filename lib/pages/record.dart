@@ -304,9 +304,6 @@ class _RecordPageState extends State<RecordPage> {
       Float32List.fromList(bytes),
       SAMPLE_RATE,
     );
-    print("transcript:");
-    print(md["transcript"]);
-    print("EOF");
     final metadata = Metadata.fromDyn(md);
     await IO.save(data, metadata);
     return metadata;
