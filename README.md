@@ -2,6 +2,8 @@
 
 跨平台加密语音日志应用
 
+![](https://github.com/user-attachments/assets/0943329e-faa0-4786-9a47-cce64bd72ede)
+
 ## 构建
 
 安装依赖：
