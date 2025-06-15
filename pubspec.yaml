@@ -2,7 +2,7 @@ name: jiyi
 description: "Cross platform encrypted audio logging app"
 publish_to: "none"
 
-version: 1.0.0+1
+version: 1.0.0+11
 
 environment:
   sdk: ">=3.2.5 <4.0.0"
