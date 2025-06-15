@@ -1,0 +1,7 @@
+<p>Jiyi is a cross-platform encrypted voice note application.</p>
+
+<ul>
+    <li><b>Protect Your Privacy</b>: In today's world where cloud services are increasingly prevalent, privacy has become a black box. All features of Jiyi run locally to fully protect your privacy.</li>
+    <li><b>Hear Past Selves</b>: In the hustle and bustle of life, writing a diary seems like a luxury. Open your phone and record a short voice note to capture the present moment.</li>
+    <li><b>Visualize Your Journey</b>: Explore the world and leave behind voice notes in different corners! Jiyi supports recording the location at the time of recording, helping you visualize your travels.</li>
+</ul>

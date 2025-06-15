@@ -2,7 +2,7 @@
     <h1>记忆</h1>
 </div>
 
-[./README-en.md](English)
+[English](./README-en.md)
 
 记忆是一款跨平台加密语音日志应用
 
