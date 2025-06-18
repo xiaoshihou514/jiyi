@@ -92,15 +92,14 @@ class _WelcomePageState extends State<WelcomePage> {
                 ).animate().fadeIn(delay: delay_1, duration: duration_1),
               ],
             ),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                      Icons.photo_library,
-                      size: iconSize,
-                      color: DefaultColors.func,
-                    )
+                  Icons.photo_library,
+                  size: iconSize,
+                  color: DefaultColors.func,
+                )
                     .animate()
                     .fadeIn(delay: delay_2_2, duration: duration_2_2)
                     .tint(
@@ -121,7 +120,6 @@ class _WelcomePageState extends State<WelcomePage> {
                     .tint(color: DefaultColors.special),
               ],
             ),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -137,7 +135,6 @@ class _WelcomePageState extends State<WelcomePage> {
                 ).animate().fadeIn(delay: delay_3, duration: duration_3),
               ],
             ),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

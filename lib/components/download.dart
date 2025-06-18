@@ -54,24 +54,22 @@ class _DownloadUnzipDialogState extends State<DownloadUnzipDialog> {
         setState(() => progress[i - 4] = (DStage.done, 100));
         continue;
       }
-      Dio()
-          .download(
-            "${widget.prefix}/$i.zip",
-            '${tmp.path}/$i.zip',
-            onReceiveProgress: (int received, int total) {
-              setState(
-                () => progress[i - 4] = (
-                  progress[i - 4].$1,
-                  _ntrunc(received / total),
-                ),
-              );
-            },
-          )
-          .then((_) async {
-            setState(() => progress[i - 4] = (DStage.unzipping, 100));
-            await extractFileToDisk(path.join(tmp.path, "$i.zip"), widget.dest);
-            setState(() => progress[i - 4] = (DStage.done, 100));
-          });
+      Dio().download(
+        "${widget.prefix}/$i.zip",
+        '${tmp.path}/$i.zip',
+        onReceiveProgress: (int received, int total) {
+          setState(
+            () => progress[i - 4] = (
+              progress[i - 4].$1,
+              _ntrunc(received / total),
+            ),
+          );
+        },
+      ).then((_) async {
+        setState(() => progress[i - 4] = (DStage.unzipping, 100));
+        await extractFileToDisk(path.join(tmp.path, "$i.zip"), widget.dest);
+        setState(() => progress[i - 4] = (DStage.done, 100));
+      });
     }
   }
 

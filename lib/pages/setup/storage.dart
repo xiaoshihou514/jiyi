@@ -119,11 +119,11 @@ class _StoragePage extends State<StoragePage> {
                 Padding(
                   padding: ScreenUtil().scaleWidth < ScreenUtil().scaleHeight
                       ?
-                        // mobile
-                        EdgeInsets.symmetric(vertical: 7.5.em)
+                      // mobile
+                      EdgeInsets.symmetric(vertical: 7.5.em)
                       :
-                        // desktop / tablet
-                        EdgeInsets.zero,
+                      // desktop / tablet
+                      EdgeInsets.zero,
                   child: Text(
                     l.st_title,
                     style: TextStyle(

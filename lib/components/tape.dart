@@ -51,10 +51,9 @@ class TapePainter extends CustomPainter {
       bg,
     );
     // lower lines
-    final fg =
-        Paint()
-          ..color = DefaultColors.bg
-          ..strokeWidth = w / 128;
+    final fg = Paint()
+      ..color = DefaultColors.bg
+      ..strokeWidth = w / 128;
     canvas.drawLine(Offset(0.2 * w, 0.95 * h), Offset(0.25 * w, 0.8 * h), fg);
     canvas.drawLine(Offset(0.8 * w, 0.95 * h), Offset(0.75 * w, 0.8 * h), fg);
     canvas.drawLine(Offset(0.25 * w, 0.8 * h), Offset(0.75 * w, 0.8 * h), fg);

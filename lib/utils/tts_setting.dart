@@ -27,14 +27,14 @@ class TtsSetting {
   Map<String, dynamic> get dyn => _$TtsSettingToJson(this);
   String get json => jsonEncode(dyn);
   so.OnlineModelConfig get model => so.OnlineModelConfig(
-    transducer: so.OnlineTransducerModelConfig(
-      encoder: encoder,
-      decoder: decoder,
-      joiner: joiner,
-    ),
-    tokens: tokens,
-    modelType: modelType,
-  );
+        transducer: so.OnlineTransducerModelConfig(
+          encoder: encoder,
+          decoder: decoder,
+          joiner: joiner,
+        ),
+        tokens: tokens,
+        modelType: modelType,
+      );
 
   @override
   String toString() => json;

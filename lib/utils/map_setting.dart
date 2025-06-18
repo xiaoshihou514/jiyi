@@ -41,12 +41,12 @@ class MapSetting {
   Map<String, dynamic> get dyn => _$MapSettingToJson(this);
 
   factory MapSetting.local(AppLocalizations l) => MapSetting(
-    isOSM: true,
-    isLocal: true,
-    urlFmt: './{z}/{x}-{y}.png',
-    name: l.settings_map_local,
-    maxZoom: 10,
-    path: '',
-    pattern: '{z}/{x}-{y}.png',
-  );
+        isOSM: true,
+        isLocal: true,
+        urlFmt: './{z}/{x}-{y}.png',
+        name: l.settings_map_local,
+        maxZoom: 10,
+        path: '',
+        pattern: '{z}/{x}-{y}.png',
+      );
 }

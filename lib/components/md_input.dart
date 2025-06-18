@@ -522,7 +522,8 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
             ? double.parse(_lonController.text)
             : 0.0,
         cover: _coverController.text,
-        path: (timestamp.toString() + DateTime.now().toString()).hashCode
+        path: (timestamp.toString() + DateTime.now().toString())
+            .hashCode
             .toString(),
         transcript: '',
       ).dyn,

@@ -58,7 +58,6 @@ class _PasswordDialogState extends State<PasswordDialog>
 
     return Dialog(
       backgroundColor: DefaultColors.shade_2,
-
       child: DefaultTextStyle.merge(
         style: TextStyle(
           decoration: TextDecoration.none,
@@ -264,8 +263,7 @@ abstract class Authenticator {
   }
 
   static Future<AuthResult> _authOther(String reason) async {
-    final bool canAuthenticateWithBiometrics =
-        await _auth.canCheckBiometrics &&
+    final bool canAuthenticateWithBiometrics = await _auth.canCheckBiometrics &&
         (await _auth.getAvailableBiometrics()).isNotEmpty;
     final bool canAuthenticate =
         canAuthenticateWithBiometrics || await _auth.isDeviceSupported();

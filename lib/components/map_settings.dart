@@ -194,14 +194,12 @@ class _MapSettingsState extends State<MapSettings> {
             ),
           ],
         ),
-
         if (_setting.name == l.settings_map_local)
           _localProviderSettings()
         else if (_custom)
           _networkProviderSettings()
         else
           Container(),
-
         Wrap(children: [Container()]),
       ],
     );
@@ -231,9 +229,8 @@ class _MapSettingsState extends State<MapSettings> {
                   ),
                   cursorColor: DefaultColors.shade_6,
                   decoration: InputDecoration(
-                    contentPadding: isMobile
-                        ? null
-                        : EdgeInsets.symmetric(vertical: 1.em),
+                    contentPadding:
+                        isMobile ? null : EdgeInsets.symmetric(vertical: 1.em),
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: DefaultColors.fg),
                     ),
@@ -267,9 +264,8 @@ class _MapSettingsState extends State<MapSettings> {
                   ),
                   cursorColor: DefaultColors.shade_6,
                   decoration: InputDecoration(
-                    contentPadding: isMobile
-                        ? null
-                        : EdgeInsets.symmetric(vertical: 1.em),
+                    contentPadding:
+                        isMobile ? null : EdgeInsets.symmetric(vertical: 1.em),
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: DefaultColors.fg),
                     ),
@@ -356,9 +352,8 @@ class _MapSettingsState extends State<MapSettings> {
                   ),
                   cursorColor: DefaultColors.shade_6,
                   decoration: InputDecoration(
-                    contentPadding: isMobile
-                        ? null
-                        : EdgeInsets.symmetric(vertical: 1.em),
+                    contentPadding:
+                        isMobile ? null : EdgeInsets.symmetric(vertical: 1.em),
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: DefaultColors.fg),
                     ),

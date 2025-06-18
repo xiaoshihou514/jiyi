@@ -150,9 +150,8 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
             ],
           ),
         ),
-        floatingActionButton: _tabController.index == 0
-            ? _floatingBtns(isMobile)
-            : null,
+        floatingActionButton:
+            _tabController.index == 0 ? _floatingBtns(isMobile) : null,
       ),
     );
   }
