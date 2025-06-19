@@ -1,0 +1,109 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  publish:
+    name: Publish for ${{ matrix.config.target }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      matrix:
+        config:
+          - os: ubuntu-latest
+            asset_name: android-v8a.apk
+            artifact_name: build/app/outputs/apk/fdroid/release/app-fdroid-release.apk
+            target: Android
+          - os: ubuntu-latest
+            asset_name: jiyi.AppImage
+            artifact_name: jiyi-${{ github.ref }}-x86_64.AppImage
+            target: Linux
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter SDK
+        uses: flutter-actions/setup-flutter@v4
+        with:
+          channel: stable
+
+      - name: Build Linux
+        if: matrix.config.target == 'Linux'
+        run: |
+          flutter build linux --release
+          cp -r build/linux/x64/release/bundle ./AppDir
+
+      - name: Build AppImage
+        if: matrix.config.target == 'Linux'
+        uses: AppImageCrafters/build-appimage-action@master
+        env:
+          UPDATE_INFO: gh-releases-zsync|xiaoshihou514|jiyi|latest|*x86_64.AppImage
+        with:
+          recipe: AppImageBuilder.yml
+
+      - name: Setup Gradle
+        if: matrix.config.target == 'Android'
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.9"
+
+      - name: Setup android tools (Android)
+        if: matrix.config.target == 'Android'
+        uses: android-actions/setup-android@v3
+
+      - name: Build Android
+        if: matrix.config.target == 'Android'
+        run: |
+          export JIYI=$(pwd)
+          cd $HOME
+          git clone https://github.com/alnitak/flutter_soloud
+          git clone https://github.com/k2-fsa/sherpa-onnx
+          export FLUTTER=$(dirname $(which flutter))
+          export FLUTTER_SOLOUD=$HOME/flutter_soloud
+          export SHERPA_ONNX=$HOME/sherpa-onnx
+
+          cd $JIYI
+          export SOLOUD_VERSION=$(sed -nE 's/.*flutter_soloud:\s*\^?([0-9.]+).*/\1/p' pubspec.yaml)
+          export SHERPA_VERSION=$(sed -nE 's/.*sherpa_onnx:\s*\^?([0-9.]+).*/\1/p' pubspec.yaml)
+          export RECORDER_VERSION=$(sed -nE 's/.*flutter_recorder:\s*\^?([0-9.]+).*/\1/p' pubspec.yaml)
+
+          flutterVersion=$(sed -nE 's/\s*flutter:\s*"\^([0-9.]+)".*/\1/p' pubspec.yaml)
+          git -C $FLUTTER checkout -f $flutterVersion
+          flutter config --no-analytics
+          flutter pub get
+
+          find $PUB_CACHE -type f -name "*.wasm" -exec rm -f {} \;
+          find $PUB_CACHE -type f -name "*.so" -exec rm -f {} \;
+          find $PUB_CACHE -type f -name "*.zip" -exec rm -f {} \;
+          find $PUB_CACHE -type f -name "*.gz" -exec rm -f {} \;
+          rm -rf $PUB_CACHE/hosted/pub.dev/analyzer-*/example/ddd03.exe
+          rm -rf $PUB_CACHE/hosted/pub.dev/gsettings-*/test/dconf/test
+          rm -rf $PUB_CACHE/hosted/pub.dev/audioplayers-*/example
+
+          pushd $FLUTTER_SOLOUD/android                                            
+          gradle build                                                             
+          cp -r ./libs/* "$PUB_CACHE/hosted/pub.dev/flutter_soloud-$SOLOUD_VERSION/android/libs/"                                                           
+          popd                                                                     
+                                                                                   
+          pushd $SHERPA_ONNX                                                       
+          export ANDROID_NDK=$ANDROID_HOME/ndk/$(ls $ANDROID_HOME/ndk/ | tail -n1) 
+          cp "$ANDROID_NDK/build/cmake/android-legacy.toolchain.cmake" "$ANDROID_NDK/build/cmake/android-legacy.toolchain.cmake.bak"                        
+          sed -i '/list(APPEND ANDROID_COMPILER_FLAGS/{N;N;s/\n[[:space:]]*-g\n/\n/}' "$ANDROID_NDK/build/cmake/android-legacy.toolchain.cmake"             
+          ./build-android-arm64-v8a.sh                                             
+          cp build-android-arm64-v8a/install/lib/lib*.so $PUB_CACHE/hosted/pub.dev/sherpa_onnx_android-$SHERPA_VERSION/android/src/main/jniLibs/arm64-v8a/  
+          cp -f "$ANDROID_NDK/build/cmake/android-legacy.toolchain.cmake.bak" "$ANDROID_NDK/build/cmake/android-legacy.toolchain.cmake"                     
+          popd                                                                     
+                                                                                   
+          touch $PUB_CACHE/hosted/pub.dev/flutter_recorder-$RECORDER_VERSION/web/libflutter_recorder_plugin.wasm                                            
+          touch $PUB_CACHE/hosted/pub.dev/flutter_soloud-$SOLOUD_VERSION/web/libflutter_soloud_plugin.wasm                                                  
+          flutter build apk --flavor fdroid
+
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ matrix.config.artifact_name }}
+          asset_name: ${{ matrix.config.asset_name }}
+          tag: ${{ github.ref }}
