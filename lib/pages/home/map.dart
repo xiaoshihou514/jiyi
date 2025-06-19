@@ -120,149 +120,149 @@ class _MapViewState extends State<MapView> {
   }
 
   Widget _onlineMap(MapSetting s) => FutureBuilder<String>(
-        future: _cacheStoreFuture,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            var layers = <Widget>[
-              TileLayer(
-                urlTemplate: s.urlFmt,
-                subdomains: s.subdomains ?? [],
-                userAgentPackageName: 'com.github.xiaoshihou.jiyi',
-                tileBuilder: s.useInversionFilter ? _inversionFilter : null,
-                tileProvider: CachedTileProvider(
-                  dio: Dio(BaseOptions(headers: jsonDecode(s.header ?? "{}"))),
-                  store: FileCacheStore(
-                    path.join(snapshot.data!, "MapTiles", s.name),
-                  ),
-                ),
+    future: _cacheStoreFuture,
+    builder: (context, snapshot) {
+      if (snapshot.hasData) {
+        var layers = <Widget>[
+          TileLayer(
+            urlTemplate: s.urlFmt,
+            subdomains: s.subdomains ?? [],
+            userAgentPackageName: 'com.github.xiaoshihou.jiyi',
+            tileBuilder: s.useInversionFilter ? _inversionFilter : null,
+            tileProvider: CachedTileProvider(
+              dio: Dio(BaseOptions(headers: jsonDecode(s.header ?? "{}"))),
+              store: FileCacheStore(
+                path.join(snapshot.data!, "MapTiles", s.name),
               ),
-              _markerLayer(),
-            ];
-            if (s.isOSM) {
-              layers.add(_osmAttribution());
-            }
+            ),
+          ),
+          _markerLayer(),
+        ];
+        if (s.isOSM) {
+          layers.add(_osmAttribution());
+        }
 
-            return FlutterMap(
-              options: MapOptions(
-                initialCenter: LatLng(35, 110),
-                initialZoom: 4,
-                minZoom: 4,
-                maxZoom: s.maxZoom.toDouble(),
-              ),
-              children: layers,
-            );
-          }
-          if (snapshot.hasError) {
-            return Center(
-              child: Text(
-                snapshot.error.toString(),
-                style: TextStyle(
-                  fontSize: 15.em,
-                  color: DefaultColors.fg,
-                  fontFamily: "朱雀仿宋",
-                ),
-              ),
-            );
-          }
-          return const Center(child: CircularProgressIndicator());
-        },
-      );
+        return FlutterMap(
+          options: MapOptions(
+            initialCenter: LatLng(35, 110),
+            initialZoom: 4,
+            minZoom: 4,
+            maxZoom: s.maxZoom.toDouble(),
+          ),
+          children: layers,
+        );
+      }
+      if (snapshot.hasError) {
+        return Center(
+          child: Text(
+            snapshot.error.toString(),
+            style: TextStyle(
+              fontSize: 15.em,
+              color: DefaultColors.fg,
+              fontFamily: "朱雀仿宋",
+            ),
+          ),
+        );
+      }
+      return const Center(child: CircularProgressIndicator());
+    },
+  );
 
   Widget _markerLayer() => Consumer<Notifier>(
-        builder: (context, counter, child) => FutureBuilder<List<Metadata>>(
-          future: IO.indexFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: Spinner(Icons.sync, DefaultColors.keyword, 40.em),
-              );
-            }
-            return _markers(snapshot.data ?? []);
-          },
-        ),
-      );
+    builder: (context, counter, child) => FutureBuilder<List<Metadata>>(
+      future: IO.indexFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: Spinner(Icons.sync, DefaultColors.keyword, 40.em),
+          );
+        }
+        return _markers(snapshot.data ?? []);
+      },
+    ),
+  );
 
   Widget _osmAttribution() => RichAttributionWidget(
-        popupBackgroundColor: DefaultColors.shade_3,
-        attributions: [
-          // Suggested attribution for the OpenStreetMap public tile server
-          TextSourceAttribution(
-            'OpenStreetMap contributors',
-            textStyle: TextStyle(color: DefaultColors.fg),
-            onTap: () =>
-                launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
-          ),
-        ],
-      );
+    popupBackgroundColor: DefaultColors.shade_3,
+    attributions: [
+      // Suggested attribution for the OpenStreetMap public tile server
+      TextSourceAttribution(
+        'OpenStreetMap contributors',
+        textStyle: TextStyle(color: DefaultColors.fg),
+        onTap: () =>
+            launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
+      ),
+    ],
+  );
 
   Widget _markers(List<Metadata> markers) => MarkerClusterLayerWidget(
-        options: MarkerClusterLayerOptions(
-          maxClusterRadius: 45,
-          size: isMobile ? Size(18.em, 18.em) : Size(8.em, 8.em),
-          alignment: Alignment.center,
-          padding: const EdgeInsets.all(50),
-          maxZoom: double.infinity,
-          markers: markers.map((md) {
-            return RichMarker(
-              md,
-              lat: md.latitude,
-              lng: md.longitude,
-              view: IconButton(
-                onPressed: () {
-                  if (context.mounted) {
-                    Navigator.push(context, SmoothRouter.builder(Player(md)));
-                  }
-                },
-                icon: Icon(
-                  Icons.pin_drop,
-                  color: DefaultColors.keyword,
-                  size: isMobile ? 18.em : 8.em,
-                ),
-              ),
-            );
-          }).toList(),
-          builder: (context, markers) {
-            return IconButton(
-              onPressed: () {
-                if (context.mounted) {
-                  Navigator.push(
-                    context,
-                    SmoothRouter.builder(
-                      Playlist(
-                        markers.cast<RichMarker>().map((m) => m.md).toList(),
-                      ),
-                    ),
-                  );
-                }
-              },
-              icon: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: DefaultColors.keyword,
-                ),
-                child: Center(
-                  child: Text(
-                    markers.length.toString(),
-                    style: TextStyle(color: DefaultColors.bg),
+    options: MarkerClusterLayerOptions(
+      maxClusterRadius: 45,
+      size: isMobile ? Size(18.em, 18.em) : Size(8.em, 8.em),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.all(50),
+      maxZoom: double.infinity,
+      markers: markers.where((md) => md.hasGeo).map((md) {
+        return RichMarker(
+          md,
+          lat: md.latitude!,
+          lng: md.longitude!,
+          view: IconButton(
+            onPressed: () {
+              if (context.mounted) {
+                Navigator.push(context, SmoothRouter.builder(Player(md)));
+              }
+            },
+            icon: Icon(
+              Icons.pin_drop,
+              color: DefaultColors.keyword,
+              size: isMobile ? 18.em : 8.em,
+            ),
+          ),
+        );
+      }).toList(),
+      builder: (context, markers) {
+        return IconButton(
+          onPressed: () {
+            if (context.mounted) {
+              Navigator.push(
+                context,
+                SmoothRouter.builder(
+                  Playlist(
+                    markers.cast<RichMarker>().map((m) => m.md).toList(),
                   ),
                 ),
-              ),
-            );
+              );
+            }
           },
-        ),
-      );
+          icon: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: DefaultColors.keyword,
+            ),
+            child: Center(
+              child: Text(
+                markers.length.toString(),
+                style: TextStyle(color: DefaultColors.bg),
+              ),
+            ),
+          ),
+        );
+      },
+    ),
+  );
 
   Widget Function(BuildContext, Widget, TileImage) get _inversionFilter =>
       (BuildContext ctx, Widget target, TileImage tile) => ColorFiltered(
-            // https://github.com/mlaily/NegativeScreen/blob/4608df1669b2fcfede8f25a0c6d5407521d54f09/NegativeScreen/Configuration.cs#L103
-            colorFilter: const ColorFilter.matrix([
-              // dart-format: off
-              1 / 3, -2 / 3, -2 / 3, 0, 255,
-              -2 / 3, 1 / 3, -2 / 3, 0, 255,
-              -2 / 3, -2 / 3, 1 / 3, 0, 255,
-              0, 0, 0, 1, 0,
-              // dart-format: on
-            ]),
-            child: target,
-          );
+        // https://github.com/mlaily/NegativeScreen/blob/4608df1669b2fcfede8f25a0c6d5407521d54f09/NegativeScreen/Configuration.cs#L103
+        colorFilter: const ColorFilter.matrix([
+          // dart-format: off
+          1 / 3, -2 / 3, -2 / 3, 0, 255,
+          -2 / 3, 1 / 3, -2 / 3, 0, 255,
+          -2 / 3, -2 / 3, 1 / 3, 0, 255,
+          0, 0, 0, 1, 0,
+          // dart-format: on
+        ]),
+        child: target,
+      );
 }

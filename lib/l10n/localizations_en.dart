@@ -15,16 +15,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get welcome_2_1 => 'is';
 
   @override
-  String get welcome_2_2 => 'your memory';
+  String get welcome_2_2 => ' memory';
 
   @override
-  String get welcome_3 => 'Let your thoughts sink into amber';
+  String get welcome_3 => 'Sink your mind';
 
   @override
-  String get welcome_4_1 => 'Preserve';
+  String get welcome_4_1 => 'Save';
 
   @override
-  String get welcome_4_2 => 'this moment';
+  String get welcome_4_2 => ' the present';
 
   @override
   String get mk_title => 'Create Master Key';
@@ -165,10 +165,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_reset_index_desc => 'Rebuild the log index';
 
   @override
-  String get settings_tts_model => 'Speech-to-text settings';
+  String get settings_tts_model => 'STT settings';
 
   @override
-  String get settings_tts_saved => 'Speech-to-text settings saved';
+  String get settings_tts_saved => 'STT settings saved';
 
   @override
   String get settings_tts_encoder => 'Encoder model path';

@@ -249,7 +249,8 @@ class _RecordPageState extends State<RecordPage> {
 
     if (!mounted) return;
     final l = AppLocalizations.of(context)!;
-    final titleAndCover = await showDialog<(String, String)>(
+    final titleAndCover =
+        await showDialog<(String, String)>(
           context: context,
           barrierDismissible: false,
           builder: (context) => TitleAndCoverInput(),
@@ -268,11 +269,10 @@ class _RecordPageState extends State<RecordPage> {
         time: _startTime,
         length: _duration,
         title: titleAndCover.$1,
-        latitude: coord.latitude,
-        longitude: coord.longitude,
+        latitude: coord?.latitude,
+        longitude: coord?.longitude,
         cover: titleAndCover.$2,
-        path: (_startTime.toString() + DateTime.now().toString())
-            .hashCode
+        path: (_startTime.toString() + DateTime.now().toString()).hashCode
             .toString(),
         transcript: "",
       ).dyn,
@@ -350,7 +350,7 @@ class _RecordPageState extends State<RecordPage> {
     return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 
-  Future<LatLng> _getLoc() async {
+  Future<LatLng?> _getLoc() async {
     bool serviceEnabled = await _geo.isLocationServiceEnabled();
     if (!serviceEnabled) {
       await _geo.openLocationSettings();
@@ -359,8 +359,13 @@ class _RecordPageState extends State<RecordPage> {
     if (permission == LocationPermission.denied) {
       permission = await _geo.requestPermission();
     }
-    final pos = await _geo.getCurrentPosition();
-    return LatLng(pos.altitude, pos.longitude);
+    if (permission != LocationPermission.denied &&
+        permission != LocationPermission.deniedForever) {
+      final pos = await _geo.getCurrentPosition();
+      return LatLng(pos.altitude, pos.longitude);
+    } else {
+      return null;
+    }
   }
 
   void _micError(String msg) {

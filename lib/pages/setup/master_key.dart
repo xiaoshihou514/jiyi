@@ -65,6 +65,7 @@ class _MasterKeyPage extends State<MasterKeyPage> {
     final l = AppLocalizations.of(context)!;
 
     return Scaffold(
+      backgroundColor: DefaultColors.bg,
       floatingActionButton: IconButton(
         onPressed: () {
           if (_enteredMK) {
@@ -93,8 +94,7 @@ class _MasterKeyPage extends State<MasterKeyPage> {
           color: DefaultColors.fg,
           fontFamily: "朱雀仿宋",
         ),
-        child: Container(
-          color: DefaultColors.bg,
+        child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.all(12.em),
             child: Column(
@@ -103,11 +103,11 @@ class _MasterKeyPage extends State<MasterKeyPage> {
                 Padding(
                   padding: ScreenUtil().scaleWidth < ScreenUtil().scaleHeight
                       ?
-                      // mobile
-                      EdgeInsets.symmetric(vertical: 7.5.em)
+                        // mobile
+                        EdgeInsets.symmetric(vertical: 7.5.em)
                       :
-                      // desktop / tablet
-                      EdgeInsets.zero,
+                        // desktop / tablet
+                        EdgeInsets.zero,
                   child: Text(
                     l.mk_title,
                     style: TextStyle(
@@ -131,14 +131,14 @@ class _MasterKeyPage extends State<MasterKeyPage> {
                   child: Padding(
                     padding: ScreenUtil().scaleWidth < ScreenUtil().scaleHeight
                         ?
-                        // mobile
-                        EdgeInsets.symmetric(vertical: 2.5.em)
-                        :
-                        // desktop / tablet
-                        EdgeInsets.symmetric(
+                          // mobile
+                          EdgeInsets.symmetric(
                             vertical: 4.em,
                             horizontal: 50.em,
-                          ),
+                          )
+                        :
+                          // desktop / tablet
+                          EdgeInsets.symmetric(vertical: 2.5.em),
                     child: AutofillGroup(
                       // input field
                       child: TextField(
@@ -187,7 +187,7 @@ class _MasterKeyPage extends State<MasterKeyPage> {
                 ),
 
                 // warning
-                Row(
+                Wrap(
                   children: [
                     Icon(Icons.warning, color: DefaultColors.error),
                     Text(

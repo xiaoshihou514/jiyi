@@ -9,12 +9,11 @@ class Metadata {
   final DateTime time;
   final Duration length;
   final String title;
-  final double latitude;
-  final double longitude;
+  final double? latitude;
+  final double? longitude;
   // length = 1 emoji
   final String cover;
   final String path;
-  // TODO: not used
   final String transcript;
 
   Metadata({
@@ -31,7 +30,8 @@ class Metadata {
   factory Metadata.fromDyn(Map<String, dynamic> dyn) => _$MetadataFromJson(dyn);
   Map<String, dynamic> get dyn => _$MetadataToJson(this);
   String get json => jsonEncode(dyn);
-  LatLng get pt => LatLng(latitude, longitude);
+  bool get hasGeo => latitude != null && longitude != null;
+  LatLng? get pt => hasGeo ? LatLng(latitude!, longitude!) : null;
 
   @override
   String toString() => json;

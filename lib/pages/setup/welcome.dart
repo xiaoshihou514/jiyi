@@ -96,10 +96,10 @@ class _WelcomePageState extends State<WelcomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  Icons.photo_library,
-                  size: iconSize,
-                  color: DefaultColors.func,
-                )
+                      Icons.photo_library,
+                      size: iconSize,
+                      color: DefaultColors.func,
+                    )
                     .animate()
                     .fadeIn(delay: delay_2_2, duration: duration_2_2)
                     .tint(
