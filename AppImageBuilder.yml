@@ -1,23 +1,27 @@
 # appimage-builder recipe see https://appimage-builder.readthedocs.io for details
 version: 1
+script:
+  - mkdir -p AppDir/usr/share/icons
+  - cp assets/icon.png AppDir/usr/share/icons
+
 AppDir:
-  path: /home/xiaoshihou/Playground/github/jiyi/AppDir
+  path: ./AppDir
   app_info:
     id: com.github.xiaoshihou.jiyi
     name: jiyi
-    icon: applications-utilities
+    icon: icon
     version: 1.0.0
     exec: jiyi
     exec_args: $@
   files:
     include:
-    - /lib64/ld-linux-x86-64.so.2
+      - /lib64/ld-linux-x86-64.so.2
     exclude:
-    - usr/share/man
-    - usr/share/doc/*/README.*
-    - usr/share/doc/*/changelog.*
-    - usr/share/doc/*/NEWS.*
-    - usr/share/doc/*/TODO.*
+      - usr/share/man
+      - usr/share/doc/*/README.*
+      - usr/share/doc/*/changelog.*
+      - usr/share/doc/*/NEWS.*
+      - usr/share/doc/*/TODO.*
   test:
     fedora-30:
       image: appimagecrafters/tests-env:fedora-30
