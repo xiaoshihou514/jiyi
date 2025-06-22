@@ -25,7 +25,10 @@
 sudo dnf install
     gstreamer1 \                                     # 录音
     gstreamer1-devel gstreamer1-plugins-base-devel \ # 播放
-    pam-devel                                        # 身份验证
+    pam-devel \                                      # 身份验证
+    libsecret-devel \                                # 储存敏感信息
+    gtk3-devel \                                     # Linux界面
+    squashfs-tools                                   # Linux打包Appimage
 ```
 
 `flutter doctor`（我的配置）：
@@ -65,7 +68,6 @@ To manually set the JDK path, use: `flutter config --jdk-dir="path/to/jdk"`.
 </details>
 
 ```shell
-sudo dnf install gtk3-devel pam-devel gstreamer1-devel libsecret-devel squashfs-tools
 dart run build_runner build
 # 安卓
 flutter build apk --release

@@ -23,7 +23,10 @@ Install dependencies:
 sudo dnf install
     gstreamer1 \                                     # Audio recording
     gstreamer1-devel gstreamer1-plugins-base-devel \ # Audio playback
-    pam-devel                                        # Authentication
+    pam-devel \                                      # Auth
+    libsecret-devel \                                # Save sensitive data
+    gtk3-devel \                                     # Linux UI
+    squashfs-tools                                   # Linux Appimage packaging
 ```
 
 `flutter doctor` (My configuration):
@@ -63,7 +66,6 @@ To manually set the JDK path, use: `flutter config --jdk-dir="path/to/jdk"`.
 </details>
 
 ```shell
-sudo dnf install gtk3-devel pam-devel gstreamer1-devel libsecret-devel squashfs-tools
 dart run build_runner build
 # Android
 flutter build apk --release
