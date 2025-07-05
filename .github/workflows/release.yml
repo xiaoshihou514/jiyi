@@ -59,7 +59,7 @@ jobs:
         if: matrix.config.target == 'Android'
         uses: android-actions/setup-android@v3
         with:
-          packages: "ndk;26.1.10909125 ndk;26.3.11579264 ndk;27.0.12077973 build-tools;35.0.0 platforms;android-35 platform-tools"
+          packages: "ndk;27.2.12479018"
 
       - name: Build Android
         if: matrix.config.target == 'Android'
@@ -67,10 +67,8 @@ jobs:
           set -ex
           export JIYI=$(pwd)
           cd $HOME
-          git clone https://github.com/alnitak/flutter_soloud
           git clone https://github.com/k2-fsa/sherpa-onnx
           export FLUTTER=$(dirname $(which flutter))
-          export FLUTTER_SOLOUD=$HOME/flutter_soloud
           export ANDROID_NDK=$ANDROID_HOME/ndk/$(ls $ANDROID_HOME/ndk/ | tail -n1)
           export SHERPA_ONNX=$HOME/sherpa-onnx
 
@@ -83,6 +81,10 @@ jobs:
           git -C $FLUTTER checkout -f $flutterVersion
           flutter config --no-analytics
           flutter pub get
+          sed -i -e 's/ndkVersion .*/ndkVersion = "27.2.12479018"/' {android/app,$PUB_CACHE/hosted/pub.dev/{flutter_recorder-*,flutter_soloud-*}/android,$SHERPA_ONNX/flutter/sherpa_onnx_android/android}/build.gradle
+          sed -i -e '1i add_link_options("LINKER:--build-id=none")' $PUB_CACHE/hosted/pub.dev/{flutter_recorder-*/src,flutter_soloud-*/android}/CMakeLists.txt
+          sed -i -e 's/-DCMAKE_TOOLCHAIN_FILE/-DCMAKE_SHARED_LINKER_FLAGS=-Wl,--build-id=none -DCMAKE_TOOLCHAIN_FILE/' $SHERPA_ONNX/build-android-arm64-v8a.sh
+          sed -i -e 's/-Wl/-Wl,--build-id=none/' $PUB_CACHE/hosted/pub.dev/flutter_soloud-*/xiph/build_Android.sh
 
           find $PUB_CACHE -type f -name "*.wasm" -exec rm -f {} \;
           find $PUB_CACHE -type f -name "*.so" -exec rm -f {} \;
@@ -92,21 +94,19 @@ jobs:
           rm -rf $PUB_CACHE/hosted/pub.dev/gsettings-*/test/dconf/test
           rm -rf $PUB_CACHE/hosted/pub.dev/audioplayers-*/example
 
-          pushd $FLUTTER_SOLOUD/android
-          gradle build
-          cp -r ./libs/* "$PUB_CACHE/hosted/pub.dev/flutter_soloud-$SOLOUD_VERSION/android/libs/"
+          pushd $PUB_CACHE/hosted/pub.dev/flutter_soloud-*/xiph
+          ./build_Android.sh
+          cp -a android ..
           popd
 
           pushd $SHERPA_ONNX
-          cp "$ANDROID_NDK/build/cmake/android-legacy.toolchain.cmake" "$ANDROID_NDK/build/cmake/android-legacy.toolchain.cmake.bak"
-          sed -i '/list(APPEND ANDROID_COMPILER_FLAGS/{N;N;s/\n[[:space:]]*-g\n/\n/}' "$ANDROID_NDK/build/cmake/android-legacy.toolchain.cmake"
           ./build-android-arm64-v8a.sh
-          cp build-android-arm64-v8a/install/lib/lib*.so $PUB_CACHE/hosted/pub.dev/sherpa_onnx_android-$SHERPA_VERSION/android/src/main/jniLibs/arm64-v8a/
-          cp -f "$ANDROID_NDK/build/cmake/android-legacy.toolchain.cmake.bak" "$ANDROID_NDK/build/cmake/android-legacy.toolchain.cmake"
+          cp build-android-arm64-v8a/install/lib/lib*.so $PUB_CACHE/hosted/pub.dev/sherpa_onnx_android-*/android/src/main/jniLibs/arm64-v8a/
           popd
 
-          touch $PUB_CACHE/hosted/pub.dev/flutter_recorder-$RECORDER_VERSION/web/libflutter_recorder_plugin.wasm
-          touch $PUB_CACHE/hosted/pub.dev/flutter_soloud-$SOLOUD_VERSION/web/libflutter_soloud_plugin.wasm
+          touch $(echo $PUB_CACHE/hosted/pub.dev/flutter_recorder-*)/web/libflutter_recorder_plugin.wasm
+          touch $(echo $PUB_CACHE/hosted/pub.dev/flutter_soloud-*)/web/libflutter_soloud_plugin.wasm
+
           flutter build apk --flavor fdroid
 
       - name: Upload binaries to release
