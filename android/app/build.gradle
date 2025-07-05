@@ -22,6 +22,9 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+import com.android.build.OutputFile
+ext.abiCodes = ["x86_64": 1, "armeabi-v7a": 2, "arm64-v8a": 3]
+
 android {
     namespace "com.github.xiaoshihou.jiyi"
     compileSdkVersion flutter.compileSdkVersion
@@ -40,20 +43,13 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    flavorDimensions "deploy"
-
-    productFlavors {
-        fdroid {
-            dimension "deploy"
-        }
-    }
-
     android.applicationVariants.all { variant ->
-        if (variant.flavorName == "fdroid") {
-            variant.outputs.all { output ->
-                output.outputFileName = "app-fdroid-release.apk"
-            }
+      variant.outputs.each { output ->
+        def abiVersionCode = project.ext.abiCodes.get(output.getFilter(OutputFile.ABI))
+        if (abiVersionCode != null) {
+          output.versionCodeOverride = variant.versionCode * 10 + abiVersionCode
         }
+      }
     }
 
     kotlinOptions {
