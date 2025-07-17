@@ -629,7 +629,7 @@ abstract class AppLocalizations {
   /// No description provided for @playlist_title.
   ///
   /// In zh, this message translates to:
-  /// **'当日记录（{len}）'**
+  /// **'选中的记录（{len}）'**
   String playlist_title(Object len);
 
   /// No description provided for @search_hint.

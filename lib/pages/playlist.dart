@@ -13,7 +13,8 @@ import 'package:jiyi/utils/text_color.dart';
 @DeepSeek()
 class Playlist extends StatefulWidget {
   final List<Metadata> _mds;
-  const Playlist(this._mds, {super.key});
+  Playlist(List<Metadata> mds, {super.key})
+    : _mds = mds..sort((x, y) => y.time.compareTo(x.time));
 
   @override
   State<Playlist> createState() => _PlaylistState();
@@ -87,7 +88,7 @@ class _PlaylistState extends State<Playlist> {
   }
 
   Widget _buildLogItem(Metadata entry, int number) {
-    final timeStr = DateFormat.Hm().format(entry.time);
+    final timeStr = DateFormat("yyyy-MM-dd HH:mm").format(entry.time);
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 6.em, vertical: 4.em),

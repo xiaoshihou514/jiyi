@@ -79,10 +79,12 @@ class _PlayerState extends State<Player> {
         _duration = widget._md.length;
       });
     } catch (e) {
-      setState(() {
-        _error = '加载失败: ${e.toString()}';
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _error = '加载失败: ${e.toString()}';
+          _isLoading = false;
+        });
+      }
     }
   }
 

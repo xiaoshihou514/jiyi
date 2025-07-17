@@ -56,10 +56,8 @@ To manually set the JDK path, use: `flutter config --jdk-dir="path/to/jdk"`.
 • cmake version 3.30.8
 • ninja version 1.12.1
 • pkg-config version 2.3.0
-• OpenGL core renderer: AMD Radeon Graphics (radeonsi, renoir, ACO, DRM 3.61, 6.14.5-200.fc41.x86_64)
 • OpenGL core version: 4.6 (Core Profile) Mesa 25.0.4
 • OpenGL core shading language version: 4.60
-• OpenGL ES renderer: AMD Radeon Graphics (radeonsi, renoir, ACO, DRM 3.61, 6.14.5-200.fc41.x86_64)
 • OpenGL ES version: OpenGL ES 3.2 Mesa 25.0.4
 • OpenGL ES shading language version: OpenGL ES GLSL ES 3.20
 • GL_EXT_framebuffer_blit: yes

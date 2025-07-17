@@ -362,7 +362,7 @@ class _RecordPageState extends State<RecordPage> {
     if (permission != LocationPermission.denied &&
         permission != LocationPermission.deniedForever) {
       final pos = await _geo.getCurrentPosition();
-      return LatLng(pos.altitude, pos.longitude);
+      return LatLng(pos.latitude, pos.longitude);
     } else {
       return null;
     }

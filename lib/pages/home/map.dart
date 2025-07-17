@@ -5,6 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:http_cache_file_store/http_cache_file_store.dart';
+import 'package:flutter_map_cache/flutter_map_cache.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import 'package:jiyi/components/spinner.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
@@ -17,25 +25,17 @@ import 'package:jiyi/utils/metadata.dart';
 import 'package:jiyi/utils/notifier.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
 import 'package:jiyi/utils/smooth_router.dart';
-import 'package:latlong2/latlong.dart';
-import 'package:http_cache_file_store/http_cache_file_store.dart';
-import 'package:flutter_map_cache/flutter_map_cache.dart';
-import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart';
-import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class RichMarker extends Marker {
   final Metadata md;
   final double lat;
   final double lng;
-  final Widget view;
   RichMarker(
     this.md, {
     required this.lat,
     required this.lng,
-    required this.view,
-  }) : super(point: LatLng(lat, lng), child: view);
+    required super.child,
+  }) : super(point: LatLng(lat, lng));
 }
 
 bool isMobile = ScreenUtil().screenWidth < ScreenUtil().screenHeight;
@@ -207,7 +207,7 @@ class _MapViewState extends State<MapView> {
           md,
           lat: md.latitude!,
           lng: md.longitude!,
-          view: IconButton(
+          child: IconButton(
             onPressed: () {
               if (context.mounted) {
                 Navigator.push(context, SmoothRouter.builder(Player(md)));

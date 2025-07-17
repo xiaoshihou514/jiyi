@@ -294,7 +294,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String playlist_title(Object len) {
-    return 'Entries Today ($len)';
+    return 'Entries selected ($len)';
   }
 
   @override

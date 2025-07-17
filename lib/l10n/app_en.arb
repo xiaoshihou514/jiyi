@@ -96,7 +96,7 @@
   "metadata_save_error": "Import failed: {msg}",
 
   "untitled_cd": "Untitled Tape",
-  "playlist_title": "Entries Today ({len})",
+  "playlist_title": "Entries selected ({len})",
 
   "search_hint": "Search titles or content...",
   "search_results_count": "{n} results found for {needle}",

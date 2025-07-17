@@ -283,7 +283,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String playlist_title(Object len) {
-    return '当日记录（$len）';
+    return '选中的记录（$len）';
   }
 
   @override
