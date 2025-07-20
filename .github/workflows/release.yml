@@ -82,7 +82,7 @@ jobs:
           flutter pub get
           sed -i -e 's/ndkVersion .*/ndkVersion = "27.2.12479018"/' {android/app,$PUB_CACHE/hosted/pub.dev/{flutter_recorder-*,flutter_soloud-*,sherpa_onnx_android-*}/android}/build.gradle
           sed -i -e '1i add_link_options("LINKER:--build-id=none")' $PUB_CACHE/hosted/pub.dev/{flutter_recorder-*/src,flutter_soloud-*/android}/CMakeLists.txt
-          sed -i -e 's/-DCMAKE_TOOLCHAIN_FILE/-DCMAKE_SHARED_LINKER_FLAGS=-Wl,--build-id=none -DCMAKE_TOOLCHAIN_FILE/' $SHERPA_ONNX/{build-android-arm64-v8a.sh,build-android-armv7-eabi.sh,build-android-x86-64.sh}
+          sed -i -e 's/-DCMAKE_TOOLCHAIN_FILE/-DCMAKE_SHARED_LINKER_FLAGS=-Wl,--build-id=none,--sort-section=name -DCMAKE_TOOLCHAIN_FILE/' $SHERPA_ONNX/{build-android-arm64-v8a.sh,build-android-armv7-eabi.sh,build-android-x86-64.sh}
           sed -i -e 's/-Wl/-Wl,--build-id=none/' $PUB_CACHE/hosted/pub.dev/flutter_soloud-*/xiph/build_Android.sh
 
           find $PUB_CACHE -type f -regex ".*\.\(wasm\|so\|zip\|gz\|exe\)$" -exec rm -f {} \;
