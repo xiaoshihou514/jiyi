@@ -18,9 +18,9 @@ jobs:
           - os: ubuntu-latest
             files: jiyi-${{ github.ref_name }}-x86_64.AppImage
             target: Linux
-          - os: windows-latest
-            files: jiyi-${{ github.ref_name }}-x86_64_windows.zip
-            target: Windows
+          # - os: windows-latest
+          #   files: jiyi-${{ github.ref_name }}-x86_64_windows.zip
+          #   target: Windows
 
     steps:
       - uses: actions/checkout@v4
@@ -50,19 +50,19 @@ jobs:
           cp -r build/linux/x64/release/bundle ./AppDir
           ./appimage-builder --skip-tests
 
-      - name: Setup Zip
-        if: matrix.config.target == 'Windows'
-        uses: MinoruSekine/setup-scoop@v4
-        with:
-          apps: zip
-
-      - name: Build Windows
-        if: matrix.config.target == 'Windows'
-        run: |
-          Set-PSDebug -Trace 1
-          flutter build windows --release
-          cp -r build/windows/x64/runner/Release/ jiyi
-          zip -9 -r jiyi-${{ github.ref_name }}-x86_64_windows.zip jiyi
+      # - name: Setup Zip
+      #   if: matrix.config.target == 'Windows'
+      #   uses: MinoruSekine/setup-scoop@v4
+      #   with:
+      #     apps: zip
+      #
+      # - name: Build Windows
+      #   if: matrix.config.target == 'Windows'
+      #   run: |
+      #     Set-PSDebug -Trace 1
+      #     flutter build windows --release
+      #     cp -r build/windows/x64/runner/Release/ jiyi
+      #     zip -9 -r jiyi-${{ github.ref_name }}-x86_64_windows.zip jiyi
 
       - name: Setup Gradle
         if: matrix.config.target == 'Android'
