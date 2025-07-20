@@ -18,6 +18,9 @@ jobs:
           - os: ubuntu-latest
             files: jiyi-${{ github.ref_name }}-x86_64.AppImage
             target: Linux
+          - os: windows-latest
+            files: jiyi-${{ github.ref_name }}-x86_64_windows.zip
+            target: Windows
 
     steps:
       - uses: actions/checkout@v4
@@ -47,6 +50,20 @@ jobs:
           cp -r build/linux/x64/release/bundle ./AppDir
           ./appimage-builder --skip-tests
 
+      - name: Setup Zip
+        if: matrix.config.target == 'Windows'
+        uses: MinoruSekine/setup-scoop@v4
+        with:
+          apps: zip
+
+      - name: Build Windows
+        if: matrix.config.target == 'Windows'
+        run: |
+          Set-PSDebug -Trace 1
+          flutter build windows --release
+          cp -r build/windows/x64/runner/Release/ jiyi
+          zip -9 -r jiyi-${{ github.ref_name }}-x86_64_windows.zip jiyi
+
       - name: Setup Gradle
         if: matrix.config.target == 'Android'
         uses: gradle/actions/setup-gradle@v4
@@ -68,8 +85,6 @@ jobs:
           cd $HOME
           git clone https://github.com/k2-fsa/sherpa-onnx
           export FLUTTER=$(dirname $(which flutter))
-          export ANDROID_NDK=$ANDROID_HOME/ndk/27.2.12479018
-          export ANDROID_NDK_LATEST_HOME=$ANDROID_NDK
           export SHERPA_ONNX=$HOME/sherpa-onnx
 
           cd $JIYI
@@ -81,9 +96,6 @@ jobs:
           flutter config --no-analytics
           flutter pub get
           sed -i -e 's/ndkVersion .*/ndkVersion = "27.2.12479018"/' {android/app,$PUB_CACHE/hosted/pub.dev/{flutter_recorder-*,flutter_soloud-*,sherpa_onnx_android-*}/android}/build.gradle
-          sed -i -e '1i add_link_options("LINKER:--build-id=none")' $PUB_CACHE/hosted/pub.dev/{flutter_recorder-*/src,flutter_soloud-*/android}/CMakeLists.txt
-          sed -i -e 's/-DCMAKE_TOOLCHAIN_FILE/-DCMAKE_SHARED_LINKER_FLAGS=-Wl,--build-id=none -DCMAKE_TOOLCHAIN_FILE/' $SHERPA_ONNX/{build-android-arm64-v8a.sh,build-android-armv7-eabi.sh,build-android-x86-64.sh}
-          sed -i -e 's/-Wl/-Wl,--build-id=none/' $PUB_CACHE/hosted/pub.dev/flutter_soloud-*/xiph/build_Android.sh
 
           find $PUB_CACHE -type f -regex ".*\.\(wasm\|so\|zip\|gz\|exe\)$" -exec rm -f {} \;
           rm -rf $PUB_CACHE/hosted/pub.dev/gsettings-*/test/dconf/test
