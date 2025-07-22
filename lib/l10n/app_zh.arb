@@ -61,6 +61,7 @@
   "settings_tts_model_type": "模型类型（例：zipformer）",
   "settings_tts_picker_desc":  "选择模型",
   "settings_tts_download_desc": "请自行从sherpa-onnx下载模型",
+  "settings_tts_download_exp": "一般格式为xxx-streaming-zipformer-语言，自行下载解压后即可看到模型（onnx）文件。一般来说中端手机跑500M的模型是没什么问题的。",
 
   "download_title": "栅格文件下载",
   "download_perc": "{a}.zip：{b}%",

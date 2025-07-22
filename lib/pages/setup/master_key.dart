@@ -132,10 +132,7 @@ class _MasterKeyPage extends State<MasterKeyPage> {
                     padding: ScreenUtil().scaleWidth < ScreenUtil().scaleHeight
                         ?
                           // mobile
-                          EdgeInsets.symmetric(
-                            vertical: 4.em,
-                            horizontal: 50.em,
-                          )
+                          EdgeInsets.symmetric(vertical: 4.em, horizontal: 2.em)
                         :
                           // desktop / tablet
                           EdgeInsets.symmetric(vertical: 2.5.em),

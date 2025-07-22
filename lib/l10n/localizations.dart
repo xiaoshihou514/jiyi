@@ -440,6 +440,12 @@ abstract class AppLocalizations {
   /// **'请自行从sherpa-onnx下载模型'**
   String get settings_tts_download_desc;
 
+  /// No description provided for @settings_tts_download_exp.
+  ///
+  /// In zh, this message translates to:
+  /// **'一般格式为xxx-streaming-zipformer-语言，自行下载解压后即可看到模型（onnx）文件。一般来说中端手机跑500M的模型是没什么问题的。'**
+  String get settings_tts_download_exp;
+
   /// No description provided for @download_title.
   ///
   /// In zh, this message translates to:

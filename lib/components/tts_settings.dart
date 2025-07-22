@@ -205,8 +205,14 @@ class _TTSSettingsState extends State<TTSSettings> {
             ),
           ),
           onTap: () => launchUrl(
-            Uri.parse("https://github.com/k2-fsa/sherpa-onnx/releases"),
+            Uri.parse(
+              "https://github.com/k2-fsa/sherpa-onnx/releases/tag/asr-models",
+            ),
           ),
+        ),
+        Text(
+          l.settings_tts_download_exp,
+          style: TextStyle(color: DefaultColors.fg),
         ),
       ],
     );
@@ -223,14 +229,14 @@ class _TTSSettingsState extends State<TTSSettings> {
       TextStyle(color: DefaultColors.fg, fontSize: isMobile ? 4.em : 3.em);
 
   InputDecoration get _inputDecoration => InputDecoration(
-        contentPadding: isMobile ? null : EdgeInsets.symmetric(vertical: 1.em),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: DefaultColors.fg),
-        ),
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: DefaultColors.fg),
-        ),
-      );
+    contentPadding: isMobile ? null : EdgeInsets.symmetric(vertical: 1.em),
+    enabledBorder: UnderlineInputBorder(
+      borderSide: BorderSide(color: DefaultColors.fg),
+    ),
+    focusedBorder: UnderlineInputBorder(
+      borderSide: BorderSide(color: DefaultColors.fg),
+    ),
+  );
 
   // Updated file selection method
   Future<void> _selectModelFile(String field) async {

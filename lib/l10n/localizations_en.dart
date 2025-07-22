@@ -193,6 +193,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Please download models manually from sherpa-onnx';
 
   @override
+  String get settings_tts_download_exp =>
+      'The format is usually xxx-streaming-zipformer-language, after you have downloaded and extracted the archive you should see the model (onnx) files. A modest phone should be able to run a 500M model.';
+
+  @override
   String get download_title => 'Raster File Download';
 
   @override

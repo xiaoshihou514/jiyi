@@ -183,6 +183,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_tts_download_desc => '请自行从sherpa-onnx下载模型';
 
   @override
+  String get settings_tts_download_exp =>
+      '一般格式为xxx-streaming-zipformer-语言，自行下载解压后即可看到模型（onnx）文件。一般来说中端手机跑500M的模型是没什么问题的。';
+
+  @override
   String get download_title => '栅格文件下载';
 
   @override
