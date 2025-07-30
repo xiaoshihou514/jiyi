@@ -2,8 +2,12 @@
     <h1>Jiyi</h1>
 </div>
 
-![](https://f-droid.org/badge/get-it-on.svg)
-[Download from Github](https://github.com/xiaoshihou514/jiyi/releases/latest)
+<a href="https://f-droid.org/en/packages/com.github.xiaoshihou.jiyi/">
+    <img src="https://f-droid.org/badge/get-it-on-en.svg" height="100">
+</a>
+<a href="https://github.com/xiaoshihou514/jiyi/releases/latest">
+    <img src="https://github.com/user-attachments/assets/22a7d628-00e8-44ee-b7b4-20325fa627d7" height="100">
+</a>
 
 Jiyi is a cross-platform encrypted voice note application.
 

@@ -2,8 +2,12 @@
     <h1>记忆</h1>
 </div>
 
-![](https://f-droid.org/badge/get-it-on-zh-cn.svg)
-[自Github下载](https://github.com/xiaoshihou514/jiyi/releases/latest)
+<a href="https://f-droid.org/zh_Hans/packages/com.github.xiaoshihou.jiyi/">
+    <img src="https://f-droid.org/badge/get-it-on-zh-cn.svg" height="100">
+</a>
+<a href="https://github.com/xiaoshihou514/jiyi/releases/latest">
+    <img src="https://github.com/user-attachments/assets/22a7d628-00e8-44ee-b7b4-20325fa627d7" height="100">
+</a>
 
 [English](./README-en.md)
 
