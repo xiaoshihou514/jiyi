@@ -2,6 +2,9 @@
     <h1>记忆</h1>
 </div>
 
+![](https://f-droid.org/badge/get-it-on-zh-cn.svg)
+[自Github下载](https://github.com/xiaoshihou514/jiyi/releases/latest)
+
 [English](./README-en.md)
 
 记忆是一款跨平台加密语音日志应用
@@ -22,7 +25,7 @@
 安装依赖：
 
 ```shell
-sudo dnf install
+sudo dnf install \
     gstreamer1 \                                     # 录音
     gstreamer1-devel gstreamer1-plugins-base-devel \ # 播放
     pam-devel \                                      # 身份验证

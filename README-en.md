@@ -2,6 +2,9 @@
     <h1>Jiyi</h1>
 </div>
 
+![](https://f-droid.org/badge/get-it-on.svg)
+[Download from Github](https://github.com/xiaoshihou514/jiyi/releases/latest)
+
 Jiyi is a cross-platform encrypted voice note application.
 
 - **Protect Your Privacy**: In today's world where cloud services are increasingly prevalent, privacy has become a black box. All features of Jiyi run locally to fully protect your privacy.
@@ -20,7 +23,7 @@ Jiyi is a cross-platform encrypted voice note application.
 Install dependencies:
 
 ```shell
-sudo dnf install
+sudo dnf install \
     gstreamer1 \                                     # Audio recording
     gstreamer1-devel gstreamer1-plugins-base-devel \ # Audio playback
     pam-devel \                                      # Auth
