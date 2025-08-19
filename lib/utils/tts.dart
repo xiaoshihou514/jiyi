@@ -9,6 +9,49 @@ abstract class Tts {
   // 1 second
   static double THRESHOLD = 1.0;
 
+  // 防结巴处理函数
+  static String _compressRepeatingChars(String input) {
+    if (input.isEmpty) return input;
+
+    StringBuffer result = StringBuffer();
+    List<String> chars = input.split('');
+    int i = 0;
+
+    while (i < chars.length) {
+      String currentChar = chars[i];
+      int repeatCount = 1;
+
+      // 检查是否是中文字符（Unicode范围）
+      bool isChinese = currentChar.runes.any(
+        (rune) => rune >= 0x4E00 && rune <= 0x9FFF,
+      );
+
+      // 如果是中文字符，计算连续重复次数
+      if (isChinese) {
+        int j = i + 1;
+        while (j < chars.length && chars[j] == currentChar) {
+          repeatCount++;
+          j++;
+        }
+
+        // 如果连续重复3次或以上，只保留一个
+        if (repeatCount >= 3) {
+          result.write(currentChar);
+          i = j; // 跳过重复字符
+          continue;
+        }
+      }
+
+      // 非重复字符或重复次数不足3次
+      for (int k = 0; k < repeatCount; k++) {
+        result.write(currentChar);
+      }
+      i += repeatCount;
+    }
+
+    return result.toString();
+  }
+
   static String fromWAV(
     so.OnlineModelConfig? model,
     Float32List data,
@@ -38,26 +81,22 @@ abstract class Tts {
     for (int i = 0; i < words.length; i++) {
       if (lastTimestamp != null &&
           (timestamps[i] - lastTimestamp) > THRESHOLD) {
-        // 时间间隔超过阈值，开始新句子
+        // 添加防结巴处理
+        currentSentence = _compressRepeatingChars(currentSentence);
         sentences.add(currentSentence);
         currentSentence = words[i];
       } else {
-        // 时间间隔在阈值内，继续当前句子
-        if (currentSentence.isNotEmpty) {
-          currentSentence += words[i];
-        } else {
-          currentSentence = words[i];
-        }
+        currentSentence += words[i];
       }
       lastTimestamp = timestamps[i];
     }
 
-    // 添加最后一个句子
+    // 处理最后一个句子
     if (currentSentence.isNotEmpty) {
+      currentSentence = _compressRepeatingChars(currentSentence);
       sentences.add(currentSentence);
     }
 
-    // 输出结果
     return sentences.join("\n");
   }
 }

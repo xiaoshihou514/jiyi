@@ -134,100 +134,18 @@ class _PlayerState extends State<Player> {
               )
             else if (_isLoading)
               Center(child: Spinner(Icons.sync, DefaultColors.keyword, 30.em))
-            else
-              Stack(
-                alignment: AlignmentDirectional.center,
-                children: [
-                  SizedBox(width: 84.em, height: 50.em, child: Tape()),
-                  // tape "hole"
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 2.em),
-                    child: Container(
-                      width: isMobile ? 46.em : 50.em,
-                      height: 18.05.em,
-                      decoration: BoxDecoration(
-                        color: DefaultColors.bg,
-                        borderRadius: BorderRadius.circular(8.5.em),
-                        border: Border.all(
-                          color: DefaultColors.shade_3,
-                          width: 1.em,
-                        ),
-                      ),
-                    ),
-                  ),
-                  // sound wave
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 2.em),
-                    child: SizedBox(
-                      width: 32.em,
-                      height: 12.em,
-                      child: SoundViz(_stop),
-                    ),
-                  ),
-                  // tape cog - left
-                  Positioned(
-                    top: 16.em,
-                    left: 18.em,
-                    child: Container(
-                      width: 16.em,
-                      height: 16.em,
-                      decoration: BoxDecoration(
-                        color: DefaultColors.shade_6,
-                        borderRadius: BorderRadius.circular(8.em),
-                        border: Border.all(
-                          color: DefaultColors.func,
-                          width: 0.8.em,
-                        ),
-                      ),
-                      child: FittedBox(child: Tapewheel(_stop)),
-                    ),
-                  ),
-                  // tape cog - right
-                  Positioned(
-                    top: 16.em,
-                    right: 18.em,
-                    child: Container(
-                      width: 16.em,
-                      height: 16.em,
-                      decoration: BoxDecoration(
-                        color: DefaultColors.shade_6,
-                        borderRadius: BorderRadius.circular(8.em),
-                        border: Border.all(
-                          color: DefaultColors.func,
-                          width: 0.8.em,
-                        ),
-                      ),
-                      child: FittedBox(child: Tapewheel(_stop)),
-                    ),
-                  ),
-                  // tape title
-                  Positioned(
-                    top: 8.em,
-                    child: Text(
-                      widget._md.title,
-                      style: TextStyle(
-                        fontSize: 4.em,
-                        fontFamily: "851手写杂书体",
-                        decoration: TextDecoration.none,
-                        color: DefaultColors.info,
-                      ),
-                    ),
-                  ),
-                  // record time
-                  Positioned(
-                    bottom: 2.5.em,
-                    child: Text(
-                      _printDuration(_position),
-                      style: TextStyle(
-                        fontSize: 6.em,
-                        fontFamily: "digital7-mono",
-                        decoration: TextDecoration.none,
-                        color: DefaultColors.bg,
-                      ),
-                    ),
-                  ),
-                ],
+            else if (isMobile)
+              _cdViz(isMobile)
+            else // desktop
+              SizedBox(
+                height: 50.em,
+                child: Row(children: [_cdViz(isMobile), _transcript()]),
               ),
+
+            Spacer(flex: 1),
+
+            // 字幕
+            if (!_isLoading && _error == null && isMobile) _transcript(),
 
             Spacer(flex: 1),
 
@@ -261,19 +179,125 @@ class _PlayerState extends State<Player> {
               ),
 
             // 控制按钮
-            Center(
-              child: IconButton(
-                onPressed: _togglePause,
-                icon: Icon(
-                  _stop.value ? Icons.play_arrow : Icons.pause,
-                  size: 20.em,
+            if (!_isLoading && _error == null)
+              Center(
+                child: IconButton(
+                  onPressed: _togglePause,
+                  icon: Icon(
+                    _stop.value ? Icons.play_arrow : Icons.pause,
+                    size: 20.em,
+                    color: DefaultColors.fg,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _transcript() {
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Wrap(
+          children: [
+            Container(
+              color: DefaultColors.shade_1,
+              child: Text(
+                widget._md.transcript,
+                style: TextStyle(
                   color: DefaultColors.fg,
+                  fontFamily: "朱雀仿宋",
+                  fontSize: 4.em,
                 ),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Stack _cdViz(bool isMobile) {
+    return Stack(
+      alignment: AlignmentDirectional.center,
+      children: [
+        SizedBox(width: 84.em, height: 50.em, child: Tape()),
+        // tape "hole"
+        Padding(
+          padding: EdgeInsets.only(bottom: 2.em),
+          child: Container(
+            width: isMobile ? 46.em : 50.em,
+            height: 18.05.em,
+            decoration: BoxDecoration(
+              color: DefaultColors.bg,
+              borderRadius: BorderRadius.circular(8.5.em),
+              border: Border.all(color: DefaultColors.shade_3, width: 1.em),
+            ),
+          ),
+        ),
+        // sound wave
+        Padding(
+          padding: EdgeInsets.only(bottom: 2.em),
+          child: SizedBox(width: 32.em, height: 12.em, child: SoundViz(_stop)),
+        ),
+        // tape cog - left
+        Positioned(
+          top: 16.em,
+          left: 18.em,
+          child: Container(
+            width: 16.em,
+            height: 16.em,
+            decoration: BoxDecoration(
+              color: DefaultColors.shade_6,
+              borderRadius: BorderRadius.circular(8.em),
+              border: Border.all(color: DefaultColors.func, width: 0.8.em),
+            ),
+            child: FittedBox(child: Tapewheel(_stop)),
+          ),
+        ),
+        // tape cog - right
+        Positioned(
+          top: 16.em,
+          right: 18.em,
+          child: Container(
+            width: 16.em,
+            height: 16.em,
+            decoration: BoxDecoration(
+              color: DefaultColors.shade_6,
+              borderRadius: BorderRadius.circular(8.em),
+              border: Border.all(color: DefaultColors.func, width: 0.8.em),
+            ),
+            child: FittedBox(child: Tapewheel(_stop)),
+          ),
+        ),
+        // tape title
+        Positioned(
+          top: 8.em,
+          child: Text(
+            widget._md.title,
+            style: TextStyle(
+              fontSize: 4.em,
+              fontFamily: "851手写杂书体",
+              decoration: TextDecoration.none,
+              color: DefaultColors.info,
+            ),
+          ),
+        ),
+        // record time
+        Positioned(
+          bottom: 2.5.em,
+          child: Text(
+            _printDuration(_position),
+            style: TextStyle(
+              fontSize: 6.em,
+              fontFamily: "digital7-mono",
+              decoration: TextDecoration.none,
+              color: DefaultColors.bg,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
