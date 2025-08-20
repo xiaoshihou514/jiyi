@@ -207,16 +207,19 @@ class _MapViewState extends State<MapView> {
           md,
           lat: md.latitude!,
           lng: md.longitude!,
-          child: IconButton(
-            onPressed: () {
-              if (context.mounted) {
-                Navigator.push(context, SmoothRouter.builder(Player(md)));
-              }
-            },
-            icon: Icon(
-              Icons.pin_drop,
-              color: DefaultColors.keyword,
-              size: isMobile ? 18.em : 8.em,
+          child: Transform.translate(
+            offset: isMobile ? Offset(-9.em, -9.em) : Offset(-4.em, -4.em),
+            child: IconButton(
+              onPressed: () {
+                if (context.mounted) {
+                  Navigator.push(context, SmoothRouter.builder(Player(md)));
+                }
+              },
+              icon: Icon(
+                Icons.pin_drop,
+                color: DefaultColors.keyword,
+                size: isMobile ? 18.em : 8.em,
+              ),
             ),
           ),
         );
