@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:jiyi/components/md_input.dart';
+import 'package:provider/provider.dart';
 
 import 'package:jiyi/pages/home/calendar.dart';
 import 'package:jiyi/pages/home/map.dart';
@@ -16,7 +16,7 @@ import 'package:jiyi/utils/encryption.dart';
 import 'package:jiyi/utils/io.dart';
 import 'package:jiyi/utils/notifier.dart';
 import 'package:jiyi/utils/smooth_router.dart';
-import 'package:provider/provider.dart';
+import 'package:jiyi/components/md_input.dart';
 
 class HomePage extends StatefulWidget {
   final bool skipEncryption;
@@ -44,7 +44,7 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(() => setState(() {}));
-    _setupEncryption();
+    _setupIO();
   }
 
   @override
@@ -203,7 +203,7 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
     );
   }
 
-  Future<void> _setupEncryption() async {
+  Future<void> _setupIO() async {
     try {
       await Encryption.init(widget.masterKey, widget.storagePath);
       await IO.init();

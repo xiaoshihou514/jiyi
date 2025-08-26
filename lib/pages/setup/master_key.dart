@@ -103,11 +103,11 @@ class _MasterKeyPage extends State<MasterKeyPage> {
                 Padding(
                   padding: ScreenUtil().scaleWidth < ScreenUtil().scaleHeight
                       ?
-                        // mobile
-                        EdgeInsets.symmetric(vertical: 7.5.em)
+                      // mobile
+                      EdgeInsets.symmetric(vertical: 7.5.em)
                       :
-                        // desktop / tablet
-                        EdgeInsets.zero,
+                      // desktop / tablet
+                      EdgeInsets.zero,
                   child: Text(
                     l.mk_title,
                     style: TextStyle(
@@ -131,11 +131,11 @@ class _MasterKeyPage extends State<MasterKeyPage> {
                   child: Padding(
                     padding: ScreenUtil().scaleWidth < ScreenUtil().scaleHeight
                         ?
-                          // mobile
-                          EdgeInsets.symmetric(vertical: 4.em, horizontal: 2.em)
+                        // mobile
+                        EdgeInsets.symmetric(vertical: 4.em, horizontal: 2.em)
                         :
-                          // desktop / tablet
-                          EdgeInsets.symmetric(vertical: 2.5.em),
+                        // desktop / tablet
+                        EdgeInsets.symmetric(vertical: 2.5.em),
                     child: AutofillGroup(
                       // input field
                       child: TextField(

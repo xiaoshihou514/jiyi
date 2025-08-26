@@ -26,12 +26,9 @@ dependencies:
   path: ^1.9.1
   wav: ^1.4.0
   json_annotation: ^4.9.0
-  flutter_map_marker_cluster:
-    git:
-      url: https://github.com/lpongetti/flutter_map_marker_cluster.git
-      ref: master
-  flutter_map: ^8.1.1
-  flutter_map_cache: ^2.0.0
+  flutter_map_marker_cluster: any
+  flutter_map: any
+  flutter_map_cache: any
   http_cache_file_store: ^2.0.1
   path_provider: ^2.1.5
   url_launcher: ^6.3.1
@@ -47,6 +44,10 @@ dependencies:
   audioplayers: ^6.4.0
   icons_launcher: ^3.0.1
   sherpa_onnx: ^1.12.1
+  flutter_onnxruntime: ^1.4.0
+  jiyi_native_tokenizer:
+    path: rust_builder
+  flutter_rust_bridge: ^2.11.1
 
 dependency_overrides:
   geolocator_android:

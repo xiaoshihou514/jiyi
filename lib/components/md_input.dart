@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
 import 'package:jiyi/utils/tts.dart';
 import 'package:jiyi/utils/tts_setting.dart';
@@ -527,6 +528,7 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
             .toString(),
         transcript: '',
       ).dyn,
+      "_token": ServicesBinding.rootIsolateToken!,
     });
 
     IO.addEntry(metadata);
@@ -538,14 +540,17 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
   }
 
   static Future<Metadata> _import(Map<String, dynamic> params) async {
+    BackgroundIsolateBinaryMessenger.ensureInitialized(params["_token"]);
     final file = params['file'] as File;
     final md = params['md'];
     Encryption.initByInstance(params['enc']);
     IO.STORAGE = params['base_path'];
 
     final wav = await Wav.readFile(file.path);
-    md["transcript"] = Tts.fromWAV(
+    md["transcript"] = await Tts.fromWAV(
       params['model'] as so.OnlineModelConfig,
+      "/home/xiaoshihou/Playground/scratch/deepseek_onnx/model_int8.onnx",
+      "/home/xiaoshihou/Playground/scratch/deepseek_onnx/tokenizer.json",
       Float32List.fromList(wav.channels.first.toList()),
       wav.samplesPerSecond,
     );

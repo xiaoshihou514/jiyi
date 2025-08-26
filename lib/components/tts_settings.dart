@@ -229,14 +229,14 @@ class _TTSSettingsState extends State<TTSSettings> {
       TextStyle(color: DefaultColors.fg, fontSize: isMobile ? 4.em : 3.em);
 
   InputDecoration get _inputDecoration => InputDecoration(
-    contentPadding: isMobile ? null : EdgeInsets.symmetric(vertical: 1.em),
-    enabledBorder: UnderlineInputBorder(
-      borderSide: BorderSide(color: DefaultColors.fg),
-    ),
-    focusedBorder: UnderlineInputBorder(
-      borderSide: BorderSide(color: DefaultColors.fg),
-    ),
-  );
+        contentPadding: isMobile ? null : EdgeInsets.symmetric(vertical: 1.em),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: DefaultColors.fg),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: DefaultColors.fg),
+        ),
+      );
 
   // Updated file selection method
   Future<void> _selectModelFile(String field) async {

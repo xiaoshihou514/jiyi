@@ -1,79 +1,99 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
+import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
+import 'package:flutter_onnxruntime/flutter_onnxruntime.dart';
 
 import 'package:jiyi/utils/anno.dart';
-import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
+import 'package:jiyi/src/rust/api/models/bpe.dart';
+import 'package:jiyi/src/rust/api/tokenizer.dart' as tk;
+import 'package:jiyi/src/rust/frb_generated.dart';
 
 abstract class Tts {
   // 1 second
   static double THRESHOLD = 1.0;
 
-  // 防结巴处理函数
-  static String _compressRepeatingChars(String input) {
-    if (input.isEmpty) return input;
-
-    StringBuffer result = StringBuffer();
-    List<String> chars = input.split('');
-    int i = 0;
-
-    while (i < chars.length) {
-      String currentChar = chars[i];
-      int repeatCount = 1;
-
-      // 检查是否是中文字符（Unicode范围）
-      bool isChinese = currentChar.runes.any(
-        (rune) => rune >= 0x4E00 && rune <= 0x9FFF,
-      );
-
-      // 如果是中文字符，计算连续重复次数
-      if (isChinese) {
-        int j = i + 1;
-        while (j < chars.length && chars[j] == currentChar) {
-          repeatCount++;
-          j++;
-        }
-
-        // 如果连续重复3次或以上，只保留一个
-        if (repeatCount >= 3) {
-          result.write(currentChar);
-          i = j; // 跳过重复字符
-          continue;
-        }
-      }
-
-      // 非重复字符或重复次数不足3次
-      for (int k = 0; k < repeatCount; k++) {
-        result.write(currentChar);
-      }
-      i += repeatCount;
-    }
-
-    return result.toString();
-  }
-
-  static String fromWAV(
+  static Future<String> fromWAV(
     so.OnlineModelConfig? model,
+    String? llmPath,
+    String? tokenizerPath,
     Float32List data,
     int sampleRate,
-  ) {
+  ) async {
     if (model == null) {
       return "";
     }
-    so.initBindings();
-    final onnx = so.OnlineRecognizer(so.OnlineRecognizerConfig(model: model));
-    final stream = onnx.createStream();
 
-    stream.acceptWaveform(samples: data, sampleRate: sampleRate);
+    // text 2 speech
+    // so.initBindings();
+    // final onnx = so.OnlineRecognizer(so.OnlineRecognizerConfig(model: model));
+    // final stream = onnx.createStream();
+    //
+    // stream.acceptWaveform(samples: data, sampleRate: sampleRate);
+    //
+    // while (onnx.isReady(stream)) {
+    //   onnx.decode(stream);
+    // }
+    // final res = onnx.getResult(stream);
+    // final raw = _splitByTime(res.tokens, res.timestamps);
+    final raw = ["收到请回复收到，完毕"];
 
-    while (onnx.isReady(stream)) {
-      onnx.decode(stream);
+    // LLM enhancement
+    if (llmPath == null || tokenizerPath == null || raw.join().isEmpty) {
+      return raw.join("\n");
+    } else {
+      return llmEnhance(raw, llmPath, tokenizerPath);
     }
-    final res = onnx.getResult(stream);
-    final words = res.tokens;
-    final timestamps = res.timestamps;
+  }
 
-    @DeepSeek()
+  static Future<String> llmEnhance(
+    List<String> raw,
+    String llmPath,
+    String tokenizerPath,
+  ) async {
+    final ort = OnnxRuntime();
+    final session = await ort.createSession(llmPath);
+
+    await RustLib.init();
+    final tmpDir = (await getTemporaryDirectory()).path;
+    final dummy = path.join(tmpDir, tmpDir.hashCode.toString());
+    File(dummy).createSync();
+    final bpe = Bpe.fromFile(vocab: tokenizerPath, merges: dummy).build();
+
+    print(raw);
+    raw.forEach((s) {
+      final t = bpe.tokenize(sequence: s);
+      print("token: $t");
+      print("id: ${t.map((t) => tk.id(t: t)).toList()}");
+    });
+    final ids = raw.map(
+      (s) => bpe.tokenize(sequence: s).map((t) => tk.id(t: t)).toList(),
+    );
+    print(ids);
+    final input = await OrtValue.fromList(
+      ids.toList(),
+      ids.map((xs) => xs.length).toList(),
+    );
+
+    print("run start");
+    final outputs = await session.run({'input_ids': input});
+    print(outputs);
+
+    await input.dispose();
+    await session.close();
+
+    return raw.join("\n");
+  }
+
+  @DeepSeek()
+  static List<String> _splitByTime(
+    List<String> words,
+    List<double> timestamps,
+  ) {
     List<String> sentences = [];
     String currentSentence = "";
     double? lastTimestamp;
@@ -81,8 +101,6 @@ abstract class Tts {
     for (int i = 0; i < words.length; i++) {
       if (lastTimestamp != null &&
           (timestamps[i] - lastTimestamp) > THRESHOLD) {
-        // 添加防结巴处理
-        currentSentence = _compressRepeatingChars(currentSentence);
         sentences.add(currentSentence);
         currentSentence = words[i];
       } else {
@@ -93,10 +111,9 @@ abstract class Tts {
 
     // 处理最后一个句子
     if (currentSentence.isNotEmpty) {
-      currentSentence = _compressRepeatingChars(currentSentence);
       sentences.add(currentSentence);
     }
 
-    return sentences.join("\n");
+    return sentences;
   }
 }

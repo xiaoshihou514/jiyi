@@ -14,7 +14,7 @@ import 'package:jiyi/utils/text_color.dart';
 class Playlist extends StatefulWidget {
   final List<Metadata> _mds;
   Playlist(List<Metadata> mds, {super.key})
-    : _mds = mds..sort((x, y) => y.time.compareTo(x.time));
+      : _mds = mds..sort((x, y) => y.time.compareTo(x.time));
 
   @override
   State<Playlist> createState() => _PlaylistState();

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:jiyi/utils/tts.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 import 'package:geolocator_platform_interface/geolocator_platform_interface.dart';
@@ -249,8 +250,7 @@ class _RecordPageState extends State<RecordPage> {
 
     if (!mounted) return;
     final l = AppLocalizations.of(context)!;
-    final titleAndCover =
-        await showDialog<(String, String)>(
+    final titleAndCover = await showDialog<(String, String)>(
           context: context,
           barrierDismissible: false,
           builder: (context) => TitleAndCoverInput(),
@@ -272,10 +272,12 @@ class _RecordPageState extends State<RecordPage> {
         latitude: coord?.latitude,
         longitude: coord?.longitude,
         cover: titleAndCover.$2,
-        path: (_startTime.toString() + DateTime.now().toString()).hashCode
+        path: (_startTime.toString() + DateTime.now().toString())
+            .hashCode
             .toString(),
         transcript: "",
       ).dyn,
+      "_token": ServicesBinding.rootIsolateToken!,
     });
     IO.addEntry(metadata);
     await IO.updateIndexOnDisk();
@@ -288,6 +290,7 @@ class _RecordPageState extends State<RecordPage> {
   }
 
   static Future<Metadata> _save(Map<String, dynamic> params) async {
+    BackgroundIsolateBinaryMessenger.ensureInitialized(params["_token"]);
     final bytes = params['bytes'] as List<double>;
     final md = params['md'] as Map<String, dynamic>;
     Encryption.initByInstance(params['enc']);
@@ -299,8 +302,10 @@ class _RecordPageState extends State<RecordPage> {
       WavFormat.pcm32bit,
     ).write();
 
-    md["transcript"] = Tts.fromWAV(
+    md["transcript"] = await Tts.fromWAV(
       params['model'] as so.OnlineModelConfig?,
+      "/home/xiaoshihou/Playground/scratch/deepseek_onnx/model_int8.onnx",
+      "/home/xiaoshihou/Playground/scratch/deepseek_onnx/tokenizer.json",
       Float32List.fromList(bytes),
       SAMPLE_RATE,
     );
