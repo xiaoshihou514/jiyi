@@ -3,8 +3,7 @@
 
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
-import 'api/models/bpe.dart';
-import 'api/tokenizer.dart';
+import 'api.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'frb_generated.dart';
@@ -69,7 +68,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.11.1';
 
   @override
-  int get rustContentHash => -1015947214;
+  int get rustContentHash => 1750524121;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -80,106 +79,10 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 }
 
 abstract class RustLibApi extends BaseApi {
-  Bpe crateApiModelsBpeBpeBuilderBuild({required BpeBuilder that});
+  Int64List crateApiEncode(
+      {required Tokenizer tokenizer, required String input});
 
-  BpeBuilder crateApiModelsBpeBpeBuilderByteFallback(
-      {required BpeBuilder that, required bool byteFallback});
-
-  BpeBuilder crateApiModelsBpeBpeBuilderCacheCapacity(
-      {required BpeBuilder that, required BigInt capacity});
-
-  BpeBuilder crateApiModelsBpeBpeBuilderContinuingSubwordPrefix(
-      {required BpeBuilder that, required String prefix});
-
-  BpeBuilder crateApiModelsBpeBpeBuilderDropout(
-      {required BpeBuilder that, required double dropout});
-
-  BpeBuilder crateApiModelsBpeBpeBuilderEndOfWordSuffix(
-      {required BpeBuilder that, required String prefix});
-
-  BpeBuilder crateApiModelsBpeBpeBuilderFiles(
-      {required BpeBuilder that,
-      required String vocab,
-      required String merges});
-
-  BpeBuilder crateApiModelsBpeBpeBuilderFuseUnk(
-      {required BpeBuilder that, required bool fuseUnk});
-
-  BpeBuilder crateApiModelsBpeBpeBuilderIgnoreMerges(
-      {required BpeBuilder that, required bool ignoreMerges});
-
-  BpeBuilder crateApiModelsBpeBpeBuilderNew();
-
-  BpeBuilder crateApiModelsBpeBpeBuilderUnkToken(
-      {required BpeBuilder that, required String unkToken});
-
-  BpeBuilder crateApiModelsBpeBpeBuilderVocabAndMerges(
-      {required BpeBuilder that,
-      required AHashMapStringU32 vocab,
-      required List<(String, String)> merges});
-
-  BpeBuilder crateApiModelsBpeBpeBuilder();
-
-  void crateApiModelsBpeBpeClearCache({required Bpe that});
-
-  BpeBuilder crateApiModelsBpeBpeFromFile(
-      {required String vocab, required String merges});
-
-  void crateApiModelsBpeBpeGetContinuingSubwordPrefix({required Bpe that});
-
-  void crateApiModelsBpeBpeGetUnkToken({required Bpe that});
-
-  Map<String, int> crateApiModelsBpeBpeGetVocab({required Bpe that});
-
-  BigInt crateApiModelsBpeBpeGetVocabSize({required Bpe that});
-
-  String? crateApiModelsBpeBpeIdToToken({required Bpe that, required int id});
-
-  Bpe crateApiModelsBpeBpeNew(
-      {required AHashMapStringU32 vocab,
-      required List<(String, String)> merges});
-
-  (AHashMapStringU32, List<(String, String)>) crateApiModelsBpeBpeReadFile(
-      {required String vocab, required String merges});
-
-  int? crateApiModelsBpeBpeTokenToId(
-      {required Bpe that, required String token});
-
-  List<Token> crateApiModelsBpeBpeTokenize(
-      {required Bpe that, required String sequence});
-
-  Tokenizer crateApiTokenizerTokenizerNew({required Bpe model});
-
-  int crateApiTokenizerId({required Token t});
-
-  RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_AHashMapStringU32;
-
-  RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_AHashMapStringU32;
-
-  CrossPlatformFinalizerArg
-      get rust_arc_decrement_strong_count_AHashMapStringU32Ptr;
-
-  RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_Bpe;
-
-  RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_Bpe;
-
-  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_BpePtr;
-
-  RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_BpeBuilder;
-
-  RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_BpeBuilder;
-
-  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_BpeBuilderPtr;
-
-  RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_Token;
-
-  RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_Token;
-
-  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_TokenPtr;
+  Tokenizer crateApiTokenizerFromConfig({required String configPath});
 
   RustArcIncrementStrongCountFnType
       get rust_arc_increment_strong_count_Tokenizer;
@@ -199,732 +102,55 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   });
 
   @override
-  Bpe crateApiModelsBpeBpeBuilderBuild({required BpeBuilder that}) {
+  Int64List crateApiEncode(
+      {required Tokenizer tokenizer, required String input}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder(
-            that, serializer);
+        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenizer(
+            tokenizer, serializer);
+        sse_encode_String(input, serializer);
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 1)!;
       },
       codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBPE,
-        decodeErrorData: sse_decode_AnyhowException,
+        decodeSuccessData: sse_decode_list_prim_i_64_strict,
+        decodeErrorData: sse_decode_String,
       ),
-      constMeta: kCrateApiModelsBpeBpeBuilderBuildConstMeta,
-      argValues: [that],
+      constMeta: kCrateApiEncodeConstMeta,
+      argValues: [tokenizer, input],
       apiImpl: this,
     ));
   }
 
-  TaskConstMeta get kCrateApiModelsBpeBpeBuilderBuildConstMeta =>
-      const TaskConstMeta(
-        debugName: "BpeBuilder_build",
-        argNames: ["that"],
+  TaskConstMeta get kCrateApiEncodeConstMeta => const TaskConstMeta(
+        debugName: "encode",
+        argNames: ["tokenizer", "input"],
       );
 
   @override
-  BpeBuilder crateApiModelsBpeBpeBuilderByteFallback(
-      {required BpeBuilder that, required bool byteFallback}) {
+  Tokenizer crateApiTokenizerFromConfig({required String configPath}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder(
-            that, serializer);
-        sse_encode_bool(byteFallback, serializer);
+        sse_encode_String(configPath, serializer);
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 2)!;
       },
       codec: SseCodec(
         decodeSuccessData:
-            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiModelsBpeBpeBuilderByteFallbackConstMeta,
-      argValues: [that, byteFallback],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiModelsBpeBpeBuilderByteFallbackConstMeta =>
-      const TaskConstMeta(
-        debugName: "BpeBuilder_byte_fallback",
-        argNames: ["that", "byteFallback"],
-      );
-
-  @override
-  BpeBuilder crateApiModelsBpeBpeBuilderCacheCapacity(
-      {required BpeBuilder that, required BigInt capacity}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder(
-            that, serializer);
-        sse_encode_usize(capacity, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 3)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiModelsBpeBpeBuilderCacheCapacityConstMeta,
-      argValues: [that, capacity],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiModelsBpeBpeBuilderCacheCapacityConstMeta =>
-      const TaskConstMeta(
-        debugName: "BpeBuilder_cache_capacity",
-        argNames: ["that", "capacity"],
-      );
-
-  @override
-  BpeBuilder crateApiModelsBpeBpeBuilderContinuingSubwordPrefix(
-      {required BpeBuilder that, required String prefix}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder(
-            that, serializer);
-        sse_encode_String(prefix, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 4)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiModelsBpeBpeBuilderContinuingSubwordPrefixConstMeta,
-      argValues: [that, prefix],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiModelsBpeBpeBuilderContinuingSubwordPrefixConstMeta =>
-          const TaskConstMeta(
-            debugName: "BpeBuilder_continuing_subword_prefix",
-            argNames: ["that", "prefix"],
-          );
-
-  @override
-  BpeBuilder crateApiModelsBpeBpeBuilderDropout(
-      {required BpeBuilder that, required double dropout}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder(
-            that, serializer);
-        sse_encode_f_32(dropout, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 5)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiModelsBpeBpeBuilderDropoutConstMeta,
-      argValues: [that, dropout],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiModelsBpeBpeBuilderDropoutConstMeta =>
-      const TaskConstMeta(
-        debugName: "BpeBuilder_dropout",
-        argNames: ["that", "dropout"],
-      );
-
-  @override
-  BpeBuilder crateApiModelsBpeBpeBuilderEndOfWordSuffix(
-      {required BpeBuilder that, required String prefix}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder(
-            that, serializer);
-        sse_encode_String(prefix, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 6)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiModelsBpeBpeBuilderEndOfWordSuffixConstMeta,
-      argValues: [that, prefix],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiModelsBpeBpeBuilderEndOfWordSuffixConstMeta =>
-      const TaskConstMeta(
-        debugName: "BpeBuilder_end_of_word_suffix",
-        argNames: ["that", "prefix"],
-      );
-
-  @override
-  BpeBuilder crateApiModelsBpeBpeBuilderFiles(
-      {required BpeBuilder that,
-      required String vocab,
-      required String merges}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder(
-            that, serializer);
-        sse_encode_String(vocab, serializer);
-        sse_encode_String(merges, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 7)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiModelsBpeBpeBuilderFilesConstMeta,
-      argValues: [that, vocab, merges],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiModelsBpeBpeBuilderFilesConstMeta =>
-      const TaskConstMeta(
-        debugName: "BpeBuilder_files",
-        argNames: ["that", "vocab", "merges"],
-      );
-
-  @override
-  BpeBuilder crateApiModelsBpeBpeBuilderFuseUnk(
-      {required BpeBuilder that, required bool fuseUnk}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder(
-            that, serializer);
-        sse_encode_bool(fuseUnk, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 8)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiModelsBpeBpeBuilderFuseUnkConstMeta,
-      argValues: [that, fuseUnk],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiModelsBpeBpeBuilderFuseUnkConstMeta =>
-      const TaskConstMeta(
-        debugName: "BpeBuilder_fuse_unk",
-        argNames: ["that", "fuseUnk"],
-      );
-
-  @override
-  BpeBuilder crateApiModelsBpeBpeBuilderIgnoreMerges(
-      {required BpeBuilder that, required bool ignoreMerges}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder(
-            that, serializer);
-        sse_encode_bool(ignoreMerges, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 9)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiModelsBpeBpeBuilderIgnoreMergesConstMeta,
-      argValues: [that, ignoreMerges],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiModelsBpeBpeBuilderIgnoreMergesConstMeta =>
-      const TaskConstMeta(
-        debugName: "BpeBuilder_ignore_merges",
-        argNames: ["that", "ignoreMerges"],
-      );
-
-  @override
-  BpeBuilder crateApiModelsBpeBpeBuilderNew() {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 10)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiModelsBpeBpeBuilderNewConstMeta,
-      argValues: [],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiModelsBpeBpeBuilderNewConstMeta =>
-      const TaskConstMeta(
-        debugName: "BpeBuilder_new",
-        argNames: [],
-      );
-
-  @override
-  BpeBuilder crateApiModelsBpeBpeBuilderUnkToken(
-      {required BpeBuilder that, required String unkToken}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder(
-            that, serializer);
-        sse_encode_String(unkToken, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 11)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiModelsBpeBpeBuilderUnkTokenConstMeta,
-      argValues: [that, unkToken],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiModelsBpeBpeBuilderUnkTokenConstMeta =>
-      const TaskConstMeta(
-        debugName: "BpeBuilder_unk_token",
-        argNames: ["that", "unkToken"],
-      );
-
-  @override
-  BpeBuilder crateApiModelsBpeBpeBuilderVocabAndMerges(
-      {required BpeBuilder that,
-      required AHashMapStringU32 vocab,
-      required List<(String, String)> merges}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder(
-            that, serializer);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAHashMapStringu32(
-            vocab, serializer);
-        sse_encode_list_record_string_string(merges, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 12)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiModelsBpeBpeBuilderVocabAndMergesConstMeta,
-      argValues: [that, vocab, merges],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiModelsBpeBpeBuilderVocabAndMergesConstMeta =>
-      const TaskConstMeta(
-        debugName: "BpeBuilder_vocab_and_merges",
-        argNames: ["that", "vocab", "merges"],
-      );
-
-  @override
-  BpeBuilder crateApiModelsBpeBpeBuilder() {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 13)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiModelsBpeBpeBuilderConstMeta,
-      argValues: [],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiModelsBpeBpeBuilderConstMeta =>
-      const TaskConstMeta(
-        debugName: "Bpe_builder",
-        argNames: [],
-      );
-
-  @override
-  void crateApiModelsBpeBpeClearCache({required Bpe that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBPE(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 14)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiModelsBpeBpeClearCacheConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiModelsBpeBpeClearCacheConstMeta =>
-      const TaskConstMeta(
-        debugName: "Bpe_clear_cache",
-        argNames: ["that"],
-      );
-
-  @override
-  BpeBuilder crateApiModelsBpeBpeFromFile(
-      {required String vocab, required String merges}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_String(vocab, serializer);
-        sse_encode_String(merges, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 15)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiModelsBpeBpeFromFileConstMeta,
-      argValues: [vocab, merges],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiModelsBpeBpeFromFileConstMeta =>
-      const TaskConstMeta(
-        debugName: "Bpe_from_file",
-        argNames: ["vocab", "merges"],
-      );
-
-  @override
-  void crateApiModelsBpeBpeGetContinuingSubwordPrefix({required Bpe that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBPE(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 16)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiModelsBpeBpeGetContinuingSubwordPrefixConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiModelsBpeBpeGetContinuingSubwordPrefixConstMeta =>
-      const TaskConstMeta(
-        debugName: "Bpe_get_continuing_subword_prefix",
-        argNames: ["that"],
-      );
-
-  @override
-  void crateApiModelsBpeBpeGetUnkToken({required Bpe that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBPE(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 17)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiModelsBpeBpeGetUnkTokenConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiModelsBpeBpeGetUnkTokenConstMeta =>
-      const TaskConstMeta(
-        debugName: "Bpe_get_unk_token",
-        argNames: ["that"],
-      );
-
-  @override
-  Map<String, int> crateApiModelsBpeBpeGetVocab({required Bpe that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBPE(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 18)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_Map_String_u_32_None,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiModelsBpeBpeGetVocabConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiModelsBpeBpeGetVocabConstMeta =>
-      const TaskConstMeta(
-        debugName: "Bpe_get_vocab",
-        argNames: ["that"],
-      );
-
-  @override
-  BigInt crateApiModelsBpeBpeGetVocabSize({required Bpe that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBPE(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 19)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_usize,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiModelsBpeBpeGetVocabSizeConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiModelsBpeBpeGetVocabSizeConstMeta =>
-      const TaskConstMeta(
-        debugName: "Bpe_get_vocab_size",
-        argNames: ["that"],
-      );
-
-  @override
-  String? crateApiModelsBpeBpeIdToToken({required Bpe that, required int id}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBPE(
-            that, serializer);
-        sse_encode_u_32(id, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 20)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_opt_String,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiModelsBpeBpeIdToTokenConstMeta,
-      argValues: [that, id],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiModelsBpeBpeIdToTokenConstMeta =>
-      const TaskConstMeta(
-        debugName: "Bpe_id_to_token",
-        argNames: ["that", "id"],
-      );
-
-  @override
-  Bpe crateApiModelsBpeBpeNew(
-      {required AHashMapStringU32 vocab,
-      required List<(String, String)> merges}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAHashMapStringu32(
-            vocab, serializer);
-        sse_encode_list_record_string_string(merges, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 21)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBPE,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiModelsBpeBpeNewConstMeta,
-      argValues: [vocab, merges],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiModelsBpeBpeNewConstMeta => const TaskConstMeta(
-        debugName: "Bpe_new",
-        argNames: ["vocab", "merges"],
-      );
-
-  @override
-  (AHashMapStringU32, List<(String, String)>) crateApiModelsBpeBpeReadFile(
-      {required String vocab, required String merges}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_String(vocab, serializer);
-        sse_encode_String(merges, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 22)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_a_hash_map_stringu_32_list_record_string_string,
-        decodeErrorData: sse_decode_AnyhowException,
-      ),
-      constMeta: kCrateApiModelsBpeBpeReadFileConstMeta,
-      argValues: [vocab, merges],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiModelsBpeBpeReadFileConstMeta =>
-      const TaskConstMeta(
-        debugName: "Bpe_read_file",
-        argNames: ["vocab", "merges"],
-      );
-
-  @override
-  int? crateApiModelsBpeBpeTokenToId(
-      {required Bpe that, required String token}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBPE(
-            that, serializer);
-        sse_encode_String(token, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 23)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_opt_box_autoadd_u_32,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiModelsBpeBpeTokenToIdConstMeta,
-      argValues: [that, token],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiModelsBpeBpeTokenToIdConstMeta =>
-      const TaskConstMeta(
-        debugName: "Bpe_token_to_id",
-        argNames: ["that", "token"],
-      );
-
-  @override
-  List<Token> crateApiModelsBpeBpeTokenize(
-      {required Bpe that, required String sequence}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBPE(
-            that, serializer);
-        sse_encode_String(sequence, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 24)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerToken,
-        decodeErrorData: sse_decode_AnyhowException,
-      ),
-      constMeta: kCrateApiModelsBpeBpeTokenizeConstMeta,
-      argValues: [that, sequence],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiModelsBpeBpeTokenizeConstMeta =>
-      const TaskConstMeta(
-        debugName: "Bpe_tokenize",
-        argNames: ["that", "sequence"],
-      );
-
-  @override
-  Tokenizer crateApiTokenizerTokenizerNew({required Bpe model}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBPE(
-            model, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 25)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData:
             sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenizer,
-        decodeErrorData: null,
+        decodeErrorData: sse_decode_String,
       ),
-      constMeta: kCrateApiTokenizerTokenizerNewConstMeta,
-      argValues: [model],
+      constMeta: kCrateApiTokenizerFromConfigConstMeta,
+      argValues: [configPath],
       apiImpl: this,
     ));
   }
 
-  TaskConstMeta get kCrateApiTokenizerTokenizerNewConstMeta =>
+  TaskConstMeta get kCrateApiTokenizerFromConfigConstMeta =>
       const TaskConstMeta(
-        debugName: "Tokenizer_new",
-        argNames: ["model"],
+        debugName: "tokenizer_from_config",
+        argNames: ["configPath"],
       );
-
-  @override
-  int crateApiTokenizerId({required Token t}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerToken(
-            t, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 26)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_u_32,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiTokenizerIdConstMeta,
-      argValues: [t],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiTokenizerIdConstMeta => const TaskConstMeta(
-        debugName: "id",
-        argNames: ["t"],
-      );
-
-  RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_AHashMapStringU32 => wire
-          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAHashMapStringu32;
-
-  RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_AHashMapStringU32 => wire
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAHashMapStringu32;
-
-  RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_Bpe => wire
-      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBPE;
-
-  RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_Bpe => wire
-      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBPE;
-
-  RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_BpeBuilder => wire
-          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder;
-
-  RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_BpeBuilder => wire
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder;
-
-  RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_Token =>
-      wire.rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerToken;
-
-  RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_Token =>
-      wire.rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerToken;
 
   RustArcIncrementStrongCountFnType
       get rust_arc_increment_strong_count_Tokenizer => wire
@@ -935,93 +161,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenizer;
 
   @protected
-  AnyhowException dco_decode_AnyhowException(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return AnyhowException(raw as String);
-  }
-
-  @protected
-  AHashMapStringU32
-      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAHashMapStringu32(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return AHashMapStringU32Impl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  Bpe dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBPE(
-      dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return BpeImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  BpeBuilder
-      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return BpeBuilderImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  Token
-      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerToken(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return TokenImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
   Tokenizer
       dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenizer(
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return TokenizerImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  Bpe dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBPE(
-      dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return BpeImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  Map<String, int> dco_decode_Map_String_u_32_None(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return Map.fromEntries(dco_decode_list_record_string_u_32(raw)
-        .map((e) => MapEntry(e.$1, e.$2)));
-  }
-
-  @protected
-  AHashMapStringU32
-      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAHashMapStringu32(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return AHashMapStringU32Impl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  Bpe dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBPE(
-      dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return BpeImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  BpeBuilder
-      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return BpeBuilderImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  Token
-      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerToken(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return TokenImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -1039,32 +183,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  bool dco_decode_bool(dynamic raw) {
+  PlatformInt64 dco_decode_i_64(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return raw as bool;
+    return dcoDecodeI64(raw);
   }
 
   @protected
-  int dco_decode_box_autoadd_u_32(dynamic raw) {
+  Int64List dco_decode_list_prim_i_64_strict(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return raw as int;
-  }
-
-  @protected
-  double dco_decode_f_32(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return raw as double;
-  }
-
-  @protected
-  List<Token>
-      dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerToken(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return (raw as List<dynamic>)
-        .map(
-            dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerToken)
-        .toList();
+    return dcoDecodeInt64List(raw);
   }
 
   @protected
@@ -1074,89 +201,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  List<(String, String)> dco_decode_list_record_string_string(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return (raw as List<dynamic>).map(dco_decode_record_string_string).toList();
-  }
-
-  @protected
-  List<(String, int)> dco_decode_list_record_string_u_32(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return (raw as List<dynamic>).map(dco_decode_record_string_u_32).toList();
-  }
-
-  @protected
-  String? dco_decode_opt_String(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return raw == null ? null : dco_decode_String(raw);
-  }
-
-  @protected
-  int? dco_decode_opt_box_autoadd_u_32(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return raw == null ? null : dco_decode_box_autoadd_u_32(raw);
-  }
-
-  @protected
-  (
-    AHashMapStringU32,
-    List<(String, String)>
-  ) dco_decode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_a_hash_map_stringu_32_list_record_string_string(
-      dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    final arr = raw as List<dynamic>;
-    if (arr.length != 2) {
-      throw Exception('Expected 2 elements, got ${arr.length}');
-    }
-    return (
-      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAHashMapStringu32(
-          arr[0]),
-      dco_decode_list_record_string_string(arr[1]),
-    );
-  }
-
-  @protected
-  (String, String) dco_decode_record_string_string(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    final arr = raw as List<dynamic>;
-    if (arr.length != 2) {
-      throw Exception('Expected 2 elements, got ${arr.length}');
-    }
-    return (
-      dco_decode_String(arr[0]),
-      dco_decode_String(arr[1]),
-    );
-  }
-
-  @protected
-  (String, int) dco_decode_record_string_u_32(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    final arr = raw as List<dynamic>;
-    if (arr.length != 2) {
-      throw Exception('Expected 2 elements, got ${arr.length}');
-    }
-    return (
-      dco_decode_String(arr[0]),
-      dco_decode_u_32(arr[1]),
-    );
-  }
-
-  @protected
-  int dco_decode_u_32(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return raw as int;
-  }
-
-  @protected
   int dco_decode_u_8(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as int;
-  }
-
-  @protected
-  void dco_decode_unit(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return;
   }
 
   @protected
@@ -1166,104 +213,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  AnyhowException sse_decode_AnyhowException(SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    var inner = sse_decode_String(deserializer);
-    return AnyhowException(inner);
-  }
-
-  @protected
-  AHashMapStringU32
-      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAHashMapStringu32(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return AHashMapStringU32Impl.frbInternalSseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
-  Bpe sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBPE(
-      SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return BpeImpl.frbInternalSseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
-  BpeBuilder
-      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return BpeBuilderImpl.frbInternalSseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
-  Token
-      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerToken(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return TokenImpl.frbInternalSseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
   Tokenizer
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenizer(
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return TokenizerImpl.frbInternalSseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
-  Bpe sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBPE(
-      SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return BpeImpl.frbInternalSseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
-  Map<String, int> sse_decode_Map_String_u_32_None(
-      SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    var inner = sse_decode_list_record_string_u_32(deserializer);
-    return Map.fromEntries(inner.map((e) => MapEntry(e.$1, e.$2)));
-  }
-
-  @protected
-  AHashMapStringU32
-      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAHashMapStringu32(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return AHashMapStringU32Impl.frbInternalSseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
-  Bpe sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBPE(
-      SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return BpeImpl.frbInternalSseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
-  BpeBuilder
-      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return BpeBuilderImpl.frbInternalSseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
-  Token
-      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerToken(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return TokenImpl.frbInternalSseDecode(
         sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
   }
 
@@ -1284,37 +238,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  bool sse_decode_bool(SseDeserializer deserializer) {
+  PlatformInt64 sse_decode_i_64(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    return deserializer.buffer.getUint8() != 0;
+    return deserializer.buffer.getPlatformInt64();
   }
 
   @protected
-  int sse_decode_box_autoadd_u_32(SseDeserializer deserializer) {
+  Int64List sse_decode_list_prim_i_64_strict(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    return (sse_decode_u_32(deserializer));
-  }
-
-  @protected
-  double sse_decode_f_32(SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return deserializer.buffer.getFloat32();
-  }
-
-  @protected
-  List<Token>
-      sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerToken(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-
     var len_ = sse_decode_i_32(deserializer);
-    var ans_ = <Token>[];
-    for (var idx_ = 0; idx_ < len_; ++idx_) {
-      ans_.add(
-          sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerToken(
-              deserializer));
-    }
-    return ans_;
+    return deserializer.buffer.getInt64List(len_);
   }
 
   @protected
@@ -1325,99 +258,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  List<(String, String)> sse_decode_list_record_string_string(
-      SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-
-    var len_ = sse_decode_i_32(deserializer);
-    var ans_ = <(String, String)>[];
-    for (var idx_ = 0; idx_ < len_; ++idx_) {
-      ans_.add(sse_decode_record_string_string(deserializer));
-    }
-    return ans_;
-  }
-
-  @protected
-  List<(String, int)> sse_decode_list_record_string_u_32(
-      SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-
-    var len_ = sse_decode_i_32(deserializer);
-    var ans_ = <(String, int)>[];
-    for (var idx_ = 0; idx_ < len_; ++idx_) {
-      ans_.add(sse_decode_record_string_u_32(deserializer));
-    }
-    return ans_;
-  }
-
-  @protected
-  String? sse_decode_opt_String(SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-
-    if (sse_decode_bool(deserializer)) {
-      return (sse_decode_String(deserializer));
-    } else {
-      return null;
-    }
-  }
-
-  @protected
-  int? sse_decode_opt_box_autoadd_u_32(SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-
-    if (sse_decode_bool(deserializer)) {
-      return (sse_decode_box_autoadd_u_32(deserializer));
-    } else {
-      return null;
-    }
-  }
-
-  @protected
-  (
-    AHashMapStringU32,
-    List<(String, String)>
-  ) sse_decode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_a_hash_map_stringu_32_list_record_string_string(
-      SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    var var_field0 =
-        sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAHashMapStringu32(
-            deserializer);
-    var var_field1 = sse_decode_list_record_string_string(deserializer);
-    return (var_field0, var_field1);
-  }
-
-  @protected
-  (String, String) sse_decode_record_string_string(
-      SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    var var_field0 = sse_decode_String(deserializer);
-    var var_field1 = sse_decode_String(deserializer);
-    return (var_field0, var_field1);
-  }
-
-  @protected
-  (String, int) sse_decode_record_string_u_32(SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    var var_field0 = sse_decode_String(deserializer);
-    var var_field1 = sse_decode_u_32(deserializer);
-    return (var_field0, var_field1);
-  }
-
-  @protected
-  int sse_decode_u_32(SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return deserializer.buffer.getUint32();
-  }
-
-  @protected
   int sse_decode_u_8(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getUint8();
-  }
-
-  @protected
-  void sse_decode_unit(SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
   }
 
   @protected
@@ -1433,47 +276,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_AnyhowException(
-      AnyhowException self, SseSerializer serializer) {
+  bool sse_decode_bool(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_String(self.message, serializer);
-  }
-
-  @protected
-  void
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAHashMapStringu32(
-          AHashMapStringU32 self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-        (self as AHashMapStringU32Impl).frbInternalSseEncode(move: true),
-        serializer);
-  }
-
-  @protected
-  void
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBPE(
-          Bpe self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-        (self as BpeImpl).frbInternalSseEncode(move: true), serializer);
-  }
-
-  @protected
-  void
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder(
-          BpeBuilder self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-        (self as BpeBuilderImpl).frbInternalSseEncode(move: true), serializer);
-  }
-
-  @protected
-  void
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerToken(
-          Token self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-        (self as TokenImpl).frbInternalSseEncode(move: true), serializer);
+    return deserializer.buffer.getUint8() != 0;
   }
 
   @protected
@@ -1483,60 +288,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(
         (self as TokenizerImpl).frbInternalSseEncode(move: true), serializer);
-  }
-
-  @protected
-  void
-      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBPE(
-          Bpe self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-        (self as BpeImpl).frbInternalSseEncode(move: false), serializer);
-  }
-
-  @protected
-  void sse_encode_Map_String_u_32_None(
-      Map<String, int> self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_list_record_string_u_32(
-        self.entries.map((e) => (e.key, e.value)).toList(), serializer);
-  }
-
-  @protected
-  void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAHashMapStringu32(
-          AHashMapStringU32 self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-        (self as AHashMapStringU32Impl).frbInternalSseEncode(move: null),
-        serializer);
-  }
-
-  @protected
-  void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBPE(
-          Bpe self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-        (self as BpeImpl).frbInternalSseEncode(move: null), serializer);
-  }
-
-  @protected
-  void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBpeBuilder(
-          BpeBuilder self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-        (self as BpeBuilderImpl).frbInternalSseEncode(move: null), serializer);
-  }
-
-  @protected
-  void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerToken(
-          Token self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-        (self as TokenImpl).frbInternalSseEncode(move: null), serializer);
   }
 
   @protected
@@ -1555,33 +306,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_bool(bool self, SseSerializer serializer) {
+  void sse_encode_i_64(PlatformInt64 self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    serializer.buffer.putUint8(self ? 1 : 0);
+    serializer.buffer.putPlatformInt64(self);
   }
 
   @protected
-  void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_u_32(self, serializer);
-  }
-
-  @protected
-  void sse_encode_f_32(double self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    serializer.buffer.putFloat32(self);
-  }
-
-  @protected
-  void
-      sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerToken(
-          List<Token> self, SseSerializer serializer) {
+  void sse_encode_list_prim_i_64_strict(
+      Int64List self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.length, serializer);
-    for (final item in self) {
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerToken(
-          item, serializer);
-    }
+    serializer.buffer.putInt64List(self);
   }
 
   @protected
@@ -1593,87 +328,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_list_record_string_string(
-      List<(String, String)> self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_i_32(self.length, serializer);
-    for (final item in self) {
-      sse_encode_record_string_string(item, serializer);
-    }
-  }
-
-  @protected
-  void sse_encode_list_record_string_u_32(
-      List<(String, int)> self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_i_32(self.length, serializer);
-    for (final item in self) {
-      sse_encode_record_string_u_32(item, serializer);
-    }
-  }
-
-  @protected
-  void sse_encode_opt_String(String? self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-
-    sse_encode_bool(self != null, serializer);
-    if (self != null) {
-      sse_encode_String(self, serializer);
-    }
-  }
-
-  @protected
-  void sse_encode_opt_box_autoadd_u_32(int? self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-
-    sse_encode_bool(self != null, serializer);
-    if (self != null) {
-      sse_encode_box_autoadd_u_32(self, serializer);
-    }
-  }
-
-  @protected
-  void
-      sse_encode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_a_hash_map_stringu_32_list_record_string_string(
-          (AHashMapStringU32, List<(String, String)>) self,
-          SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAHashMapStringu32(
-        self.$1, serializer);
-    sse_encode_list_record_string_string(self.$2, serializer);
-  }
-
-  @protected
-  void sse_encode_record_string_string(
-      (String, String) self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_String(self.$1, serializer);
-    sse_encode_String(self.$2, serializer);
-  }
-
-  @protected
-  void sse_encode_record_string_u_32(
-      (String, int) self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_String(self.$1, serializer);
-    sse_encode_u_32(self.$2, serializer);
-  }
-
-  @protected
-  void sse_encode_u_32(int self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    serializer.buffer.putUint32(self);
-  }
-
-  @protected
   void sse_encode_u_8(int self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putUint8(self);
-  }
-
-  @protected
-  void sse_encode_unit(void self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
   }
 
   @protected
@@ -1687,160 +344,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putInt32(self);
   }
-}
 
-@sealed
-class AHashMapStringU32Impl extends RustOpaque implements AHashMapStringU32 {
-  // Not to be used by end users
-  AHashMapStringU32Impl.frbInternalDcoDecode(List<dynamic> wire)
-      : super.frbInternalDcoDecode(wire, _kStaticData);
-
-  // Not to be used by end users
-  AHashMapStringU32Impl.frbInternalSseDecode(
-      BigInt ptr, int externalSizeOnNative)
-      : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
-
-  static final _kStaticData = RustArcStaticData(
-    rustArcIncrementStrongCount:
-        RustLib.instance.api.rust_arc_increment_strong_count_AHashMapStringU32,
-    rustArcDecrementStrongCount:
-        RustLib.instance.api.rust_arc_decrement_strong_count_AHashMapStringU32,
-    rustArcDecrementStrongCountPtr: RustLib
-        .instance.api.rust_arc_decrement_strong_count_AHashMapStringU32Ptr,
-  );
-}
-
-@sealed
-class BpeBuilderImpl extends RustOpaque implements BpeBuilder {
-  // Not to be used by end users
-  BpeBuilderImpl.frbInternalDcoDecode(List<dynamic> wire)
-      : super.frbInternalDcoDecode(wire, _kStaticData);
-
-  // Not to be used by end users
-  BpeBuilderImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
-      : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
-
-  static final _kStaticData = RustArcStaticData(
-    rustArcIncrementStrongCount:
-        RustLib.instance.api.rust_arc_increment_strong_count_BpeBuilder,
-    rustArcDecrementStrongCount:
-        RustLib.instance.api.rust_arc_decrement_strong_count_BpeBuilder,
-    rustArcDecrementStrongCountPtr:
-        RustLib.instance.api.rust_arc_decrement_strong_count_BpeBuilderPtr,
-  );
-
-  Bpe build() => RustLib.instance.api.crateApiModelsBpeBpeBuilderBuild(
-        that: this,
-      );
-
-  BpeBuilder byteFallback({required bool byteFallback}) =>
-      RustLib.instance.api.crateApiModelsBpeBpeBuilderByteFallback(
-          that: this, byteFallback: byteFallback);
-
-  BpeBuilder cacheCapacity({required BigInt capacity}) => RustLib.instance.api
-      .crateApiModelsBpeBpeBuilderCacheCapacity(that: this, capacity: capacity);
-
-  BpeBuilder continuingSubwordPrefix({required String prefix}) =>
-      RustLib.instance.api.crateApiModelsBpeBpeBuilderContinuingSubwordPrefix(
-          that: this, prefix: prefix);
-
-  BpeBuilder dropout({required double dropout}) => RustLib.instance.api
-      .crateApiModelsBpeBpeBuilderDropout(that: this, dropout: dropout);
-
-  BpeBuilder endOfWordSuffix({required String prefix}) => RustLib.instance.api
-      .crateApiModelsBpeBpeBuilderEndOfWordSuffix(that: this, prefix: prefix);
-
-  BpeBuilder files({required String vocab, required String merges}) =>
-      RustLib.instance.api.crateApiModelsBpeBpeBuilderFiles(
-          that: this, vocab: vocab, merges: merges);
-
-  BpeBuilder fuseUnk({required bool fuseUnk}) => RustLib.instance.api
-      .crateApiModelsBpeBpeBuilderFuseUnk(that: this, fuseUnk: fuseUnk);
-
-  BpeBuilder ignoreMerges({required bool ignoreMerges}) =>
-      RustLib.instance.api.crateApiModelsBpeBpeBuilderIgnoreMerges(
-          that: this, ignoreMerges: ignoreMerges);
-
-  BpeBuilder unkToken({required String unkToken}) => RustLib.instance.api
-      .crateApiModelsBpeBpeBuilderUnkToken(that: this, unkToken: unkToken);
-
-  BpeBuilder vocabAndMerges(
-          {required AHashMapStringU32 vocab,
-          required List<(String, String)> merges}) =>
-      RustLib.instance.api.crateApiModelsBpeBpeBuilderVocabAndMerges(
-          that: this, vocab: vocab, merges: merges);
-}
-
-@sealed
-class BpeImpl extends RustOpaque implements Bpe {
-  // Not to be used by end users
-  BpeImpl.frbInternalDcoDecode(List<dynamic> wire)
-      : super.frbInternalDcoDecode(wire, _kStaticData);
-
-  // Not to be used by end users
-  BpeImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
-      : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
-
-  static final _kStaticData = RustArcStaticData(
-    rustArcIncrementStrongCount:
-        RustLib.instance.api.rust_arc_increment_strong_count_Bpe,
-    rustArcDecrementStrongCount:
-        RustLib.instance.api.rust_arc_decrement_strong_count_Bpe,
-    rustArcDecrementStrongCountPtr:
-        RustLib.instance.api.rust_arc_decrement_strong_count_BpePtr,
-  );
-
-  void clearCache() => RustLib.instance.api.crateApiModelsBpeBpeClearCache(
-        that: this,
-      );
-
-  void getContinuingSubwordPrefix() =>
-      RustLib.instance.api.crateApiModelsBpeBpeGetContinuingSubwordPrefix(
-        that: this,
-      );
-
-  void getUnkToken() => RustLib.instance.api.crateApiModelsBpeBpeGetUnkToken(
-        that: this,
-      );
-
-  Map<String, int> getVocab() =>
-      RustLib.instance.api.crateApiModelsBpeBpeGetVocab(
-        that: this,
-      );
-
-  BigInt getVocabSize() =>
-      RustLib.instance.api.crateApiModelsBpeBpeGetVocabSize(
-        that: this,
-      );
-
-  String? idToToken({required int id}) =>
-      RustLib.instance.api.crateApiModelsBpeBpeIdToToken(that: this, id: id);
-
-  int? tokenToId({required String token}) => RustLib.instance.api
-      .crateApiModelsBpeBpeTokenToId(that: this, token: token);
-
-  List<Token> tokenize({required String sequence}) => RustLib.instance.api
-      .crateApiModelsBpeBpeTokenize(that: this, sequence: sequence);
-}
-
-@sealed
-class TokenImpl extends RustOpaque implements Token {
-  // Not to be used by end users
-  TokenImpl.frbInternalDcoDecode(List<dynamic> wire)
-      : super.frbInternalDcoDecode(wire, _kStaticData);
-
-  // Not to be used by end users
-  TokenImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
-      : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
-
-  static final _kStaticData = RustArcStaticData(
-    rustArcIncrementStrongCount:
-        RustLib.instance.api.rust_arc_increment_strong_count_Token,
-    rustArcDecrementStrongCount:
-        RustLib.instance.api.rust_arc_decrement_strong_count_Token,
-    rustArcDecrementStrongCountPtr:
-        RustLib.instance.api.rust_arc_decrement_strong_count_TokenPtr,
-  );
+  @protected
+  void sse_encode_bool(bool self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putUint8(self ? 1 : 0);
+  }
 }
 
 @sealed

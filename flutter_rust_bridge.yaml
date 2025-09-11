@@ -1,6 +1,3 @@
 rust_input: crate::api
 rust_root: rust/
 dart_output: lib/src/rust
-rust_preamble: |
-  use ahash::AHashMap;
-  use tokenizers::{Model,Token,Tokenizer};

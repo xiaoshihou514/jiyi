@@ -47,6 +47,7 @@ abstract class IO {
       );
       _index = await indexFuture;
       for (final md in _index) {
+        print(md);
         _metadataByDate.putIfAbsent(md.time.trim, () => []).add(md);
       }
     } else {
