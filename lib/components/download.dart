@@ -47,8 +47,7 @@ class _FileDownloadDialogState extends State<FileDownloadDialog> {
     );
 
     // 处理文件名
-    fileNames =
-        widget.fileNames ??
+    fileNames = widget.fileNames ??
         widget.urls.map((url) => path.basename(url)).toList();
 
     // 确定目标目录

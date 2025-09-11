@@ -24,39 +24,73 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_web.dart';
                     required super.portManager,
                   });
 
-                  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_TokenizerPtr => wire.rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenizer;
+                  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_TokenOutputStreamPtr => wire.rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenOutputStream;
+
+CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_TokenizerPtr => wire.rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenizer;
 
 
 
-                  @protected Tokenizer dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenizer(dynamic raw);
+                  @protected AnyhowException dco_decode_AnyhowException(dynamic raw);
+
+@protected TokenOutputStream dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenOutputStream(dynamic raw);
+
+@protected Tokenizer dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenizer(dynamic raw);
+
+@protected TokenOutputStream dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenOutputStream(dynamic raw);
+
+@protected TokenOutputStream dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenOutputStream(dynamic raw);
+
+@protected TokenOutputStream dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenOutputStream(dynamic raw);
 
 @protected Tokenizer dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenizer(dynamic raw);
 
 @protected String dco_decode_String(dynamic raw);
 
-@protected PlatformInt64 dco_decode_i_64(dynamic raw);
-
-@protected Int64List dco_decode_list_prim_i_64_strict(dynamic raw);
+@protected int dco_decode_box_autoadd_u_32(dynamic raw);
 
 @protected Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
 
+@protected String? dco_decode_opt_String(dynamic raw);
+
+@protected int? dco_decode_opt_box_autoadd_u_32(dynamic raw);
+
+@protected int dco_decode_u_32(dynamic raw);
+
 @protected int dco_decode_u_8(dynamic raw);
+
+@protected void dco_decode_unit(dynamic raw);
 
 @protected BigInt dco_decode_usize(dynamic raw);
 
+@protected AnyhowException sse_decode_AnyhowException(SseDeserializer deserializer);
+
+@protected TokenOutputStream sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenOutputStream(SseDeserializer deserializer);
+
 @protected Tokenizer sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenizer(SseDeserializer deserializer);
+
+@protected TokenOutputStream sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenOutputStream(SseDeserializer deserializer);
+
+@protected TokenOutputStream sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenOutputStream(SseDeserializer deserializer);
+
+@protected TokenOutputStream sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenOutputStream(SseDeserializer deserializer);
 
 @protected Tokenizer sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenizer(SseDeserializer deserializer);
 
 @protected String sse_decode_String(SseDeserializer deserializer);
 
-@protected PlatformInt64 sse_decode_i_64(SseDeserializer deserializer);
-
-@protected Int64List sse_decode_list_prim_i_64_strict(SseDeserializer deserializer);
+@protected int sse_decode_box_autoadd_u_32(SseDeserializer deserializer);
 
 @protected Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
 
+@protected String? sse_decode_opt_String(SseDeserializer deserializer);
+
+@protected int? sse_decode_opt_box_autoadd_u_32(SseDeserializer deserializer);
+
+@protected int sse_decode_u_32(SseDeserializer deserializer);
+
 @protected int sse_decode_u_8(SseDeserializer deserializer);
+
+@protected void sse_decode_unit(SseDeserializer deserializer);
 
 @protected BigInt sse_decode_usize(SseDeserializer deserializer);
 
@@ -64,19 +98,35 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_web.dart';
 
 @protected bool sse_decode_bool(SseDeserializer deserializer);
 
+@protected void sse_encode_AnyhowException(AnyhowException self, SseSerializer serializer);
+
+@protected void sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenOutputStream(TokenOutputStream self, SseSerializer serializer);
+
 @protected void sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenizer(Tokenizer self, SseSerializer serializer);
+
+@protected void sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenOutputStream(TokenOutputStream self, SseSerializer serializer);
+
+@protected void sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenOutputStream(TokenOutputStream self, SseSerializer serializer);
+
+@protected void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenOutputStream(TokenOutputStream self, SseSerializer serializer);
 
 @protected void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenizer(Tokenizer self, SseSerializer serializer);
 
 @protected void sse_encode_String(String self, SseSerializer serializer);
 
-@protected void sse_encode_i_64(PlatformInt64 self, SseSerializer serializer);
-
-@protected void sse_encode_list_prim_i_64_strict(Int64List self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer);
 
 @protected void sse_encode_list_prim_u_8_strict(Uint8List self, SseSerializer serializer);
 
+@protected void sse_encode_opt_String(String? self, SseSerializer serializer);
+
+@protected void sse_encode_opt_box_autoadd_u_32(int? self, SseSerializer serializer);
+
+@protected void sse_encode_u_32(int self, SseSerializer serializer);
+
 @protected void sse_encode_u_8(int self, SseSerializer serializer);
+
+@protected void sse_encode_unit(void self, SseSerializer serializer);
 
 @protected void sse_encode_usize(BigInt self, SseSerializer serializer);
 
@@ -92,14 +142,22 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_web.dart';
 class RustLibWire implements BaseWire {
             RustLibWire.fromExternalLibrary(ExternalLibrary lib);
 
-            void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenizer(int ptr) => wasmModule.rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenizer(ptr);
+            void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenOutputStream(int ptr) => wasmModule.rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenOutputStream(ptr);
+
+void rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenOutputStream(int ptr) => wasmModule.rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenOutputStream(ptr);
+
+void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenizer(int ptr) => wasmModule.rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenizer(ptr);
 
 void rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenizer(int ptr) => wasmModule.rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenizer(ptr);
         }
         @JS('wasm_bindgen') external RustLibWasmModule get wasmModule;
 
         @JS() @anonymous extension type RustLibWasmModule._(JSObject _) implements JSObject {
-            external void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenizer(int ptr);
+            external void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenOutputStream(int ptr);
+
+external void rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenOutputStream(int ptr);
+
+external void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenizer(int ptr);
 
 external void rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTokenizer(int ptr);
         }

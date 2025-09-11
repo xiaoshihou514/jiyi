@@ -73,7 +73,8 @@ To manually set the JDK path, use: `flutter config --jdk-dir="path/to/jdk"`.
 </details>
 
 ```shell
-dart run build_runner build
+frbc generate --stop-on-error --no-dart-format
+dart run build_runner build --build-filter 'package:jiyi/utils/*'
 # Android
 flutter build apk --release
 # Linux

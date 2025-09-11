@@ -6,11 +6,52 @@
 import 'frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-Tokenizer tokenizerFromConfig({required String configPath}) =>
-    RustLib.instance.api.crateApiTokenizerFromConfig(configPath: configPath);
 
-Int64List encode({required Tokenizer tokenizer, required String input}) =>
-    RustLib.instance.api.crateApiEncode(tokenizer: tokenizer, input: input);
+            // These functions are ignored because they are not marked as `pub`: `concat`, `decode`, `new`, `prompt_internal`, `run`
+// These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `TextGeneration`
 
-// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Tokenizer>>
-abstract class Tokenizer implements RustOpaqueInterface {}
+
+            String  prompt({required String root , required String system , required String prompt }) => RustLib.instance.api.crateApiPrompt(root: root, system: system, prompt: prompt);
+
+            
+                // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<TokenOutputStream>>
+                abstract class TokenOutputStream implements RustOpaqueInterface {
+                     Future<void>  clear();
+
+
+ Future<String>  decodeAll();
+
+
+ Future<String?>  decodeRest();
+
+
+ Future<int?>  getToken({required String tokenS });
+
+
+ Future<Tokenizer>  intoInner();
+
+
+  // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
+static Future<TokenOutputStream>  newInstance({required Tokenizer tokenizer })=>RustLib.instance.api.crateApiTokenOutputStreamNew(tokenizer: tokenizer);
+
+
+ Future<String?>  nextToken({required int token });
+
+
+ Future<void>  tokenizer();
+
+
+
+                    
+                }
+                
+
+
+                // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner< Tokenizer>>
+                abstract class Tokenizer implements RustOpaqueInterface {
+                    
+
+                    
+                }
+                
+            

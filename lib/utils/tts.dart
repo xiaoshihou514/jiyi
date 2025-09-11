@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
-import 'package:flutter_onnxruntime/flutter_onnxruntime.dart';
 
 import 'package:jiyi/utils/anno.dart';
 import 'package:jiyi/src/rust/api.dart' as api;
@@ -48,22 +47,7 @@ abstract class Tts {
     String llmPath,
     String tokenizerPath,
   ) async {
-    final ort = OnnxRuntime();
-    final session = await ort.createSession(llmPath);
-
-    await RustLib.init();
-    final tokenizer = api.tokenizerFromConfig(configPath: tokenizerPath);
-    final ids = api.encode(tokenizer: tokenizer, input: raw).inner;
-    final input = await OrtValue.fromList(ids, [1, ids.length]);
-
-    print("run start");
-    print(await session.getInputInfo());
-    final outputs = await session.run({'input_ids': input});
-    print(outputs);
-
-    await input.dispose();
-    await session.close();
-
+    // TODO
     return raw;
   }
 

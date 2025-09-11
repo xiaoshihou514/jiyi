@@ -4,13 +4,14 @@ import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 
 part "tts_setting.g.dart";
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class TtsSetting {
   final String encoder;
   final String decoder;
   final String joiner;
   final String tokens;
   final String modelType;
+  final String? name;
 
   TtsSetting({
     required this.encoder,
@@ -18,6 +19,7 @@ class TtsSetting {
     required this.joiner,
     required this.tokens,
     required this.modelType,
+    this.name,
   });
 
   factory TtsSetting.fromDyn(Map<String, dynamic> dyn) =>

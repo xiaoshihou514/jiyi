@@ -7,19 +7,19 @@ part of 'map_setting.dart';
 // **************************************************************************
 
 MapSetting _$MapSettingFromJson(Map<String, dynamic> json) => MapSetting(
-      isLocal: json['isLocal'] as bool,
-      isOSM: json['isOSM'] as bool,
-      urlFmt: json['urlFmt'] as String,
-      name: json['name'] as String,
-      maxZoom: (json['maxZoom'] as num).toInt(),
-      path: json['path'] as String?,
-      pattern: json['pattern'] as String?,
-      subdomains: (json['subdomains'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
-      header: json['header'] as String?,
-      useInversionFilter: json['useInversionFilter'] as bool? ?? true,
-    );
+  isLocal: json['isLocal'] as bool,
+  isOSM: json['isOSM'] as bool,
+  urlFmt: json['urlFmt'] as String,
+  name: json['name'] as String,
+  maxZoom: (json['maxZoom'] as num).toInt(),
+  path: json['path'] as String?,
+  pattern: json['pattern'] as String?,
+  subdomains: (json['subdomains'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
+  header: json['header'] as String?,
+  useInversionFilter: json['useInversionFilter'] as bool? ?? true,
+);
 
 Map<String, dynamic> _$MapSettingToJson(MapSetting instance) =>
     <String, dynamic>{
@@ -29,8 +29,8 @@ Map<String, dynamic> _$MapSettingToJson(MapSetting instance) =>
       'name': instance.name,
       'maxZoom': instance.maxZoom,
       'useInversionFilter': instance.useInversionFilter,
-      if (instance.subdomains case final value?) 'subdomains': value,
-      if (instance.header case final value?) 'header': value,
-      if (instance.path case final value?) 'path': value,
-      if (instance.pattern case final value?) 'pattern': value,
+      'subdomains': ?instance.subdomains,
+      'header': ?instance.header,
+      'path': ?instance.path,
+      'pattern': ?instance.pattern,
     };

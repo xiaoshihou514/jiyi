@@ -1,5 +1,5 @@
 [package]
-name = "jiyi_native_tokenizer"
+name = "jiyi_native"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,10 +7,14 @@ edition = "2021"
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
-ahash = "0.8.12"
-extend = "1.2.0"
+anyhow = "1.0.99"
+# change this once qwen3 is included in release
+candle-core = { git = "https://github.com/huggingface/candle.git", branch = "main" }
+candle-transformers = { git = "https://github.com/huggingface/candle.git", branch = "main" }
+candle-nn = { git = "https://github.com/huggingface/candle.git", branch = "main" }
 flutter_rust_bridge = "=2.11.1"
-tokenizers = "0.21.4"
+serde_json = "1.0.143"
+tokenizers = "0.22.0"
 
 [lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(frb_expand)'] }
