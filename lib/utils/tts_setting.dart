@@ -6,12 +6,12 @@ part "tts_setting.g.dart";
 
 @JsonSerializable(includeIfNull: false)
 class TtsSetting {
-  final String encoder;
-  final String decoder;
-  final String joiner;
-  final String tokens;
-  final String modelType;
-  final String? name;
+  String encoder;
+  String decoder;
+  String joiner;
+  String tokens;
+  String modelType;
+  String? name;
 
   TtsSetting({
     required this.encoder,
@@ -29,14 +29,14 @@ class TtsSetting {
   Map<String, dynamic> get dyn => _$TtsSettingToJson(this);
   String get json => jsonEncode(dyn);
   so.OnlineModelConfig get model => so.OnlineModelConfig(
-        transducer: so.OnlineTransducerModelConfig(
-          encoder: encoder,
-          decoder: decoder,
-          joiner: joiner,
-        ),
-        tokens: tokens,
-        modelType: modelType,
-      );
+    transducer: so.OnlineTransducerModelConfig(
+      encoder: encoder,
+      decoder: decoder,
+      joiner: joiner,
+    ),
+    tokens: tokens,
+    modelType: modelType,
+  );
 
   @override
   String toString() => json;

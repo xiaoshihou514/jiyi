@@ -156,10 +156,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_reset_index_desc => '重新建立日志索引';
 
   @override
-  String get settings_tts_model => '语音转文字设置';
+  String get settings_tts_model => '语音识别设置';
 
   @override
-  String get settings_tts_saved => '语音转文字设置已保存';
+  String get settings_tts_provider => '选择语音识别模型';
+
+  @override
+  String get settings_tts_custom => '本地语音识别模型';
+
+  @override
+  String get settings_tts_saved => '语音识别设置已保存';
 
   @override
   String get settings_tts_encoder => '编码器（encoder）模型路径';
@@ -185,6 +191,9 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get settings_tts_download_exp =>
       '一般格式为xxx-streaming-zipformer-语言，自行下载解压后即可看到模型（onnx）文件。一般来说中端手机跑500M的模型是没什么问题的。';
+
+  @override
+  String get settings_tts_zh_en_streaming_zipformer => '中英双语识别';
 
   @override
   String get download_title => '栅格文件下载';

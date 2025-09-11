@@ -3,11 +3,13 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:jiyi/components/download_unzip.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
 import 'package:jiyi/utils/tts_setting.dart';
 import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:jiyi/utils/anno.dart';
@@ -33,6 +35,8 @@ class TTSSettings extends StatefulWidget {
 class _TTSSettingsState extends State<TTSSettings> {
   late final AppLocalizations l;
   late TtsSetting _ttsSetting;
+  late List<String> list;
+  List<String>? downloads;
 
   // Model type controller remains as it's a text input
   final _modelTypeController = TextEditingController();
@@ -48,6 +52,7 @@ class _TTSSettingsState extends State<TTSSettings> {
       tokens: '',
       modelType: '',
     );
+    list = [l.settings_tts_custom, l.settings_tts_zh_en_streaming_zipformer];
     _loadTTSSettings();
   }
 
@@ -99,6 +104,25 @@ class _TTSSettingsState extends State<TTSSettings> {
                     context,
                   ).showSnackBar(SnackBar(content: Text(l.settings_tts_saved)));
                 }
+
+                if ([
+                  _ttsSetting.encoder,
+                  _ttsSetting.decoder,
+                  _ttsSetting.joiner,
+                  _ttsSetting.tokens,
+                ].any((p) => !File(p).existsSync())) {
+                  final dest = (await getApplicationDocumentsDirectory()).path;
+                  print(dest);
+                  // download
+                  if (context.mounted) {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (context) =>
+                          DownloadUnzipDialog(urls: downloads!, dest: dest),
+                    );
+                  }
+                }
               },
               iconSize: 6.em,
               alignment: Alignment.center,
@@ -119,104 +143,150 @@ class _TTSSettingsState extends State<TTSSettings> {
           ],
         ),
 
-        // Encoder model path
         _flex(
           children: [
-            Text(l.settings_tts_encoder),
-            _buildRichButton(
-              () => _selectModelFile('encoder'),
-              Icons.file_open,
-              _ttsSetting.encoder.isEmpty
-                  ? Text(l.settings_tts_picker_desc, style: _hintStyle)
-                  : Text(path.basename(_ttsSetting.encoder), style: _fileStyle),
-              DefaultColors.constant,
-            ),
-          ],
-        ),
-
-        // Decoder model path
-        _flex(
-          children: [
-            Text(l.settings_tts_decoder),
-            _buildRichButton(
-              () => _selectModelFile('decoder'),
-              Icons.file_open,
-              _ttsSetting.decoder.isEmpty
-                  ? Text(l.settings_tts_picker_desc, style: _hintStyle)
-                  : Text(path.basename(_ttsSetting.decoder), style: _fileStyle),
-              DefaultColors.constant,
-            ),
-          ],
-        ),
-
-        // Joiner model path
-        _flex(
-          children: [
-            Text(l.settings_tts_joiner),
-            _buildRichButton(
-              () => _selectModelFile('joiner'),
-              Icons.file_open,
-              _ttsSetting.joiner.isEmpty
-                  ? Text(l.settings_tts_picker_desc, style: _hintStyle)
-                  : Text(path.basename(_ttsSetting.joiner), style: _fileStyle),
-              DefaultColors.constant,
-            ),
-          ],
-        ),
-
-        // Tokens file path
-        _flex(
-          children: [
-            Text(l.settings_tts_tokens),
-            _buildRichButton(
-              () => _selectModelFile('tokens'),
-              Icons.file_open,
-              _ttsSetting.tokens.isEmpty
-                  ? Text(l.settings_tts_picker_desc, style: _hintStyle)
-                  : Text(path.basename(_ttsSetting.tokens), style: _fileStyle),
-              DefaultColors.constant,
-            ),
-          ],
-        ),
-
-        // Model type
-        _flex(
-          children: [
-            Text(l.settings_tts_model_type),
-            SizedBox(
-              height: 6.em,
-              width: 50.em,
-              child: TextField(
-                controller: _modelTypeController,
-                style: _inputStyle,
-                decoration: _inputDecoration,
-                onChanged: (value) => _updateSetting('modelType', value),
+            Text(l.settings_tts_provider),
+            DropdownButton(
+              value: _ttsSetting.name ?? l.settings_tts_custom,
+              icon: Icon(Icons.arrow_drop_down, size: 5.em),
+              style: TextStyle(
+                color: DefaultColors.fg,
+                fontSize: 5.em,
+                decoration: TextDecoration.none,
+                fontFamily: "朱雀仿宋",
               ),
+              dropdownColor: DefaultColors.shade_3,
+              underline: Container(
+                height: 1.5,
+                width: 1.2,
+                color: DefaultColors.fg,
+              ),
+              onChanged: (String? value) => setState(() {
+                if (value == l.settings_tts_custom) {
+                  _ttsSetting.name = null;
+                  _ttsSetting.encoder = '';
+                  _ttsSetting.decoder = '';
+                  _ttsSetting.joiner = '';
+                  _ttsSetting.tokens = '';
+                  _ttsSetting.modelType = '';
+                } else {
+                  _usePreset(value!);
+                }
+              }),
+              items: list
+                  .map(
+                    (String value) =>
+                        DropdownMenuItem(value: value, child: Text(value)),
+                  )
+                  .toList(),
             ),
           ],
         ),
-        InkWell(
-          child: Text(
-            l.settings_tts_download_desc,
-            style: TextStyle(
-              decoration: TextDecoration.underline,
-              decorationColor: DefaultColors.info,
-              color: DefaultColors.info,
-            ),
-          ),
-          onTap: () => launchUrl(
-            Uri.parse(
-              "https://github.com/k2-fsa/sherpa-onnx/releases/tag/asr-models",
-            ),
-          ),
-        ),
-        Text(
-          l.settings_tts_download_exp,
-          style: TextStyle(color: DefaultColors.fg),
-        ),
+
+        if (_ttsSetting.name == null) _localTTSSettings(),
       ],
     );
   }
+
+  Widget _localTTSSettings() => Column(
+    children: [
+      // Encoder model path
+      _flex(
+        children: [
+          Text(l.settings_tts_encoder),
+          _buildRichButton(
+            () => _selectModelFile('encoder'),
+            Icons.file_open,
+            _ttsSetting.encoder.isEmpty
+                ? Text(l.settings_tts_picker_desc, style: _hintStyle)
+                : Text(path.basename(_ttsSetting.encoder), style: _fileStyle),
+            DefaultColors.constant,
+          ),
+        ],
+      ),
+
+      // Decoder model path
+      _flex(
+        children: [
+          Text(l.settings_tts_decoder),
+          _buildRichButton(
+            () => _selectModelFile('decoder'),
+            Icons.file_open,
+            _ttsSetting.decoder.isEmpty
+                ? Text(l.settings_tts_picker_desc, style: _hintStyle)
+                : Text(path.basename(_ttsSetting.decoder), style: _fileStyle),
+            DefaultColors.constant,
+          ),
+        ],
+      ),
+
+      // Joiner model path
+      _flex(
+        children: [
+          Text(l.settings_tts_joiner),
+          _buildRichButton(
+            () => _selectModelFile('joiner'),
+            Icons.file_open,
+            _ttsSetting.joiner.isEmpty
+                ? Text(l.settings_tts_picker_desc, style: _hintStyle)
+                : Text(path.basename(_ttsSetting.joiner), style: _fileStyle),
+            DefaultColors.constant,
+          ),
+        ],
+      ),
+
+      // Tokens file path
+      _flex(
+        children: [
+          Text(l.settings_tts_tokens),
+          _buildRichButton(
+            () => _selectModelFile('tokens'),
+            Icons.file_open,
+            _ttsSetting.tokens.isEmpty
+                ? Text(l.settings_tts_picker_desc, style: _hintStyle)
+                : Text(path.basename(_ttsSetting.tokens), style: _fileStyle),
+            DefaultColors.constant,
+          ),
+        ],
+      ),
+
+      // Model type
+      _flex(
+        children: [
+          Text(l.settings_tts_model_type),
+          SizedBox(
+            height: 6.em,
+            width: 50.em,
+            child: TextField(
+              controller: _modelTypeController,
+              style: _inputStyle,
+              decoration: _inputDecoration,
+              onChanged: (value) => _updateSetting('modelType', value),
+            ),
+          ),
+        ],
+      ),
+      InkWell(
+        child: Text(
+          l.settings_tts_download_desc,
+          style: TextStyle(
+            decoration: TextDecoration.underline,
+            decorationColor: DefaultColors.info,
+            color: DefaultColors.info,
+          ),
+        ),
+        onTap: () => launchUrl(
+          Uri.parse(
+            "https://github.com/k2-fsa/sherpa-onnx/releases/tag/asr-models",
+          ),
+        ),
+      ),
+      Text(
+        l.settings_tts_download_exp,
+        style: TextStyle(color: DefaultColors.fg),
+      ),
+    ],
+  );
 
   TextStyle get _hintStyle =>
       TextStyle(fontSize: 5.em, color: DefaultColors.bg, fontFamily: "朱雀仿宋");
@@ -228,14 +298,14 @@ class _TTSSettingsState extends State<TTSSettings> {
       TextStyle(color: DefaultColors.fg, fontSize: isMobile ? 4.em : 3.em);
 
   InputDecoration get _inputDecoration => InputDecoration(
-        contentPadding: isMobile ? null : EdgeInsets.symmetric(vertical: 1.em),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: DefaultColors.fg),
-        ),
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: DefaultColors.fg),
-        ),
-      );
+    contentPadding: isMobile ? null : EdgeInsets.symmetric(vertical: 1.em),
+    enabledBorder: UnderlineInputBorder(
+      borderSide: BorderSide(color: DefaultColors.fg),
+    ),
+    focusedBorder: UnderlineInputBorder(
+      borderSide: BorderSide(color: DefaultColors.fg),
+    ),
+  );
 
   Future<void> _selectModelFile(String field) async {
     if (Platform.isAndroid) {
@@ -297,4 +367,19 @@ class _TTSSettingsState extends State<TTSSettings> {
             children: children,
           ),
         );
+
+  void _usePreset(String name) {
+    _ttsSetting.name = name;
+    if (name == l.settings_tts_zh_en_streaming_zipformer) {
+      _ttsSetting.encoder = '';
+      _ttsSetting.decoder = '';
+      _ttsSetting.joiner = '';
+      _ttsSetting.tokens = '';
+      _ttsSetting.modelType = 'zipformer';
+      downloads = [
+        "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-streaming-zipformer-bilingual-zh-en-2023-02-20.tar.bz2",
+      ];
+      // TODO
+    }
+  }
 }

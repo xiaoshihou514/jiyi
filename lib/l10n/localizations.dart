@@ -389,13 +389,25 @@ abstract class AppLocalizations {
   /// No description provided for @settings_tts_model.
   ///
   /// In zh, this message translates to:
-  /// **'语音转文字设置'**
+  /// **'语音识别设置'**
   String get settings_tts_model;
+
+  /// No description provided for @settings_tts_provider.
+  ///
+  /// In zh, this message translates to:
+  /// **'选择语音识别模型'**
+  String get settings_tts_provider;
+
+  /// No description provided for @settings_tts_custom.
+  ///
+  /// In zh, this message translates to:
+  /// **'本地语音识别模型'**
+  String get settings_tts_custom;
 
   /// No description provided for @settings_tts_saved.
   ///
   /// In zh, this message translates to:
-  /// **'语音转文字设置已保存'**
+  /// **'语音识别设置已保存'**
   String get settings_tts_saved;
 
   /// No description provided for @settings_tts_encoder.
@@ -445,6 +457,12 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'一般格式为xxx-streaming-zipformer-语言，自行下载解压后即可看到模型（onnx）文件。一般来说中端手机跑500M的模型是没什么问题的。'**
   String get settings_tts_download_exp;
+
+  /// No description provided for @settings_tts_zh_en_streaming_zipformer.
+  ///
+  /// In zh, this message translates to:
+  /// **'中英双语识别'**
+  String get settings_tts_zh_en_streaming_zipformer;
 
   /// No description provided for @download_title.
   ///

@@ -11,14 +11,12 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
 class DownloadUnzipDialog extends StatefulWidget {
-  final String prefix;
+  final List<String> urls;
   final String dest;
-  final int maxZoom;
 
   const DownloadUnzipDialog({
-    required this.prefix,
+    required this.urls,
     required this.dest,
-    required this.maxZoom,
     super.key,
   });
 
@@ -40,7 +38,7 @@ class _DownloadUnzipDialogState extends State<DownloadUnzipDialog> {
   void initState() {
     super.initState();
     progress = List.generate(
-      widget.maxZoom - 3,
+      widget.urls.length,
       (i) => (DStage.downloading, 0),
     );
     _startDownload();
@@ -49,27 +47,28 @@ class _DownloadUnzipDialogState extends State<DownloadUnzipDialog> {
   Future<void> _startDownload() async {
     final tmp = await getTemporaryDirectory();
 
-    for (int i = 4; i <= widget.maxZoom; i++) {
-      if (Directory(path.join(widget.dest, "$i")).existsSync()) {
-        setState(() => progress[i - 4] = (DStage.done, 100));
+    for (final (i, url) in widget.urls.indexed) {
+      final base = path.basename(url);
+      final p = path.join(widget.dest, base);
+      if (Directory(p).existsSync() || File(p).existsSync()) {
+        setState(() => progress[i] = (DStage.done, 100));
         continue;
       }
-      Dio().download(
-        "${widget.prefix}/$i.zip",
-        '${tmp.path}/$i.zip',
-        onReceiveProgress: (int received, int total) {
-          setState(
-            () => progress[i - 4] = (
-              progress[i - 4].$1,
-              _ntrunc(received / total),
-            ),
-          );
-        },
-      ).then((_) async {
-        setState(() => progress[i - 4] = (DStage.unzipping, 100));
-        await extractFileToDisk(path.join(tmp.path, "$i.zip"), widget.dest);
-        setState(() => progress[i - 4] = (DStage.done, 100));
-      });
+      Dio()
+          .download(
+            url,
+            '${tmp.path}/$base',
+            onReceiveProgress: (int received, int total) {
+              setState(
+                () => progress[i] = (progress[i].$1, _ntrunc(received / total)),
+              );
+            },
+          )
+          .then((_) async {
+            setState(() => progress[i] = (DStage.unzipping, 100));
+            await extractFileToDisk(path.join(tmp.path, base), widget.dest);
+            setState(() => progress[i] = (DStage.done, 100));
+          });
     }
   }
 
@@ -116,7 +115,7 @@ class _DownloadUnzipDialogState extends State<DownloadUnzipDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: List.generate(
-              widget.maxZoom - 3,
+              widget.urls.length,
               (i) => _progressViz(i + 4),
             ),
           ),
@@ -150,7 +149,7 @@ class _DownloadUnzipDialogState extends State<DownloadUnzipDialog> {
   }
 }
 
-void showDownloadDialog(
+void showTileDownloadDialog(
   BuildContext context,
   String prefix,
   String path,
@@ -160,9 +159,11 @@ void showDownloadDialog(
     context: context,
     barrierDismissible: false,
     builder: (context) => DownloadUnzipDialog(
-      prefix: prefix,
+      urls: List.generate(
+        min(maxZoomLevel, 10) - 3,
+        (i) => '$prefix/${i + 4}.zip',
+      ),
       dest: path,
-      maxZoom: min(maxZoomLevel, 10),
     ),
   );
 }

@@ -168,6 +168,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_tts_model => 'STT settings';
 
   @override
+  String get settings_tts_provider => '选择语音识别模型';
+
+  @override
+  String get settings_tts_custom => '本地语音识别模型';
+
+  @override
   String get settings_tts_saved => 'STT settings saved';
 
   @override
@@ -195,6 +201,9 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settings_tts_download_exp =>
       'The format is usually xxx-streaming-zipformer-language, after you have downloaded and extracted the archive you should see the model (onnx) files. A modest phone should be able to run a 500M model.';
+
+  @override
+  String get settings_tts_zh_en_streaming_zipformer => '中英双语识别';
 
   @override
   String get download_title => 'Raster File Download';
