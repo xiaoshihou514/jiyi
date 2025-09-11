@@ -3,7 +3,6 @@ import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 
 import 'package:jiyi/utils/anno.dart';
 import 'package:jiyi/src/rust/api.dart' as api;
-import 'package:jiyi/src/rust/frb_generated.dart';
 
 abstract class Tts {
   // 1 second
@@ -12,7 +11,6 @@ abstract class Tts {
   static Future<String> fromWAV(
     so.OnlineModelConfig? model,
     String? llmPath,
-    String? tokenizerPath,
     Float32List data,
     int sampleRate,
   ) async {
@@ -21,35 +19,28 @@ abstract class Tts {
     }
 
     // text 2 speech
-    // so.initBindings();
-    // final onnx = so.OnlineRecognizer(so.OnlineRecognizerConfig(model: model));
-    // final stream = onnx.createStream();
-    //
-    // stream.acceptWaveform(samples: data, sampleRate: sampleRate);
-    //
-    // while (onnx.isReady(stream)) {
-    //   onnx.decode(stream);
-    // }
-    // final res = onnx.getResult(stream);
-    // final raw = _splitByTime(res.tokens, res.timestamps);
-    final raw = ["收到请回复收到，完毕"];
+    so.initBindings();
+    final onnx = so.OnlineRecognizer(so.OnlineRecognizerConfig(model: model));
+    final stream = onnx.createStream();
+
+    stream.acceptWaveform(samples: data, sampleRate: sampleRate);
+
+    while (onnx.isReady(stream)) {
+      onnx.decode(stream);
+    }
+    final res = onnx.getResult(stream);
+    final raw = _splitByTime(res.tokens, res.timestamps);
 
     // LLM enhancement
-    if (llmPath == null || tokenizerPath == null || raw.join().isEmpty) {
+    if (llmPath == null || raw.join().isEmpty) {
       return raw.join("\n");
     } else {
-      return llmEnhance(raw.join("\n"), llmPath, tokenizerPath);
+      return llmEnhance(raw.join("\n"), llmPath, llmPath);
     }
   }
 
-  static Future<String> llmEnhance(
-    String raw,
-    String llmPath,
-    String tokenizerPath,
-  ) async {
-    // TODO
-    return raw;
-  }
+  static String llmEnhance(String raw, String llmPath, String tokenizerPath) =>
+      api.prompt(root: llmPath, system: "", prompt: raw);
 
   @DeepSeek()
   static List<String> _splitByTime(

@@ -523,8 +523,7 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
             ? double.parse(_lonController.text)
             : 0.0,
         cover: _coverController.text,
-        path: (timestamp.toString() + DateTime.now().toString())
-            .hashCode
+        path: (timestamp.toString() + DateTime.now().toString()).hashCode
             .toString(),
         transcript: '',
       ).dyn,
@@ -550,7 +549,6 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
     md["transcript"] = await Tts.fromWAV(
       params['model'] as so.OnlineModelConfig,
       "/home/xiaoshihou/Playground/scratch/deepseek_onnx/model_int8.onnx",
-      "/home/xiaoshihou/Playground/scratch/deepseek_onnx/tokenizer.json",
       Float32List.fromList(wav.channels.first.toList()),
       wav.samplesPerSecond,
     );

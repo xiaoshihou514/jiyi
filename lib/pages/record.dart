@@ -250,7 +250,8 @@ class _RecordPageState extends State<RecordPage> {
 
     if (!mounted) return;
     final l = AppLocalizations.of(context)!;
-    final titleAndCover = await showDialog<(String, String)>(
+    final titleAndCover =
+        await showDialog<(String, String)>(
           context: context,
           barrierDismissible: false,
           builder: (context) => TitleAndCoverInput(),
@@ -272,8 +273,7 @@ class _RecordPageState extends State<RecordPage> {
         latitude: coord?.latitude,
         longitude: coord?.longitude,
         cover: titleAndCover.$2,
-        path: (_startTime.toString() + DateTime.now().toString())
-            .hashCode
+        path: (_startTime.toString() + DateTime.now().toString()).hashCode
             .toString(),
         transcript: "",
       ).dyn,
@@ -305,7 +305,6 @@ class _RecordPageState extends State<RecordPage> {
     md["transcript"] = await Tts.fromWAV(
       params['model'] as so.OnlineModelConfig?,
       "/home/xiaoshihou/Playground/scratch/deepseek_onnx/model_int8.onnx",
-      "/home/xiaoshihou/Playground/scratch/deepseek_onnx/tokenizer.json",
       Float32List.fromList(bytes),
       SAMPLE_RATE,
     );
