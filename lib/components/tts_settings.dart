@@ -218,7 +218,6 @@ class _TTSSettingsState extends State<TTSSettings> {
     );
   }
 
-  // Styles remain the same...
   TextStyle get _hintStyle =>
       TextStyle(fontSize: 5.em, color: DefaultColors.bg, fontFamily: "朱雀仿宋");
 
@@ -229,16 +228,15 @@ class _TTSSettingsState extends State<TTSSettings> {
       TextStyle(color: DefaultColors.fg, fontSize: isMobile ? 4.em : 3.em);
 
   InputDecoration get _inputDecoration => InputDecoration(
-        contentPadding: isMobile ? null : EdgeInsets.symmetric(vertical: 1.em),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: DefaultColors.fg),
-        ),
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: DefaultColors.fg),
-        ),
-      );
+    contentPadding: isMobile ? null : EdgeInsets.symmetric(vertical: 1.em),
+    enabledBorder: UnderlineInputBorder(
+      borderSide: BorderSide(color: DefaultColors.fg),
+    ),
+    focusedBorder: UnderlineInputBorder(
+      borderSide: BorderSide(color: DefaultColors.fg),
+    ),
+  );
 
-  // Updated file selection method
   Future<void> _selectModelFile(String field) async {
     if (Platform.isAndroid) {
       if (!await Permission.storage.status.isGranted) {
@@ -256,7 +254,6 @@ class _TTSSettingsState extends State<TTSSettings> {
     }
   }
 
-  // Button component remains the same...
   IconButton _buildRichButton(
     void Function() callback,
     IconData icon,
@@ -288,7 +285,6 @@ class _TTSSettingsState extends State<TTSSettings> {
     );
   }
 
-  // Layout component remains the same...
   Widget _flex({required List<Widget> children}) => isMobile
       ? Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

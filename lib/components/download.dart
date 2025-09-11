@@ -1,8 +1,6 @@
 import 'dart:io';
-import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:archive/archive_io.dart';
 
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
@@ -10,66 +8,91 @@ import 'package:jiyi/utils/em.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
-class DownloadUnzipDialog extends StatefulWidget {
-  final String prefix;
-  final String dest;
-  final int maxZoom;
+class FileDownloadDialog extends StatefulWidget {
+  final List<String> urls;
+  final String? destinationDirectory;
+  final List<String>? fileNames;
 
-  const DownloadUnzipDialog({
-    required this.prefix,
-    required this.dest,
-    required this.maxZoom,
+  const FileDownloadDialog({
+    required this.urls,
+    this.destinationDirectory,
+    this.fileNames,
     super.key,
   });
 
   @override
-  State<DownloadUnzipDialog> createState() => _DownloadUnzipDialogState();
+  State<FileDownloadDialog> createState() => _FileDownloadDialogState();
 }
 
-enum DStage { downloading, unzipping, done }
+enum DownloadStage { downloading, done }
 
-class _DownloadUnzipDialogState extends State<DownloadUnzipDialog> {
-  late final List<(DStage, double)> progress;
+class _FileDownloadDialogState extends State<FileDownloadDialog> {
+  late final List<(DownloadStage, double)> progress;
+  late final List<String> fileNames;
+  late final String destDir;
 
-  double _perc(int i) => progress[i - 4].$2;
-  DStage _stage(int i) => progress[i - 4].$1;
+  double _perc(int i) => progress[i].$2;
+  DownloadStage _stage(int i) => progress[i].$1;
   // [0,1] -> [0,100]
   double _ntrunc(double x) => (x * 10000).toInt().toDouble() / 100;
 
   @override
   void initState() {
     super.initState();
+
+    // 初始化进度列表
     progress = List.generate(
-      widget.maxZoom - 3,
-      (i) => (DStage.downloading, 0),
+      widget.urls.length,
+      (i) => (DownloadStage.downloading, 0),
     );
-    _startDownload();
+
+    // 处理文件名
+    fileNames =
+        widget.fileNames ??
+        widget.urls.map((url) => path.basename(url)).toList();
+
+    // 确定目标目录
+    _determineDestination().then((_) => _startDownload());
+  }
+
+  Future<void> _determineDestination() async {
+    if (widget.destinationDirectory != null) {
+      destDir = widget.destinationDirectory!;
+      // 确保目录存在
+      await Directory(destDir).create(recursive: true);
+    } else {
+      // 使用临时目录
+      final tmp = await getTemporaryDirectory();
+      destDir = tmp.path;
+    }
   }
 
   Future<void> _startDownload() async {
-    final tmp = await getTemporaryDirectory();
+    for (int i = 0; i < widget.urls.length; i++) {
+      final url = widget.urls[i];
+      final fileName = fileNames[i];
+      final savePath = path.join(destDir, fileName);
 
-    for (int i = 4; i <= widget.maxZoom; i++) {
-      if (Directory(path.join(widget.dest, "$i")).existsSync()) {
-        setState(() => progress[i - 4] = (DStage.done, 100));
+      // 检查文件是否已存在
+      if (File(savePath).existsSync()) {
+        setState(() => progress[i] = (DownloadStage.done, 100));
         continue;
       }
-      Dio().download(
-        "${widget.prefix}/$i.zip",
-        '${tmp.path}/$i.zip',
+
+      await Dio().download(
+        url,
+        savePath,
         onReceiveProgress: (int received, int total) {
           setState(
-            () => progress[i - 4] = (
-              progress[i - 4].$1,
+            () => progress[i] = (
+              DownloadStage.downloading,
               _ntrunc(received / total),
             ),
           );
         },
-      ).then((_) async {
-        setState(() => progress[i - 4] = (DStage.unzipping, 100));
-        await extractFileToDisk(path.join(tmp.path, "$i.zip"), widget.dest);
-        setState(() => progress[i - 4] = (DStage.done, 100));
-      });
+      );
+
+      setState(() => progress[i] = (DownloadStage.done, 100));
     }
   }
 
@@ -86,7 +109,7 @@ class _DownloadUnzipDialogState extends State<DownloadUnzipDialog> {
         fontSize: 8.em,
       ),
       title: Text(l.download_title),
-      actions: progress.every((b) => b.$1 == DStage.done)
+      actions: progress.every((b) => b.$1 == DownloadStage.done)
           ? [
               TextButton(
                 onPressed: () => {
@@ -115,10 +138,7 @@ class _DownloadUnzipDialogState extends State<DownloadUnzipDialog> {
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: List.generate(
-              widget.maxZoom - 3,
-              (i) => _progressViz(i + 4),
-            ),
+            children: List.generate(widget.urls.length, (i) => _progressViz(i)),
           ),
         ),
       ),
@@ -127,42 +147,54 @@ class _DownloadUnzipDialogState extends State<DownloadUnzipDialog> {
 
   Widget _progressViz(int index) {
     final l = AppLocalizations.of(context)!;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        SizedBox(
-          height: 2.em,
-          width: 10.em,
-          child: LinearProgressIndicator(
-            value: _perc(index) / 100,
-            backgroundColor: DefaultColors.shade_4,
-            valueColor: AlwaysStoppedAnimation(DefaultColors.constant),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 1.em),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            fileNames[index],
+            style: TextStyle(fontSize: 3.5.em),
+            overflow: TextOverflow.ellipsis,
           ),
-        ),
-        if (_stage(index) == DStage.downloading)
-          Text(l.download_perc(index, _perc(index)))
-        else if (_stage(index) == DStage.unzipping)
-          Text(l.download_extracting)
-        else
-          Text(l.download_done),
-      ],
+          SizedBox(height: 0.5.em),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                height: 2.em,
+                width: 10.em,
+                child: LinearProgressIndicator(
+                  value: _perc(index) / 100,
+                  backgroundColor: DefaultColors.shade_4,
+                  valueColor: AlwaysStoppedAnimation(DefaultColors.constant),
+                ),
+              ),
+              if (_stage(index) == DownloadStage.downloading)
+                Text(l.download_perc(index + 1, _perc(index)))
+              else
+                Text(l.download_done),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
 
-void showDownloadDialog(
+void showFileDownloadDialog(
   BuildContext context,
-  String prefix,
-  String path,
-  int maxZoomLevel,
-) {
+  List<String> urls, {
+  String? destinationDirectory,
+  List<String>? fileNames,
+}) {
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (context) => DownloadUnzipDialog(
-      prefix: prefix,
-      dest: path,
-      maxZoom: min(maxZoomLevel, 10),
+    builder: (context) => FileDownloadDialog(
+      urls: urls,
+      destinationDirectory: destinationDirectory,
+      fileNames: fileNames,
     ),
   );
 }

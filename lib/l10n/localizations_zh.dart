@@ -162,16 +162,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_tts_saved => '语音转文字设置已保存';
 
   @override
-  String get settings_tts_encoder => '编码器模型路径';
+  String get settings_tts_encoder => '编码器（encoder）模型路径';
 
   @override
-  String get settings_tts_decoder => '解码器模型路径';
+  String get settings_tts_decoder => '解码器（decoder）模型路径';
 
   @override
-  String get settings_tts_joiner => '拼接器模型路径';
+  String get settings_tts_joiner => '拼接器（joiner）模型路径';
 
   @override
-  String get settings_tts_tokens => '词元文件路径';
+  String get settings_tts_tokens => '词元文件（tokens.txt）路径';
 
   @override
   String get settings_tts_model_type => '模型类型（例：zipformer）';

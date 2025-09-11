@@ -8,7 +8,7 @@ import 'package:numberpicker/numberpicker.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
-import 'package:jiyi/components/download.dart';
+import 'package:jiyi/components/tile_download.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/utils/map_setting.dart';
@@ -229,8 +229,9 @@ class _MapSettingsState extends State<MapSettings> {
                   ),
                   cursorColor: DefaultColors.shade_6,
                   decoration: InputDecoration(
-                    contentPadding:
-                        isMobile ? null : EdgeInsets.symmetric(vertical: 1.em),
+                    contentPadding: isMobile
+                        ? null
+                        : EdgeInsets.symmetric(vertical: 1.em),
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: DefaultColors.fg),
                     ),
@@ -264,8 +265,9 @@ class _MapSettingsState extends State<MapSettings> {
                   ),
                   cursorColor: DefaultColors.shade_6,
                   decoration: InputDecoration(
-                    contentPadding:
-                        isMobile ? null : EdgeInsets.symmetric(vertical: 1.em),
+                    contentPadding: isMobile
+                        ? null
+                        : EdgeInsets.symmetric(vertical: 1.em),
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: DefaultColors.fg),
                     ),
@@ -352,8 +354,9 @@ class _MapSettingsState extends State<MapSettings> {
                   ),
                   cursorColor: DefaultColors.shade_6,
                   decoration: InputDecoration(
-                    contentPadding:
-                        isMobile ? null : EdgeInsets.symmetric(vertical: 1.em),
+                    contentPadding: isMobile
+                        ? null
+                        : EdgeInsets.symmetric(vertical: 1.em),
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: DefaultColors.fg),
                     ),
