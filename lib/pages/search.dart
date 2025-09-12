@@ -7,7 +7,7 @@ import 'package:jiyi/pages/player.dart';
 import 'package:jiyi/utils/anno.dart';
 import 'package:jiyi/utils/em.dart';
 import 'package:jiyi/utils/io.dart';
-import 'package:jiyi/utils/metadata.dart';
+import 'package:jiyi/utils/data/metadata.dart';
 import 'package:jiyi/utils/smooth_router.dart';
 import 'package:jiyi/utils/text_color.dart';
 
@@ -50,8 +50,8 @@ class _SearchState extends State<Search> {
       for (final entry in data) {
         // 在标题中搜索
         final titleMatchIndex = entry.title.toLowerCase().indexOf(
-              query.toLowerCase(),
-            );
+          query.toLowerCase(),
+        );
         if (titleMatchIndex != -1) {
           results.add(
             SearchResult(
@@ -68,8 +68,8 @@ class _SearchState extends State<Search> {
         for (int i = 0; i < transcriptLines.length; i++) {
           final line = transcriptLines[i];
           final lineMatchIndex = line.toLowerCase().indexOf(
-                query.toLowerCase(),
-              );
+            query.toLowerCase(),
+          );
           if (lineMatchIndex != -1) {
             results.add(
               SearchResult(

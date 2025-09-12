@@ -7,7 +7,7 @@ import 'package:path/path.dart' as path;
 
 import 'package:jiyi/utils/encryption.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
-import 'package:jiyi/utils/metadata.dart';
+import 'package:jiyi/utils/data/metadata.dart';
 
 extension on DateTime {
   DateTime get trim => DateTime(year, month, day);

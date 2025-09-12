@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:jiyi/components/settings_utils.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
@@ -11,26 +11,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:jiyi/components/download_unzip.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
-import 'package:jiyi/utils/map_setting.dart';
+import 'package:jiyi/utils/data/map_setting.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
 import 'package:permission_handler/permission_handler.dart';
-
-extension on num {
-  double get em => (ScreenUtil().screenWidth > ScreenUtil().screenHeight)
-      ? sh / 128
-      : sw / 96;
-}
-
-bool isMobile = ScreenUtil().screenWidth < ScreenUtil().screenHeight;
-Widget _flex({required List<Widget> children}) => isMobile
-    ? Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: children,
-      )
-    : Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: children,
-      );
 
 class MapSettings extends StatefulWidget {
   final AppLocalizations loc;
@@ -169,7 +152,7 @@ class _MapSettingsState extends State<MapSettings> {
             ),
           ],
         ),
-        _flex(
+        SUtils.flex(
           children: [
             Text(l.settings_map_provider),
             DropdownButton(
@@ -223,7 +206,7 @@ class _MapSettingsState extends State<MapSettings> {
   Widget _networkProviderSettings() {
     return Column(
       children: [
-        _flex(
+        SUtils.flex(
           children: [
             Text(l.settings_map_custom_desc),
             SizedBox(
@@ -240,11 +223,11 @@ class _MapSettingsState extends State<MapSettings> {
                   controller: _customPatternController,
                   style: TextStyle(
                     color: DefaultColors.fg,
-                    fontSize: isMobile ? 4.em : 3.em,
+                    fontSize: SUtils.isMobile ? 4.em : 3.em,
                   ),
                   cursorColor: DefaultColors.shade_6,
                   decoration: InputDecoration(
-                    contentPadding: isMobile
+                    contentPadding: SUtils.isMobile
                         ? null
                         : EdgeInsets.symmetric(vertical: 1.em),
                     enabledBorder: UnderlineInputBorder(
@@ -259,7 +242,7 @@ class _MapSettingsState extends State<MapSettings> {
             ),
           ],
         ),
-        _flex(
+        SUtils.flex(
           children: [
             Text(l.settings_map_custom_headers),
             SizedBox(
@@ -276,11 +259,11 @@ class _MapSettingsState extends State<MapSettings> {
                   controller: _customHeaderController,
                   style: TextStyle(
                     color: DefaultColors.fg,
-                    fontSize: isMobile ? 4.em : 3.em,
+                    fontSize: SUtils.isMobile ? 4.em : 3.em,
                   ),
                   cursorColor: DefaultColors.shade_6,
                   decoration: InputDecoration(
-                    contentPadding: isMobile
+                    contentPadding: SUtils.isMobile
                         ? null
                         : EdgeInsets.symmetric(vertical: 1.em),
                     enabledBorder: UnderlineInputBorder(
@@ -321,10 +304,10 @@ class _MapSettingsState extends State<MapSettings> {
   Widget _localProviderSettings() {
     return Column(
       children: [
-        _flex(
+        SUtils.flex(
           children: [
             Text(l.settings_map_loc_path),
-            _buildRichButton(
+            SUtils.buildFileChooser(
               _choose,
               Icons.folder_open,
               (_setting.path ?? "").isEmpty
@@ -348,7 +331,7 @@ class _MapSettingsState extends State<MapSettings> {
             ),
           ],
         ),
-        _flex(
+        SUtils.flex(
           children: [
             Text(l.settings_map_loc_pattern),
             SizedBox(
@@ -365,11 +348,11 @@ class _MapSettingsState extends State<MapSettings> {
                   controller: _localPatternController,
                   style: TextStyle(
                     color: DefaultColors.fg,
-                    fontSize: isMobile ? 4.em : 3.em,
+                    fontSize: SUtils.isMobile ? 4.em : 3.em,
                   ),
                   cursorColor: DefaultColors.shade_6,
                   decoration: InputDecoration(
-                    contentPadding: isMobile
+                    contentPadding: SUtils.isMobile
                         ? null
                         : EdgeInsets.symmetric(vertical: 1.em),
                     enabledBorder: UnderlineInputBorder(
@@ -406,7 +389,7 @@ class _MapSettingsState extends State<MapSettings> {
         Wrap(children: [Text(l.settings_map_pull_desc), Container()]),
         Wrap(
           children: [
-            _buildRichButton(
+            SUtils.buildFileChooser(
               () => _download(
                 "https://codeberg.org/xiaoshihou/openstreetmap_raw_raster_tiles_download_2025_5/media/branch/main/",
               ),
@@ -421,7 +404,7 @@ class _MapSettingsState extends State<MapSettings> {
               ),
               DefaultColors.keyword,
             ),
-            _buildRichButton(
+            SUtils.buildFileChooser(
               () => _download(
                 "https://gitlab.com/xiaoshihou/openstreetmap_raw_raster_tiles_download_2025_5/-/raw/main/",
               ),
@@ -436,7 +419,7 @@ class _MapSettingsState extends State<MapSettings> {
               ),
               DefaultColors.keyword,
             ),
-            _buildRichButton(
+            SUtils.buildFileChooser(
               () => _download(
                 "https://github.com/xiaoshihou514/openstreetmap_raw_raster_tiles_download_2025_5/raw/refs/heads/main/",
               ),
@@ -454,37 +437,6 @@ class _MapSettingsState extends State<MapSettings> {
           ],
         ),
       ],
-    );
-  }
-
-  IconButton _buildRichButton(
-    void Function() callback,
-    IconData icon,
-    Text text,
-    Color bg,
-  ) {
-    return IconButton(
-      onPressed: callback,
-      iconSize: 6.em,
-      alignment: Alignment.center,
-      icon: Container(
-        decoration: BoxDecoration(
-          color: bg,
-          borderRadius: BorderRadius.circular(40),
-        ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 2.em, vertical: 1.em),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            spacing: 3.em,
-            children: [
-              Icon(icon, color: DefaultColors.bg),
-              Flexible(child: text),
-            ],
-          ),
-        ),
-      ),
     );
   }
 

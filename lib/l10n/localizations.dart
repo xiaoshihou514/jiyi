@@ -464,6 +464,60 @@ abstract class AppLocalizations {
   /// **'中英双语识别'**
   String get settings_tts_zh_en_streaming_zipformer;
 
+  /// No description provided for @settings_llm_zdpp_model.
+  ///
+  /// In zh, this message translates to:
+  /// **'自动排版设置'**
+  String get settings_llm_zdpp_model;
+
+  /// No description provided for @settings_llm_zdpp_desc.
+  ///
+  /// In zh, this message translates to:
+  /// **'自动排版会调用大语言模型帮你把语音内容加上标点符号、自动分段'**
+  String get settings_llm_zdpp_desc;
+
+  /// No description provided for @settings_llm_zdpp_provider.
+  ///
+  /// In zh, this message translates to:
+  /// **'选择大模型'**
+  String get settings_llm_zdpp_provider;
+
+  /// No description provided for @settings_llm_zdpp_custom.
+  ///
+  /// In zh, this message translates to:
+  /// **'本地大语言模型'**
+  String get settings_llm_zdpp_custom;
+
+  /// No description provided for @settings_llm_zdpp_qwen3_1_5B.
+  ///
+  /// In zh, this message translates to:
+  /// **'千问3-1.5B'**
+  String get settings_llm_zdpp_qwen3_1_5B;
+
+  /// No description provided for @settings_llm_zdpp_root_picker_desc.
+  ///
+  /// In zh, this message translates to:
+  /// **'选择模型所在文件夹'**
+  String get settings_llm_zdpp_root_picker_desc;
+
+  /// No description provided for @settings_llm_zdpp_root_picker_cover.
+  ///
+  /// In zh, this message translates to:
+  /// **'选择文件夹'**
+  String get settings_llm_zdpp_root_picker_cover;
+
+  /// No description provided for @settings_llm_zdpp_prompt_desc.
+  ///
+  /// In zh, this message translates to:
+  /// **'自动排版提示词'**
+  String get settings_llm_zdpp_prompt_desc;
+
+  /// No description provided for @settings_llm_zdpp_saved.
+  ///
+  /// In zh, this message translates to:
+  /// **'自动排版设置已保存'**
+  String get settings_llm_zdpp_saved;
+
   /// No description provided for @download_title.
   ///
   /// In zh, this message translates to:

@@ -5,6 +5,7 @@ final String MASTER_KEY = "JIYI_MASTER_KEY";
 final String STORAGE_PATH = "JIYI_STORAGE";
 final String MAP_SETTINGS = "JIYI_MAP_SETTINGS";
 final String TTS_MODEL_SETTINGS = "JIYI_TTS_SETTINGS";
+final String LLM_MODEL_SETTINGS = "JIYI_LLM_SETTINGS";
 
 final storage = FlutterSecureStorage();
 

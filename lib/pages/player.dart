@@ -12,7 +12,7 @@ import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/utils/anno.dart';
 import 'package:jiyi/utils/em.dart';
 import 'package:jiyi/utils/encryption.dart';
-import 'package:jiyi/utils/metadata.dart';
+import 'package:jiyi/utils/data/metadata.dart';
 import 'package:jiyi/utils/io.dart';
 import 'package:jiyi/utils/stop_model.dart';
 

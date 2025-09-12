@@ -10,7 +10,7 @@ import 'package:jiyi/pages/playlist.dart';
 import 'package:jiyi/utils/anno.dart';
 import 'package:jiyi/utils/em.dart';
 import 'package:jiyi/utils/io.dart';
-import 'package:jiyi/utils/metadata.dart';
+import 'package:jiyi/utils/data/metadata.dart';
 import 'package:jiyi/utils/notifier.dart';
 import 'package:jiyi/utils/smooth_router.dart';
 import 'package:jiyi/utils/text_color.dart';

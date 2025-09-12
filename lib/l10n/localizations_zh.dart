@@ -196,6 +196,33 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_tts_zh_en_streaming_zipformer => '中英双语识别';
 
   @override
+  String get settings_llm_zdpp_model => '自动排版设置';
+
+  @override
+  String get settings_llm_zdpp_desc => '自动排版会调用大语言模型帮你把语音内容加上标点符号、自动分段';
+
+  @override
+  String get settings_llm_zdpp_provider => '选择大模型';
+
+  @override
+  String get settings_llm_zdpp_custom => '本地大语言模型';
+
+  @override
+  String get settings_llm_zdpp_qwen3_1_5B => '千问3-1.5B';
+
+  @override
+  String get settings_llm_zdpp_root_picker_desc => '选择模型所在文件夹';
+
+  @override
+  String get settings_llm_zdpp_root_picker_cover => '选择文件夹';
+
+  @override
+  String get settings_llm_zdpp_prompt_desc => '自动排版提示词';
+
+  @override
+  String get settings_llm_zdpp_saved => '自动排版设置已保存';
+
+  @override
   String get download_title => '下载';
 
   @override

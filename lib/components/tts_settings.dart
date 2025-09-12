@@ -2,26 +2,18 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiyi/components/download_unzip.dart';
+import 'package:jiyi/components/settings_utils.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
-import 'package:jiyi/utils/tts_setting.dart';
+import 'package:jiyi/utils/data/tts_setting.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:jiyi/utils/anno.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-extension on num {
-  double get em => (ScreenUtil().screenWidth > ScreenUtil().screenHeight)
-      ? sh / 128
-      : sw / 96;
-}
-
-bool isMobile = ScreenUtil().screenWidth < ScreenUtil().screenHeight;
 
 @DeepSeek()
 class TTSSettings extends StatefulWidget {
@@ -34,7 +26,7 @@ class TTSSettings extends StatefulWidget {
 
 class _TTSSettingsState extends State<TTSSettings> {
   late final AppLocalizations l;
-  late TtsSetting _ttsSetting;
+  late TtsSetting _setting;
   late List<String> list;
   List<String>? downloads;
 
@@ -45,7 +37,7 @@ class _TTSSettingsState extends State<TTSSettings> {
   void initState() {
     super.initState();
     l = widget.loc;
-    _ttsSetting = TtsSetting(
+    _setting = TtsSetting(
       encoder: '',
       decoder: '',
       joiner: '',
@@ -60,21 +52,21 @@ class _TTSSettingsState extends State<TTSSettings> {
     final settings = await ss.read(key: ss.TTS_MODEL_SETTINGS);
     if (settings != null) {
       setState(() {
-        _ttsSetting = TtsSetting.fromJson(settings);
-        _modelTypeController.text = _ttsSetting.modelType;
+        _setting = TtsSetting.fromJson(settings);
+        _modelTypeController.text = _setting.modelType;
       });
     }
   }
 
   void _updateSetting(String field, String value) {
     setState(() {
-      _ttsSetting = TtsSetting(
-        encoder: field == 'encoder' ? value : _ttsSetting.encoder,
-        decoder: field == 'decoder' ? value : _ttsSetting.decoder,
-        joiner: field == 'joiner' ? value : _ttsSetting.joiner,
-        tokens: field == 'tokens' ? value : _ttsSetting.tokens,
-        modelType: field == 'modelType' ? value : _ttsSetting.modelType,
-        name: field == 'name' ? value : _ttsSetting.name,
+      _setting = TtsSetting(
+        encoder: field == 'encoder' ? value : _setting.encoder,
+        decoder: field == 'decoder' ? value : _setting.decoder,
+        joiner: field == 'joiner' ? value : _setting.joiner,
+        tokens: field == 'tokens' ? value : _setting.tokens,
+        modelType: field == 'modelType' ? value : _setting.modelType,
+        name: field == 'name' ? value : _setting.name,
       );
     });
   }
@@ -97,7 +89,7 @@ class _TTSSettingsState extends State<TTSSettings> {
 
                 await ss.write(
                   key: ss.TTS_MODEL_SETTINGS,
-                  value: _ttsSetting.json,
+                  value: _setting.json,
                 );
 
                 if (context.mounted) {
@@ -106,12 +98,9 @@ class _TTSSettingsState extends State<TTSSettings> {
                   ).showSnackBar(SnackBar(content: Text(l.settings_tts_saved)));
                 }
 
-                if ([
-                  _ttsSetting.encoder,
-                  _ttsSetting.decoder,
-                  _ttsSetting.joiner,
-                  _ttsSetting.tokens,
-                ].any((p) => !File(p).existsSync())) {
+                // preset download logic
+                if (_setting.name != null &&
+                    !Directory(path.basename(_setting.encoder)).existsSync()) {
                   final dest = (await getApplicationSupportDirectory()).path;
                   // download
                   if (context.mounted) {
@@ -143,11 +132,11 @@ class _TTSSettingsState extends State<TTSSettings> {
           ],
         ),
 
-        _flex(
+        SUtils.flex(
           children: [
             Text(l.settings_tts_provider),
             DropdownButton(
-              value: _ttsSetting.name ?? l.settings_tts_custom,
+              value: _setting.name ?? l.settings_tts_custom,
               icon: Icon(Icons.arrow_drop_down, size: 5.em),
               style: TextStyle(
                 color: DefaultColors.fg,
@@ -163,12 +152,12 @@ class _TTSSettingsState extends State<TTSSettings> {
               ),
               onChanged: (String? value) => setState(() {
                 if (value == l.settings_tts_custom) {
-                  _ttsSetting.name = null;
-                  _ttsSetting.encoder = '';
-                  _ttsSetting.decoder = '';
-                  _ttsSetting.joiner = '';
-                  _ttsSetting.tokens = '';
-                  _ttsSetting.modelType = '';
+                  _setting.name = null;
+                  _setting.encoder = '';
+                  _setting.decoder = '';
+                  _setting.joiner = '';
+                  _setting.tokens = '';
+                  _setting.modelType = '';
                 } else {
                   _usePreset(value!);
                 }
@@ -183,7 +172,7 @@ class _TTSSettingsState extends State<TTSSettings> {
           ],
         ),
 
-        if (_ttsSetting.name == null) _localTTSSettings(),
+        if (_setting.name == null) _localTTSSettings(),
       ],
     );
   }
@@ -191,67 +180,67 @@ class _TTSSettingsState extends State<TTSSettings> {
   Widget _localTTSSettings() => Column(
     children: [
       // Encoder model path
-      _flex(
+      SUtils.flex(
         children: [
           Text(l.settings_tts_encoder),
-          _buildRichButton(
+          SUtils.buildFileChooser(
             () => _selectModelFile('encoder'),
             Icons.file_open,
-            _ttsSetting.encoder.isEmpty
+            _setting.encoder.isEmpty
                 ? Text(l.settings_tts_picker_desc, style: _hintStyle)
-                : Text(path.basename(_ttsSetting.encoder), style: _fileStyle),
+                : Text(path.basename(_setting.encoder), style: _fileStyle),
             DefaultColors.constant,
           ),
         ],
       ),
 
       // Decoder model path
-      _flex(
+      SUtils.flex(
         children: [
           Text(l.settings_tts_decoder),
-          _buildRichButton(
+          SUtils.buildFileChooser(
             () => _selectModelFile('decoder'),
             Icons.file_open,
-            _ttsSetting.decoder.isEmpty
+            _setting.decoder.isEmpty
                 ? Text(l.settings_tts_picker_desc, style: _hintStyle)
-                : Text(path.basename(_ttsSetting.decoder), style: _fileStyle),
+                : Text(path.basename(_setting.decoder), style: _fileStyle),
             DefaultColors.constant,
           ),
         ],
       ),
 
       // Joiner model path
-      _flex(
+      SUtils.flex(
         children: [
           Text(l.settings_tts_joiner),
-          _buildRichButton(
+          SUtils.buildFileChooser(
             () => _selectModelFile('joiner'),
             Icons.file_open,
-            _ttsSetting.joiner.isEmpty
+            _setting.joiner.isEmpty
                 ? Text(l.settings_tts_picker_desc, style: _hintStyle)
-                : Text(path.basename(_ttsSetting.joiner), style: _fileStyle),
+                : Text(path.basename(_setting.joiner), style: _fileStyle),
             DefaultColors.constant,
           ),
         ],
       ),
 
       // Tokens file path
-      _flex(
+      SUtils.flex(
         children: [
           Text(l.settings_tts_tokens),
-          _buildRichButton(
+          SUtils.buildFileChooser(
             () => _selectModelFile('tokens'),
             Icons.file_open,
-            _ttsSetting.tokens.isEmpty
+            _setting.tokens.isEmpty
                 ? Text(l.settings_tts_picker_desc, style: _hintStyle)
-                : Text(path.basename(_ttsSetting.tokens), style: _fileStyle),
+                : Text(path.basename(_setting.tokens), style: _fileStyle),
             DefaultColors.constant,
           ),
         ],
       ),
 
       // Model type
-      _flex(
+      SUtils.flex(
         children: [
           Text(l.settings_tts_model_type),
           SizedBox(
@@ -294,11 +283,15 @@ class _TTSSettingsState extends State<TTSSettings> {
   TextStyle get _fileStyle =>
       TextStyle(fontSize: 3.em, color: DefaultColors.bg, fontFamily: "朱雀仿宋");
 
-  TextStyle get _inputStyle =>
-      TextStyle(color: DefaultColors.fg, fontSize: isMobile ? 4.em : 3.em);
+  TextStyle get _inputStyle => TextStyle(
+    color: DefaultColors.fg,
+    fontSize: SUtils.isMobile ? 4.em : 3.em,
+  );
 
   InputDecoration get _inputDecoration => InputDecoration(
-    contentPadding: isMobile ? null : EdgeInsets.symmetric(vertical: 1.em),
+    contentPadding: SUtils.isMobile
+        ? null
+        : EdgeInsets.symmetric(vertical: 1.em),
     enabledBorder: UnderlineInputBorder(
       borderSide: BorderSide(color: DefaultColors.fg),
     ),
@@ -324,73 +317,29 @@ class _TTSSettingsState extends State<TTSSettings> {
     }
   }
 
-  IconButton _buildRichButton(
-    void Function() callback,
-    IconData icon,
-    Text text,
-    Color bg,
-  ) {
-    return IconButton(
-      onPressed: callback,
-      iconSize: 6.em,
-      alignment: Alignment.center,
-      icon: Container(
-        decoration: BoxDecoration(
-          color: bg,
-          borderRadius: BorderRadius.circular(40),
-        ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 2.em, vertical: 1.em),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            spacing: 3.em,
-            children: [
-              Icon(icon, color: DefaultColors.bg),
-              text,
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _flex({required List<Widget> children}) => isMobile
-      ? Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: children,
-        )
-      : Padding(
-          padding: EdgeInsets.symmetric(vertical: 2.em),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: children,
-          ),
-        );
-
   Future<void> _usePreset(String name) async {
-    _ttsSetting.name = name;
+    _setting.name = name;
     if (name == l.settings_tts_zh_en_streaming_zipformer) {
       final dest = (await getApplicationSupportDirectory()).path;
       final prefix =
           "sherpa-onnx-streaming-zipformer-bilingual-zh-en-2023-02-20";
-      _ttsSetting.encoder = path.join(
+      _setting.encoder = path.join(
         dest,
         prefix,
         "encoder-epoch-99-avg-1.int8.onnx",
       );
-      _ttsSetting.decoder = path.join(
+      _setting.decoder = path.join(
         dest,
         prefix,
         "decoder-epoch-99-avg-1.int8.onnx",
       );
-      _ttsSetting.joiner = path.join(
+      _setting.joiner = path.join(
         dest,
         prefix,
         "joiner-epoch-99-avg-1.int8.onnx",
       );
-      _ttsSetting.tokens = path.join(dest, prefix, "tokens.txt");
-      _ttsSetting.modelType = 'zipformer';
+      _setting.tokens = path.join(dest, prefix, "tokens.txt");
+      _setting.modelType = 'zipformer';
       if (l.localeName.contains("zh")) {
         // ghfast.top墙内加速
         downloads = [

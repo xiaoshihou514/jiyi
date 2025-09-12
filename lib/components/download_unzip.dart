@@ -63,11 +63,27 @@ class _DownloadUnzipDialogState extends State<DownloadUnzipDialog> {
                 () => progress[i] = (progress[i].$1, _ntrunc(received / total)),
               );
             },
+            options: Options(maxRedirects: 32),
           )
           .then((_) async {
-            setState(() => progress[i] = (DStage.unzipping, 100));
-            await extractFileToDisk(path.join(tmp.path, base), widget.dest);
-            setState(() => progress[i] = (DStage.done, 100));
+            if ([
+              "tar.gz",
+              "tgz",
+              "tar.bz2",
+              "tbz",
+              "tar.xz",
+              "txz",
+              "tar",
+              "zip",
+            ].any((e) => base.endsWith(e))) {
+              // extract stage
+              setState(() => progress[i] = (DStage.unzipping, 100));
+              await extractFileToDisk(path.join(tmp.path, base), widget.dest);
+              setState(() => progress[i] = (DStage.done, 100));
+            } else {
+              // done
+              setState(() => progress[i] = (DStage.done, 100));
+            }
           });
     }
   }
