@@ -186,7 +186,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_tts_picker_desc => '选择模型';
 
   @override
-  String get settings_tts_download_desc => '请自行从sherpa-onnx下载模型';
+  String get settings_tts_download_desc => '请自行从sherpa-onnx下载模型，如果懒得搞可以使用预配置';
 
   @override
   String get settings_tts_download_exp =>
@@ -196,11 +196,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_tts_zh_en_streaming_zipformer => '中英双语识别';
 
   @override
-  String get download_title => '栅格文件下载';
+  String get download_title => '下载';
 
   @override
   String download_perc(Object a, Object b) {
-    return '$a.zip：$b%';
+    return '$a：$b%';
   }
 
   @override

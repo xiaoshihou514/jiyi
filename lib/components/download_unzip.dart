@@ -29,8 +29,8 @@ enum DStage { downloading, unzipping, done }
 class _DownloadUnzipDialogState extends State<DownloadUnzipDialog> {
   late final List<(DStage, double)> progress;
 
-  double _perc(int i) => progress[i - 4].$2;
-  DStage _stage(int i) => progress[i - 4].$1;
+  double _perc(int i) => progress[i].$2;
+  DStage _stage(int i) => progress[i].$1;
   // [0,1] -> [0,100]
   double _ntrunc(double x) => (x * 10000).toInt().toDouble() / 100;
 
@@ -114,10 +114,7 @@ class _DownloadUnzipDialogState extends State<DownloadUnzipDialog> {
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: List.generate(
-              widget.urls.length,
-              (i) => _progressViz(i + 4),
-            ),
+            children: List.generate(widget.urls.length, (i) => _progressViz(i)),
           ),
         ),
       ),
@@ -139,7 +136,7 @@ class _DownloadUnzipDialogState extends State<DownloadUnzipDialog> {
           ),
         ),
         if (_stage(index) == DStage.downloading)
-          Text(l.download_perc(index, _perc(index)))
+          Text(l.download_perc(path.basename(widget.urls[index]), _perc(index)))
         else if (_stage(index) == DStage.unzipping)
           Text(l.download_extracting)
         else

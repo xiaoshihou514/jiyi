@@ -449,7 +449,7 @@ abstract class AppLocalizations {
   /// No description provided for @settings_tts_download_desc.
   ///
   /// In zh, this message translates to:
-  /// **'请自行从sherpa-onnx下载模型'**
+  /// **'请自行从sherpa-onnx下载模型，如果懒得搞可以使用预配置'**
   String get settings_tts_download_desc;
 
   /// No description provided for @settings_tts_download_exp.
@@ -467,13 +467,13 @@ abstract class AppLocalizations {
   /// No description provided for @download_title.
   ///
   /// In zh, this message translates to:
-  /// **'栅格文件下载'**
+  /// **'下载'**
   String get download_title;
 
   /// No description provided for @download_perc.
   ///
   /// In zh, this message translates to:
-  /// **'{a}.zip：{b}%'**
+  /// **'{a}：{b}%'**
   String download_perc(Object a, Object b);
 
   /// No description provided for @download_extracting.

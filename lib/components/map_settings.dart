@@ -69,7 +69,8 @@ class _MapSettingsState extends State<MapSettings> {
   }
 
   Future<void> _initMapSettings() async {
-    _defaultPath = (await getApplicationDocumentsDirectory()).path;
+    // WARNING: this might be incompatible with 1.0.0+11, when it was getApplicationDocumentsDirectory
+    _defaultPath = (await getApplicationSupportDirectory()).path;
     final settings = await ss.read(key: ss.MAP_SETTINGS);
     if (settings != null) {
       setState(() {
@@ -100,14 +101,33 @@ class _MapSettingsState extends State<MapSettings> {
             IconButton(
               onPressed: () async {
                 _setting.pattern = _localPatternController.text;
-                if (_custom) {
+                // 一坨屎
+                if (_custom && !_setting.isLocal) {
+                  // 自定义网络地图
                   _setting.urlFmt = _customPatternController.text;
                   _setting.header = _customHeaderController.text.isEmpty
                       ? "{}"
                       : _customHeaderController.text;
-                  final s = _setting.dyn;
+                  final s = _setting.dynCustomNetwork;
                   s["name"] =
                       "${l.settings_map_custom}${_setting.urlFmt.hashCode}";
+                  print(s);
+                  await ss.write(key: ss.MAP_SETTINGS, value: jsonEncode(s));
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(l.settings_map_save_success)),
+                    );
+                  }
+                } else if (_custom && _setting.isLocal) {
+                  // 本地地图
+                  _setting.urlFmt = _customPatternController.text;
+                  _setting.header = _customHeaderController.text.isEmpty
+                      ? "{}"
+                      : _customHeaderController.text;
+                  final s = _setting.dynCustomLocal;
+                  s["name"] =
+                      "${l.settings_map_custom}${_setting.urlFmt.hashCode}";
+                  print(s);
                   await ss.write(key: ss.MAP_SETTINGS, value: jsonEncode(s));
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -117,13 +137,11 @@ class _MapSettingsState extends State<MapSettings> {
                 } else if (!_setting.isLocal ||
                     ((_setting.path ?? "").isNotEmpty &&
                         (_setting.pattern ?? "").isNotEmpty)) {
+                  // 内置配置
                   _setting.urlFmt = _setting.isLocal
                       ? path.join(_setting.path!, _setting.pattern!)
                       : _setting.urlFmt;
-                  await ss.write(
-                    key: ss.MAP_SETTINGS,
-                    value: _setting.toJson(),
-                  );
+                  await ss.write(key: ss.MAP_SETTINGS, value: _setting.json);
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text(l.settings_map_save_success)),
@@ -182,6 +200,7 @@ class _MapSettingsState extends State<MapSettings> {
                 } else if (_setting.name == l.settings_map_custom) {
                   _custom = true;
                 } else {
+                  _custom = false;
                   _usePreset(_setting.name);
                 }
               }),
@@ -197,9 +216,7 @@ class _MapSettingsState extends State<MapSettings> {
         if (_setting.name == l.settings_map_local)
           _localProviderSettings()
         else if (_custom)
-          _networkProviderSettings()
-        else
-          Container(),
+          _networkProviderSettings(),
         Wrap(children: [Container()]),
       ],
     );

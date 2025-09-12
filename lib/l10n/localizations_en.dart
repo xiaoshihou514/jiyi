@@ -206,11 +206,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_tts_zh_en_streaming_zipformer => '中英双语识别';
 
   @override
-  String get download_title => 'Raster File Download';
+  String get download_title => 'Download';
 
   @override
   String download_perc(Object a, Object b) {
-    return '$a.zip: $b%';
+    return '$a: $b%';
   }
 
   @override

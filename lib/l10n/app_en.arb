@@ -63,8 +63,8 @@
   "settings_tts_download_desc": "Please download models manually from sherpa-onnx",
   "settings_tts_download_exp": "The format is usually xxx-streaming-zipformer-language, after you have downloaded and extracted the archive you should see the model (onnx) files. A modest phone should be able to run a 500M model.",
 
-  "download_title": "Raster File Download",
-  "download_perc": "{a}.zip: {b}%",
+  "download_title": "Download",
+  "download_perc": "{a}: {b}%",
   "download_extracting": "Extracting",
   "download_done": "Done",
   "download_exit": "Completed",

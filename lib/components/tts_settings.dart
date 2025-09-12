@@ -74,6 +74,7 @@ class _TTSSettingsState extends State<TTSSettings> {
         joiner: field == 'joiner' ? value : _ttsSetting.joiner,
         tokens: field == 'tokens' ? value : _ttsSetting.tokens,
         modelType: field == 'modelType' ? value : _ttsSetting.modelType,
+        name: field == 'name' ? value : _ttsSetting.name,
       );
     });
   }
@@ -94,6 +95,8 @@ class _TTSSettingsState extends State<TTSSettings> {
                 // Update model type from controller
                 _updateSetting('modelType', _modelTypeController.text);
 
+                print("save");
+                print(_ttsSetting.name);
                 await ss.write(
                   key: ss.TTS_MODEL_SETTINGS,
                   value: _ttsSetting.json,
@@ -111,8 +114,7 @@ class _TTSSettingsState extends State<TTSSettings> {
                   _ttsSetting.joiner,
                   _ttsSetting.tokens,
                 ].any((p) => !File(p).existsSync())) {
-                  final dest = (await getApplicationDocumentsDirectory()).path;
-                  print(dest);
+                  final dest = (await getApplicationSupportDirectory()).path;
                   // download
                   if (context.mounted) {
                     showDialog(
@@ -171,6 +173,9 @@ class _TTSSettingsState extends State<TTSSettings> {
                   _ttsSetting.modelType = '';
                 } else {
                   _usePreset(value!);
+                  print("_usePreset");
+                  print(_ttsSetting.name);
+                  print(_ttsSetting.encoder);
                 }
               }),
               items: list
@@ -368,18 +373,39 @@ class _TTSSettingsState extends State<TTSSettings> {
           ),
         );
 
-  void _usePreset(String name) {
+  Future<void> _usePreset(String name) async {
     _ttsSetting.name = name;
     if (name == l.settings_tts_zh_en_streaming_zipformer) {
-      _ttsSetting.encoder = '';
-      _ttsSetting.decoder = '';
-      _ttsSetting.joiner = '';
-      _ttsSetting.tokens = '';
+      final dest = (await getApplicationSupportDirectory()).path;
+      final prefix =
+          "sherpa-onnx-streaming-zipformer-bilingual-zh-en-2023-02-20";
+      _ttsSetting.encoder = path.join(
+        dest,
+        prefix,
+        "encoder-epoch-99-avg-1.int8.onnx",
+      );
+      _ttsSetting.decoder = path.join(
+        dest,
+        prefix,
+        "decoder-epoch-99-avg-1.int8.onnx",
+      );
+      _ttsSetting.joiner = path.join(
+        dest,
+        prefix,
+        "joiner-epoch-99-avg-1.int8.onnx",
+      );
+      _ttsSetting.tokens = path.join(dest, prefix, "tokens.txt");
       _ttsSetting.modelType = 'zipformer';
-      downloads = [
-        "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-streaming-zipformer-bilingual-zh-en-2023-02-20.tar.bz2",
-      ];
-      // TODO
+      if (l.localeName.contains("zh")) {
+        // ghfast.top墙内加速
+        downloads = [
+          "https://ghfast.top/github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-streaming-zipformer-bilingual-zh-en-2023-02-20.tar.bz2",
+        ];
+      } else {
+        downloads = [
+          "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-streaming-zipformer-bilingual-zh-en-2023-02-20.tar.bz2",
+        ];
+      }
     }
   }
 }

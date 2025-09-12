@@ -37,16 +37,41 @@ class MapSetting {
       _$MapSettingFromJson(jsonDecode(json));
 
   /// Connect the generated [_$PersonToJson] function to the `toJson` method.
-  String toJson() => jsonEncode(dyn);
-  Map<String, dynamic> get dyn => _$MapSettingToJson(this);
+  String get json => jsonEncode(_dyn);
+  Map<String, dynamic> get _dyn => _$MapSettingToJson(this);
+  Map<String, dynamic> get dynCustomNetwork {
+    Map<String, dynamic> s = {};
+    s["isLocal"] = isLocal;
+    s["isOSM"] = isOSM;
+    s["urlFmt"] = urlFmt;
+    s["name"] = name;
+    s["maxZoom"] = maxZoom;
+    s["useInversionFilter"] = false;
+    s["subdomains"] = subdomains;
+    s["header"] = header;
+    return s;
+  }
+
+  Map<String, dynamic> get dynCustomLocal {
+    Map<String, dynamic> s = {};
+    s["isLocal"] = isLocal;
+    s["isOSM"] = isOSM;
+    s["urlFmt"] = urlFmt;
+    s["name"] = name;
+    s["maxZoom"] = maxZoom;
+    s["useInversionFilter"] = useInversionFilter;
+    s["path"] = path;
+    s["pattern"] = pattern;
+    return s;
+  }
 
   factory MapSetting.local(AppLocalizations l) => MapSetting(
-        isOSM: true,
-        isLocal: true,
-        urlFmt: './{z}/{x}-{y}.png',
-        name: l.settings_map_local,
-        maxZoom: 10,
-        path: '',
-        pattern: '{z}/{x}-{y}.png',
-      );
+    isOSM: true,
+    isLocal: true,
+    urlFmt: './{z}/{x}-{y}.png',
+    name: l.settings_map_local,
+    maxZoom: 10,
+    path: '',
+    pattern: '{z}/{x}-{y}.png',
+  );
 }
