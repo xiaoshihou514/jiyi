@@ -95,8 +95,6 @@ class _TTSSettingsState extends State<TTSSettings> {
                 // Update model type from controller
                 _updateSetting('modelType', _modelTypeController.text);
 
-                print("save");
-                print(_ttsSetting.name);
                 await ss.write(
                   key: ss.TTS_MODEL_SETTINGS,
                   value: _ttsSetting.json,
@@ -173,9 +171,6 @@ class _TTSSettingsState extends State<TTSSettings> {
                   _ttsSetting.modelType = '';
                 } else {
                   _usePreset(value!);
-                  print("_usePreset");
-                  print(_ttsSetting.name);
-                  print(_ttsSetting.encoder);
                 }
               }),
               items: list

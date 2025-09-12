@@ -278,6 +278,8 @@ class _RecordPageState extends State<RecordPage> {
         transcript: "",
       ).dyn,
       "_token": ServicesBinding.rootIsolateToken!,
+      // LLM opt
+      "prompt": l.tts_opt_prompt,
     });
     IO.addEntry(metadata);
     await IO.updateIndexOnDisk();
@@ -304,7 +306,9 @@ class _RecordPageState extends State<RecordPage> {
 
     md["transcript"] = await Tts.fromWAV(
       params['model'] as so.OnlineModelConfig?,
-      "/home/xiaoshihou/Playground/scratch/deepseek_onnx/model_int8.onnx",
+      // FIXME
+      "/home/xiaoshihou/Playground/scratch/candle/candle-examples/examples/qwen/model",
+      params["prompt"],
       Float32List.fromList(bytes),
       SAMPLE_RATE,
     );

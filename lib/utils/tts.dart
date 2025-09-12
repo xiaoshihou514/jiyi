@@ -5,12 +5,14 @@ import 'package:jiyi/utils/anno.dart';
 import 'package:jiyi/src/rust/api.dart' as api;
 
 abstract class Tts {
-  // 1 second
+  // split when next word later than 1 second
+  // ignore: non_constant_identifier_names
   static double THRESHOLD = 1.0;
 
   static Future<String> fromWAV(
     so.OnlineModelConfig? model,
     String? llmPath,
+    String? prompt,
     Float32List data,
     int sampleRate,
   ) async {
@@ -32,7 +34,7 @@ abstract class Tts {
     final raw = _splitByTime(res.tokens, res.timestamps);
 
     // LLM enhancement
-    if (llmPath == null || raw.join().isEmpty) {
+    if (llmPath == null || prompt == null || raw.join().isEmpty) {
       return raw.join("\n");
     } else {
       return llmEnhance(raw.join("\n"), llmPath, llmPath);

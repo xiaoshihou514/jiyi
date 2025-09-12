@@ -679,6 +679,12 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'解密失败：{err}，请检查主密钥是否正确'**
   String decryption_err(Object err);
+
+  /// No description provided for @tts_opt_prompt.
+  ///
+  /// In zh, this message translates to:
+  /// **'请为用户输入添加适当的标点符号并调整语序，使其语义通顺、易于阅读。请注意：\n- 删除所有口语填充词（如“呃”、“额”、“嗯”）\n- 修正明显的语音识别错误\n- 根据话题转换和内容逻辑进行自然分段\n- 保持原文的语义和主要内容不变\n- 只输出修正后的文本，不要有任何额外解释或说明'**
+  String get tts_opt_prompt;
 }
 
 class _AppLocalizationsDelegate

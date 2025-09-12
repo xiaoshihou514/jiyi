@@ -111,7 +111,6 @@ class _MapSettingsState extends State<MapSettings> {
                   final s = _setting.dynCustomNetwork;
                   s["name"] =
                       "${l.settings_map_custom}${_setting.urlFmt.hashCode}";
-                  print(s);
                   await ss.write(key: ss.MAP_SETTINGS, value: jsonEncode(s));
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -127,7 +126,6 @@ class _MapSettingsState extends State<MapSettings> {
                   final s = _setting.dynCustomLocal;
                   s["name"] =
                       "${l.settings_map_custom}${_setting.urlFmt.hashCode}";
-                  print(s);
                   await ss.write(key: ss.MAP_SETTINGS, value: jsonEncode(s));
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(

@@ -507,6 +507,7 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
 
     final settings = await ss.read(key: ss.TTS_MODEL_SETTINGS);
     final model = settings == null ? null : TtsSetting.fromJson(settings).model;
+    final l = AppLocalizations.of(context)!;
     final metadata = await compute(_import, {
       'model': model,
       'file': _audioFile!,
@@ -528,6 +529,7 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
         transcript: '',
       ).dyn,
       "_token": ServicesBinding.rootIsolateToken!,
+      "prompt": l.tts_opt_prompt,
     });
 
     IO.addEntry(metadata);
@@ -548,7 +550,9 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
     final wav = await Wav.readFile(file.path);
     md["transcript"] = await Tts.fromWAV(
       params['model'] as so.OnlineModelConfig,
-      "/home/xiaoshihou/Playground/scratch/deepseek_onnx/model_int8.onnx",
+      // FIXME
+      "/home/xiaoshihou/Playground/scratch/candle/candle-examples/examples/qwen/model",
+      params["prompt"],
       Float32List.fromList(wav.channels.first.toList()),
       wav.samplesPerSecond,
     );
