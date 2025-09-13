@@ -4,16 +4,16 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Project-level configuration.
-set(PROJECT_NAME "jiyi_native_tokenizer")
+set(PROJECT_NAME "jiyi_native")
 project(${PROJECT_NAME} LANGUAGES CXX)
 
 include("../cargokit/cmake/cargokit.cmake")
-apply_cargokit(${PROJECT_NAME} ../../rust jiyi_native_tokenizer "")
+apply_cargokit(${PROJECT_NAME} ../../rust jiyi_native "")
 
 # List of absolute paths to libraries that should be bundled with the plugin.
 # This list could contain prebuilt libraries, or libraries created by an
 # external build triggered from this build file.
-set(jiyi_native_tokenizer_bundled_libraries
+set(jiyi_native_bundled_libraries
   "${${PROJECT_NAME}_cargokit_lib}"
   PARENT_SCOPE
 )

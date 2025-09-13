@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:jiyi/utils/data/llm_setting.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
 import 'package:jiyi/utils/tts.dart';
 import 'package:jiyi/utils/data/tts_setting.dart';
@@ -507,7 +508,9 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
 
     final settings = await ss.read(key: ss.TTS_MODEL_SETTINGS);
     final model = settings == null ? null : TtsSetting.fromJson(settings).model;
-    final l = AppLocalizations.of(context)!;
+    final zdppJson = await ss.read(key: ss.LLM_MODEL_SETTINGS);
+    final llmSettings = zdppJson == null ? null : LLMSetting.fromJson(zdppJson);
+
     final metadata = await compute(_import, {
       'model': model,
       'file': _audioFile!,
@@ -529,7 +532,9 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
         transcript: '',
       ).dyn,
       "_token": ServicesBinding.rootIsolateToken!,
-      "prompt": l.tts_opt_prompt,
+      // LLM opt
+      "llmPath": llmSettings?.rootPath,
+      "prompt": llmSettings?.prompt,
     });
 
     IO.addEntry(metadata);
@@ -550,8 +555,7 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
     final wav = await Wav.readFile(file.path);
     md["transcript"] = await Tts.fromWAV(
       params['model'] as so.OnlineModelConfig,
-      // FIXME
-      "/home/xiaoshihou/Playground/scratch/candle/candle-examples/examples/qwen/model",
+      params["llmPath"],
       params["prompt"],
       Float32List.fromList(wav.channels.first.toList()),
       wav.samplesPerSecond,

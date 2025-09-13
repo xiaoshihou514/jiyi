@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:jiyi/utils/data/llm_setting.dart';
 import 'package:jiyi/utils/tts.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 import 'package:geolocator_platform_interface/geolocator_platform_interface.dart';
@@ -258,8 +259,12 @@ class _RecordPageState extends State<RecordPage> {
         ) ??
         (l.untitled_cd, "❔");
 
-    final settings = await ss.read(key: ss.TTS_MODEL_SETTINGS);
-    final model = settings == null ? null : TtsSetting.fromJson(settings).model;
+    final ttsSettings = await ss.read(key: ss.TTS_MODEL_SETTINGS);
+    final model = ttsSettings == null
+        ? null
+        : TtsSetting.fromJson(ttsSettings).model;
+    final zdppJson = await ss.read(key: ss.LLM_MODEL_SETTINGS);
+    final llmSettings = zdppJson == null ? null : LLMSetting.fromJson(zdppJson);
 
     final metadata = await compute(_save, {
       'model': model,
@@ -279,7 +284,8 @@ class _RecordPageState extends State<RecordPage> {
       ).dyn,
       "_token": ServicesBinding.rootIsolateToken!,
       // LLM opt
-      "prompt": l.tts_opt_prompt,
+      "llmPath": llmSettings?.rootPath,
+      "prompt": llmSettings?.prompt,
     });
     IO.addEntry(metadata);
     await IO.updateIndexOnDisk();
@@ -304,10 +310,10 @@ class _RecordPageState extends State<RecordPage> {
       WavFormat.pcm32bit,
     ).write();
 
+    print(params);
     md["transcript"] = await Tts.fromWAV(
       params['model'] as so.OnlineModelConfig?,
-      // FIXME
-      "/home/xiaoshihou/Playground/scratch/candle/candle-examples/examples/qwen/model",
+      params["llmPath"],
       params["prompt"],
       Float32List.fromList(bytes),
       SAMPLE_RATE,
@@ -359,17 +365,22 @@ class _RecordPageState extends State<RecordPage> {
   }
 
   Future<LatLng?> _getLoc() async {
+    print("getLoc");
     bool serviceEnabled = await _geo.isLocationServiceEnabled();
+    print("serviceEnabled: $serviceEnabled");
     if (!serviceEnabled) {
       await _geo.openLocationSettings();
     }
     LocationPermission permission = await _geo.checkPermission();
+    print("permission: $permission");
     if (permission == LocationPermission.denied) {
       permission = await _geo.requestPermission();
     }
     if (permission != LocationPermission.denied &&
         permission != LocationPermission.deniedForever) {
+      print("getCurrentPosition");
       final pos = await _geo.getCurrentPosition();
+      print("getLoc done");
       return LatLng(pos.latitude, pos.longitude);
     } else {
       return null;

@@ -42,7 +42,6 @@ class _LLMSettingsState extends State<LLMSettings> {
     if (settings != null) {
       setState(() {
         _setting = LLMSetting.fromJson(settings);
-        print(_setting.dyn);
         _promptController.text = _setting.prompt;
       });
     }
@@ -79,7 +78,6 @@ class _LLMSettingsState extends State<LLMSettings> {
                   key: ss.LLM_MODEL_SETTINGS,
                   value: _setting.json,
                 );
-                print(_setting.dyn);
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(l.settings_llm_zdpp_saved)),
@@ -242,7 +240,7 @@ class _LLMSettingsState extends State<LLMSettings> {
     });
     if (name == l.settings_llm_zdpp_qwen3_1_5B) {
       final prefix = l.localeName.contains("zh")
-          ? "https://hf-mirror.com/Qwen/Qwen3-1.7B/resolve/main"
+          ? "https://modelscope.cn/models/Qwen/Qwen3-1.7B/resolve/master"
           : "https://huggingface.co/Qwen/Qwen3-1.7B/resolve/main";
       _download = [
         "$prefix/config.json",

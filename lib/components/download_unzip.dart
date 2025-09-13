@@ -63,7 +63,6 @@ class _DownloadUnzipDialogState extends State<DownloadUnzipDialog> {
                 () => progress[i] = (progress[i].$1, _ntrunc(received / total)),
               );
             },
-            options: Options(maxRedirects: 32),
           )
           .then((_) async {
             if ([
