@@ -33,6 +33,19 @@ class _DownloadUnzipDialogState extends State<DownloadUnzipDialog> {
   DStage _stage(int i) => progress[i].$1;
   // [0,1] -> [0,100]
   double _ntrunc(double x) => (x * 10000).toInt().toDouble() / 100;
+  String _truncFname(String input, int maxLength) {
+    if (input.length <= maxLength) {
+      return input;
+    }
+
+    final headLength = (maxLength - 3) ~/ 2; // 开头保留长度
+    final tailLength = maxLength - 3 - headLength; // 结尾保留长度
+
+    final head = input.substring(0, headLength);
+    final tail = input.substring(input.length - tailLength);
+
+    return '$head...$tail';
+  }
 
   @override
   void initState() {
@@ -54,10 +67,11 @@ class _DownloadUnzipDialogState extends State<DownloadUnzipDialog> {
         setState(() => progress[i] = (DStage.done, 100));
         continue;
       }
+      final tmpDownloadPath = path.join(tmp.path, base);
       Dio()
           .download(
             url,
-            '${tmp.path}/$base',
+            tmpDownloadPath,
             onReceiveProgress: (int received, int total) {
               setState(
                 () => progress[i] = (progress[i].$1, _ntrunc(received / total)),
@@ -77,10 +91,11 @@ class _DownloadUnzipDialogState extends State<DownloadUnzipDialog> {
             ].any((e) => base.endsWith(e))) {
               // extract stage
               setState(() => progress[i] = (DStage.unzipping, 100));
-              await extractFileToDisk(path.join(tmp.path, base), widget.dest);
+              await extractFileToDisk(tmpDownloadPath, widget.dest);
               setState(() => progress[i] = (DStage.done, 100));
             } else {
               // done
+              File(tmpDownloadPath).renameSync(path.join(widget.dest, base));
               setState(() => progress[i] = (DStage.done, 100));
             }
           });
@@ -151,7 +166,12 @@ class _DownloadUnzipDialogState extends State<DownloadUnzipDialog> {
           ),
         ),
         if (_stage(index) == DStage.downloading)
-          Text(l.download_perc(path.basename(widget.urls[index]), _perc(index)))
+          Text(
+            l.download_perc(
+              _truncFname(path.basename(widget.urls[index]), 24),
+              _perc(index),
+            ),
+          )
         else if (_stage(index) == DStage.unzipping)
           Text(l.download_extracting)
         else

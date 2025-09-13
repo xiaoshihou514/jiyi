@@ -310,7 +310,6 @@ class _RecordPageState extends State<RecordPage> {
       WavFormat.pcm32bit,
     ).write();
 
-    print(params);
     md["transcript"] = await Tts.fromWAV(
       params['model'] as so.OnlineModelConfig?,
       params["llmPath"],
@@ -338,7 +337,7 @@ class _RecordPageState extends State<RecordPage> {
 
   Future<void> _recorderInit() async {
     if (Platform.isAndroid) {
-      _ensurePermission();
+      await _ensurePermission();
     }
     try {
       await _recorder.init(
@@ -365,22 +364,17 @@ class _RecordPageState extends State<RecordPage> {
   }
 
   Future<LatLng?> _getLoc() async {
-    print("getLoc");
     bool serviceEnabled = await _geo.isLocationServiceEnabled();
-    print("serviceEnabled: $serviceEnabled");
     if (!serviceEnabled) {
       await _geo.openLocationSettings();
     }
     LocationPermission permission = await _geo.checkPermission();
-    print("permission: $permission");
     if (permission == LocationPermission.denied) {
       permission = await _geo.requestPermission();
     }
     if (permission != LocationPermission.denied &&
         permission != LocationPermission.deniedForever) {
-      print("getCurrentPosition");
       final pos = await _geo.getCurrentPosition();
-      print("getLoc done");
       return LatLng(pos.latitude, pos.longitude);
     } else {
       return null;

@@ -221,13 +221,12 @@ class _LLMSettingsState extends State<LLMSettings> {
       }
     }
 
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.any,
+    String? result = await FilePicker.platform.getDirectoryPath(
       lockParentWindow: true,
     );
 
-    if (result != null && result.files.single.path != null) {
-      setState(() => _setting.rootPath = result.files.single.path!);
+    if (result != null) {
+      setState(() => _setting.rootPath = result);
     }
   }
 

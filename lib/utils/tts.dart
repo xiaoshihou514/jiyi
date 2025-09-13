@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:jiyi/src/rust/frb_generated.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 
 import 'package:jiyi/utils/anno.dart';
@@ -37,12 +38,18 @@ abstract class Tts {
     if (llmPath == null || prompt == null || raw.join().isEmpty) {
       return raw.join("\n");
     } else {
-      return llmEnhance(raw.join("\n"), llmPath, llmPath);
+      await RustLib.init();
+      return llmEnhance(raw.join("\n"), llmPath, prompt);
     }
   }
 
-  static String llmEnhance(String raw, String llmPath, String tokenizerPath) =>
-      api.prompt(root: llmPath, system: "", prompt: raw);
+  static String llmEnhance(String input, String llmPath, String prompt) {
+    print(input);
+    print(llmPath);
+    print(prompt);
+    final processed = api.prompt(root: llmPath, system: prompt, prompt: input);
+    return _trim(processed, ["\n", "\t", " ", "<think>", "</think>"]);
+  }
 
   @DeepSeek()
   static List<String> _splitByTime(
@@ -70,5 +77,48 @@ abstract class Tts {
     }
 
     return sentences;
+  }
+
+  @DeepSeek()
+  static String _trim(String text, List<String> patterns) {
+    if (text.isEmpty || patterns.isEmpty) {
+      return text;
+    }
+
+    // 去除开头的匹配模式
+    int startIndex = 0;
+    bool startFound = true;
+
+    while (startFound && startIndex < text.length) {
+      startFound = false;
+      for (String pattern in patterns) {
+        if (pattern.isEmpty) continue;
+
+        if (text.startsWith(pattern, startIndex)) {
+          startIndex += pattern.length;
+          startFound = true;
+          break; // 找到一个匹配就跳出循环，重新检查
+        }
+      }
+    }
+
+    // 去除结尾的匹配模式
+    int endIndex = text.length;
+    bool endFound = true;
+
+    while (endFound && endIndex > startIndex) {
+      endFound = false;
+      for (String pattern in patterns) {
+        if (pattern.isEmpty) continue;
+
+        if (text.substring(0, endIndex).endsWith(pattern)) {
+          endIndex -= pattern.length;
+          endFound = true;
+          break; // 找到一个匹配就跳出循环，重新检查
+        }
+      }
+    }
+
+    return text.substring(startIndex, endIndex);
   }
 }
