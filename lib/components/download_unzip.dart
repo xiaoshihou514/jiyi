@@ -58,7 +58,7 @@ class _DownloadUnzipDialogState extends State<DownloadUnzipDialog> {
   }
 
   Future<void> _startDownload() async {
-    final tmp = await getTemporaryDirectory();
+    final tmp = await getApplicationCacheDirectory();
 
     for (final (i, url) in widget.urls.indexed) {
       final base = path.basename(url);

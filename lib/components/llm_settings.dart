@@ -63,13 +63,14 @@ class _LLMSettingsState extends State<LLMSettings> {
                 if (_setting.name != null &&
                     !Directory(_setting.rootPath).existsSync()) {
                   // preset download logic
-                  final dest = (await getApplicationSupportDirectory()).path;
                   if (context.mounted) {
                     showDialog(
                       context: context,
                       barrierDismissible: false,
-                      builder: (context) =>
-                          DownloadUnzipDialog(urls: _download!, dest: dest),
+                      builder: (context) => DownloadUnzipDialog(
+                        urls: _download!,
+                        dest: _setting.rootPath,
+                      ),
                     );
                   }
                 }

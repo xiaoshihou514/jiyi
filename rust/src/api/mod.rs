@@ -188,11 +188,14 @@ impl TextGeneration {
             }
             if let Some(t) = self.tokenizer.next_token(next_token)? {
                 output.push_str(t.as_str());
+                print!("{}", t);
                 std::io::stdout().flush()?;
             }
         }
         let dt = start_gen.elapsed();
         if let Some(rest) = self.tokenizer.decode_rest().map_err(E::msg)? {
+            print!("{}", rest);
+            std::io::stdout().flush()?;
             output.push_str(rest.as_str());
         }
         std::io::stdout().flush()?;
@@ -209,6 +212,7 @@ fn prompt_internal(root: String, system: String, prompt: String) -> Result<Strin
         "temp: {:.2} repeat-penalty: {:.2} repeat-last-n: {}",
         0., 1.1, 64,
     );
+    println!("root: {root}");
 
     let root = PathBuf::from_str(root.as_str())?;
     let tokenizer_filename = concat(&root, "tokenizer.json");
@@ -260,13 +264,6 @@ fn prompt_internal(root: String, system: String, prompt: String) -> Result<Strin
 }
 
 #[frb(sync)]
-pub fn prompt(root: String, system: String, prompt: String) -> Result<String, String> {
-    let result = prompt_internal(root, system, prompt).map_err(|e| e.to_string());
-    match result {
-        Err(ref e) => {
-            println!("{e}");
-        }
-        _ => (),
-    }
-    result
+pub fn prompt(root: String, system: String, prompt: String) -> String {
+    prompt_internal(root, system, prompt).unwrap()
 }
