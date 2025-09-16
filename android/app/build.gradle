@@ -28,7 +28,7 @@ ext.abiCodes = ["x86_64": 1, "armeabi-v7a": 2, "arm64-v8a": 3]
 android {
     namespace "com.github.xiaoshihou.jiyi"
     compileSdkVersion flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
+    ndkVersion "27.2.12479018"
 
     // fuck you google
     dependenciesInfo {

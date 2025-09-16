@@ -1,6 +1,6 @@
 use std::{path::PathBuf, str::FromStr};
 
-use anyhow::{Error as E, Result};
+use anyhow::Error as E;
 use candle_transformers::models::qwen3::ModelForCausalLM as Model3;
 
 use candle_core::{DType, Device, Tensor};
@@ -33,7 +33,7 @@ impl TokenOutputStream {
         self.tokenizer
     }
 
-    fn decode(&self, tokens: &[u32]) -> Result<String> {
+    fn decode(&self, tokens: &[u32]) -> anyhow::Result<String> {
         match self.tokenizer.decode(tokens, true) {
             Ok(str) => Ok(str),
             Err(err) => anyhow::bail!("cannot decode: {err}"),
@@ -41,7 +41,7 @@ impl TokenOutputStream {
     }
 
     // https://github.com/huggingface/text-generation-inference/blob/5ba53d44a18983a4de32d122f4cb46f4a17d9ef6/server/text_generation_server/models/model.py#L68
-    pub fn next_token(&mut self, token: u32) -> Result<Option<String>> {
+    pub fn next_token(&mut self, token: u32) -> anyhow::Result<Option<String>> {
         let prev_text = if self.tokens.is_empty() {
             String::new()
         } else {
@@ -60,7 +60,7 @@ impl TokenOutputStream {
         }
     }
 
-    pub fn decode_rest(&self) -> Result<Option<String>> {
+    pub fn decode_rest(&self) -> anyhow::Result<Option<String>> {
         let prev_text = if self.tokens.is_empty() {
             String::new()
         } else {
@@ -76,7 +76,7 @@ impl TokenOutputStream {
         }
     }
 
-    pub fn decode_all(&self) -> Result<String> {
+    pub fn decode_all(&self) -> anyhow::Result<String> {
         self.decode(&self.tokens)
     }
 
@@ -133,7 +133,7 @@ impl TextGeneration {
         }
     }
 
-    fn run(&mut self, prompt: &str, sample_len: usize) -> Result<String> {
+    fn run(&mut self, prompt: &str, sample_len: usize) -> anyhow::Result<String> {
         use std::io::Write;
         self.tokenizer.clear();
         let mut tokens = self
@@ -261,5 +261,12 @@ fn prompt_internal(root: String, system: String, prompt: String) -> Result<Strin
 
 #[frb(sync)]
 pub fn prompt(root: String, system: String, prompt: String) -> Result<String, String> {
-    prompt_internal(root, system, prompt).map_err(|e| e.to_string())
+    let result = prompt_internal(root, system, prompt).map_err(|e| e.to_string());
+    match result {
+        Err(ref e) => {
+            println!("{e}");
+        }
+        _ => (),
+    }
+    result
 }
