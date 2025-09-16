@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:jiyi/components/md_edit.dart';
 
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
@@ -14,7 +15,7 @@ import 'package:jiyi/utils/text_color.dart';
 class Playlist extends StatefulWidget {
   final List<Metadata> _mds;
   Playlist(List<Metadata> mds, {super.key})
-      : _mds = mds..sort((x, y) => y.time.compareTo(x.time));
+    : _mds = mds..sort((x, y) => y.time.compareTo(x.time));
 
   @override
   State<Playlist> createState() => _PlaylistState();
@@ -115,19 +116,42 @@ class _PlaylistState extends State<Playlist> {
           ),
 
           // 封面容器
-          Container(
-            width: 15.em,
-            height: 15.em,
-            margin: EdgeInsets.symmetric(horizontal: 4.em),
-            decoration: BoxDecoration(
-              color: getStatusColor(entry.cover),
-              shape: BoxShape.circle,
-              border: Border.all(color: DefaultColors.shade_4, width: 0.5.em),
-            ),
-            child: Center(
-              child: Text(
-                entry.cover,
-                style: TextStyle(fontFamily: "朱雀仿宋", fontSize: 7.5.em),
+          IconButton(
+            onPressed: () async {
+              Metadata? newEntry;
+              if (context.mounted) {
+                newEntry = await showMetadataEditDialog(context, entry);
+              }
+              if (newEntry != null) {
+                // hacky reload
+                final updated = widget._mds;
+                final i = updated.indexOf(entry);
+                assert(i > -1);
+                updated[i] = newEntry;
+                if (mounted) {
+                  Navigator.pushReplacement(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (_, _, _) => Playlist(updated),
+                    ),
+                  );
+                }
+              }
+            },
+            icon: Container(
+              width: 15.em,
+              height: 15.em,
+              margin: EdgeInsets.symmetric(horizontal: 4.em),
+              decoration: BoxDecoration(
+                color: getStatusColor(entry.cover),
+                shape: BoxShape.circle,
+                border: Border.all(color: DefaultColors.shade_4, width: 0.5.em),
+              ),
+              child: Center(
+                child: Text(
+                  entry.cover,
+                  style: TextStyle(fontFamily: "朱雀仿宋", fontSize: 7.5.em),
+                ),
               ),
             ),
           ),

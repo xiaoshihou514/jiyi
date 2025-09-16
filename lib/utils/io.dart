@@ -116,6 +116,34 @@ abstract class IO {
     );
   }
 
+  static Future<void> updateMetadata(
+    Metadata original,
+    Metadata updated,
+  ) async {
+    await File(path.join(STORAGE, "${updated.path}.bq")).writeAsBytes(
+      await Encryption.encrypt(utf8.encode(updated.json)),
+      flush: true,
+    );
+
+    if (completer.isCompleted) {
+      completer = Completer();
+      indexFuture = completer.future;
+    }
+    final i = _index.indexOf(original);
+    assert(i > -1);
+    _index[i] = updated;
+    completer.complete(_index);
+    await updateIndexOnDisk();
+
+    _metadataByDate.updateAll((k, mds) {
+      final i = mds.indexOf(original);
+      if (i != -1) {
+        mds[i] = updated;
+      }
+      return mds;
+    });
+  }
+
   static List<Metadata> metadataByDay(DateTime day) =>
       _metadataByDate[day] ?? [];
 }

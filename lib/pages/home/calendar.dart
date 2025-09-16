@@ -1,6 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:jiyi/components/md_edit.dart';
+import 'package:jiyi/pages/home.dart';
+import 'package:jiyi/utils/secure_storage.dart' as ss;
 import 'package:provider/provider.dart';
 
 import 'package:jiyi/components/spinner.dart';
@@ -140,6 +143,26 @@ class _CalendarState extends State<Calendar> {
                       : Playlist(IO.metadataByDay(date)),
                 ),
               );
+            }
+          },
+          onLongPress: () async {
+            if (context.mounted && covers.length == 1) {
+              await showMetadataEditDialog(
+                context,
+                IO.metadataByDay(date).first,
+              );
+              // hacky reload
+              final masterKey = await ss.read(key: ss.MASTER_KEY);
+              final storagePath = await ss.read(key: ss.STORAGE_PATH);
+              if (mounted) {
+                Navigator.pushReplacement(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (_, _, _) =>
+                        HomePage(true, storagePath!, masterKey!),
+                  ),
+                );
+              }
             }
           },
           icon: SizedBox(

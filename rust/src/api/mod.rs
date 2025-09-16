@@ -152,7 +152,6 @@ impl TextGeneration {
         println!("\n输出：");
 
         let mut output = String::new();
-        let mut generated_tokens = 0usize;
         let eos_token = match self.tokenizer.get_token("<|endoftext|>") {
             Some(token) => token,
             None => anyhow::bail!("cannot find the <|endoftext|> token"),
@@ -161,7 +160,6 @@ impl TextGeneration {
             Some(token) => token,
             None => anyhow::bail!("cannot find the <|im_end|> token"),
         };
-        let start_gen = std::time::Instant::now();
         for index in 0..sample_len {
             let context_size = if index > 0 { 1 } else { tokens.len() };
             let start_pos = tokens.len().saturating_sub(context_size);
@@ -182,7 +180,6 @@ impl TextGeneration {
 
             let next_token = self.logits_processor.sample(&logits)?;
             tokens.push(next_token);
-            generated_tokens += 1;
             if next_token == eos_token || next_token == eos_token2 {
                 break;
             }
@@ -192,17 +189,12 @@ impl TextGeneration {
                 std::io::stdout().flush()?;
             }
         }
-        let dt = start_gen.elapsed();
         if let Some(rest) = self.tokenizer.decode_rest().map_err(E::msg)? {
             print!("{}", rest);
             std::io::stdout().flush()?;
             output.push_str(rest.as_str());
         }
         std::io::stdout().flush()?;
-        println!(
-            "\n{generated_tokens} tokens generated ({:.2} token/s)",
-            generated_tokens as f64 / dt.as_secs_f64(),
-        );
         Ok(output)
     }
 }
@@ -214,6 +206,7 @@ fn prompt_internal(root: String, system: String, prompt: String) -> Result<Strin
     );
     println!("root: {root}");
 
+    let start = std::time::Instant::now();
     let root = PathBuf::from_str(root.as_str())?;
     let tokenizer_filename = concat(&root, "tokenizer.json");
     let filenames = {
@@ -238,7 +231,6 @@ fn prompt_internal(root: String, system: String, prompt: String) -> Result<Strin
     };
     let tokenizer = Tokenizer::from_file(tokenizer_filename).map_err(E::msg)?;
 
-    let start = std::time::Instant::now();
     let config_file = concat(&root, "config.json");
     let device = Device::Cpu;
     let dtype = DType::F32;
@@ -247,6 +239,7 @@ fn prompt_internal(root: String, system: String, prompt: String) -> Result<Strin
 
     println!("loaded the model in {:?}", start.elapsed());
 
+    let start_gen = std::time::Instant::now();
     let mut pipeline = TextGeneration::new(
         model,
         tokenizer,
@@ -257,10 +250,12 @@ fn prompt_internal(root: String, system: String, prompt: String) -> Result<Strin
         64,
         &device,
     );
-    pipeline.run(
+    let result = pipeline.run(
         format!("<|im_start|>system\n{system}\n<|im_start|>user\n{prompt}\n<|im_end|>",).as_str(),
         10000,
-    )
+    );
+    println!("\ndone generation in {:?}", start_gen.elapsed());
+    result
 }
 
 #[frb(sync)]

@@ -8,6 +8,7 @@ import 'package:jiyi/components/soundviz.dart';
 import 'package:jiyi/components/spinner.dart';
 import 'package:jiyi/components/tape.dart';
 import 'package:jiyi/components/tapewheel.dart';
+import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/utils/anno.dart';
 import 'package:jiyi/utils/em.dart';
@@ -139,13 +140,21 @@ class _PlayerState extends State<Player> {
             else // desktop
               SizedBox(
                 height: 50.em,
-                child: Row(children: [_cdViz(isMobile), _transcript()]),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _cdViz(isMobile),
+                    SizedBox(width: 11.em),
+                    _transcript,
+                  ],
+                ),
               ),
 
             Spacer(flex: 1),
 
             // 字幕
-            if (!_isLoading && _error == null && isMobile) _transcript(),
+            if (!_isLoading && _error == null && isMobile) _transcript,
 
             Spacer(flex: 1),
 
@@ -196,7 +205,9 @@ class _PlayerState extends State<Player> {
     );
   }
 
-  Widget _transcript() {
+  Widget get _transcript {
+    final l = AppLocalizations.of(context)!;
+    final content = widget._md.transcript;
     return Expanded(
       child: SingleChildScrollView(
         child: Wrap(
@@ -204,7 +215,7 @@ class _PlayerState extends State<Player> {
             Container(
               color: DefaultColors.shade_1,
               child: Text(
-                widget._md.transcript,
+                content.isEmpty ? l.transcript_empty : content,
                 style: TextStyle(
                   color: DefaultColors.fg,
                   fontFamily: "朱雀仿宋",

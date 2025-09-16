@@ -2,13 +2,13 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:jiyi/components/style/popup.dart';
 import 'package:jiyi/utils/data/llm_setting.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
 import 'package:jiyi/utils/tts.dart';
 import 'package:jiyi/utils/data/tts_setting.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_soloud/flutter_soloud.dart';
 import 'package:intl/intl.dart';
 
@@ -21,12 +21,6 @@ import 'package:jiyi/utils/data/metadata.dart';
 import 'package:jiyi/utils/io.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wav/wav_file.dart';
-
-extension on num {
-  double get em => (ScreenUtil().screenWidth > ScreenUtil().screenHeight)
-      ? sh / 128
-      : sw / 90;
-}
 
 @DeepSeek()
 class MetadataInputDialog extends StatefulWidget {
@@ -114,72 +108,6 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
     }
   }
 
-  Future<void> _selectDateTime(BuildContext context) async {
-    final l = AppLocalizations.of(context)!;
-    final date = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-      helpText: l.metadata_select_date,
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: DefaultColors.func,
-              onPrimary: DefaultColors.bg,
-              surface: DefaultColors.bg,
-              onSurface: DefaultColors.fg,
-            ),
-            dialogTheme: DialogThemeData(backgroundColor: DefaultColors.bg),
-          ),
-          child: child!,
-        );
-      },
-    );
-
-    if (date == null) return;
-
-    if (context.mounted) {
-      final time = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
-        helpText: l.metadata_select_time,
-        builder: (context, child) {
-          return Theme(
-            data: Theme.of(context).copyWith(
-              colorScheme: ColorScheme.light(
-                primary: DefaultColors.func,
-                onPrimary: DefaultColors.bg,
-                surface: DefaultColors.bg,
-                onSurface: DefaultColors.fg,
-              ),
-              dialogTheme: DialogThemeData(backgroundColor: DefaultColors.bg),
-            ),
-            child: child!,
-          );
-        },
-      );
-
-      if (time == null) return;
-
-      setState(() {
-        _selectedDate = date;
-        _selectedTime = time;
-      });
-    }
-  }
-
-  String _formatDuration(Duration duration) {
-    final hours = duration.inHours;
-    final minutes = duration.inMinutes.remainder(60);
-    final seconds = duration.inSeconds.remainder(60);
-
-    return '${hours.toString().padLeft(2, '0')}:'
-        '${minutes.toString().padLeft(2, '0')}:'
-        '${seconds.toString().padLeft(2, '0')}';
-  }
-
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
@@ -248,7 +176,7 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
                       Icon(Icons.timer, size: 4.em, color: DefaultColors.info),
                       SizedBox(width: 1.em),
                       Text(
-                        '${l.metadata_duration}: ${_formatDuration(_audioDuration!)}',
+                        '${l.metadata_duration}: ${Popup.formatDuration(_audioDuration!)}',
                         style: TextStyle(
                           color: DefaultColors.fg,
                           fontSize: 3.5.em,
@@ -298,13 +226,19 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
                   color: DefaultColors.func,
                   size: 4.em,
                 ),
-                onTap: () => _selectDateTime(context),
+                onTap: () => Popup.selectDateTime(
+                  context,
+                  (date, time) => setState(() {
+                    _selectedDate = date;
+                    _selectedTime = time;
+                  }),
+                ),
               ),
 
               // 标题输入
               TextFormField(
                 controller: _titleController,
-                decoration: _buildInputDecoration(
+                decoration: Popup.buildInputDecoration(
                   '${l.metadata_title_label}*',
                   null,
                 ),
@@ -322,6 +256,27 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
                 },
               ),
               SizedBox(height: 4.em),
+              // 封面emoji输入
+              TextFormField(
+                cursorColor: DefaultColors.func,
+                controller: _coverController,
+                decoration: Popup.buildInputDecoration(
+                  '${l.metadata_cover_label}*',
+                  null,
+                ),
+                style: TextStyle(
+                  color: DefaultColors.fg,
+                  fontSize: 3.5.em,
+                  fontFamily: "朱雀仿宋",
+                ),
+                maxLength: 1,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return l.metadata_cover_required;
+                  }
+                  return null;
+                },
+              ),
               // 经纬度输入
               Text(
                 l.metadata_location_optional,
@@ -342,7 +297,7 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),
-                      decoration: _buildInputDecoration(
+                      decoration: Popup.buildInputDecoration(
                         l.metadata_latitude,
                         l.metadata_latitude_hint,
                       ),
@@ -370,7 +325,7 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),
-                      decoration: _buildInputDecoration(
+                      decoration: Popup.buildInputDecoration(
                         l.metadata_longitude,
                         l.metadata_longitude_hint,
                       ),
@@ -391,28 +346,6 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
                     ),
                   ),
                 ],
-              ),
-              SizedBox(height: 4.em),
-              // 封面emoji输入
-              TextFormField(
-                cursorColor: DefaultColors.func,
-                controller: _coverController,
-                decoration: _buildInputDecoration(
-                  '${l.metadata_cover_label}*',
-                  null,
-                ),
-                style: TextStyle(
-                  color: DefaultColors.fg,
-                  fontSize: 3.5.em,
-                  fontFamily: "朱雀仿宋",
-                ),
-                maxLength: 1,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return l.metadata_cover_required;
-                  }
-                  return null;
-                },
               ),
             ],
           ),
@@ -453,39 +386,6 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
                 ),
               ),
       ],
-    );
-  }
-
-  InputDecoration _buildInputDecoration(String labelText, String? hintText) {
-    return InputDecoration(
-      labelText: labelText,
-      hintText: hintText,
-      labelStyle: TextStyle(
-        color: DefaultColors.shade_5,
-        fontSize: 3.5.em,
-        fontFamily: "朱雀仿宋",
-      ),
-      floatingLabelStyle: TextStyle(
-        color: DefaultColors.func,
-        fontSize: 3.5.em,
-        fontFamily: "朱雀仿宋",
-      ),
-      border: OutlineInputBorder(
-        borderSide: BorderSide(color: DefaultColors.shade_4, width: 0.25.em),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: DefaultColors.shade_4, width: 0.25.em),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: DefaultColors.func, width: 0.5.em),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: DefaultColors.error, width: 0.25.em),
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: DefaultColors.error, width: 0.5.em),
-      ),
-      contentPadding: EdgeInsets.symmetric(horizontal: 3.em, vertical: 4.em),
     );
   }
 

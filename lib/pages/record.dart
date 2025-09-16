@@ -364,6 +364,11 @@ class _RecordPageState extends State<RecordPage> {
   }
 
   Future<LatLng?> _getLoc() async {
+    // FIXME
+    if (true) {
+      return LatLng(0, 0);
+    }
+
     bool serviceEnabled = await _geo.isLocationServiceEnabled();
     if (!serviceEnabled) {
       await _geo.openLocationSettings();
