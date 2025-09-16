@@ -342,6 +342,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get metadata_transcript_hint => '输入音频转录文本';
 
   @override
+  String get metadata_missing_llm_setting => '未配置自动排版';
+
+  @override
+  String get metadata_zdpp => '自动排版';
+
+  @override
   String get untitled_cd => 'Untitled Tape';
 
   @override

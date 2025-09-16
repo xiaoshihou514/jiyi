@@ -433,8 +433,7 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
       ).dyn,
       "_token": ServicesBinding.rootIsolateToken!,
       // LLM opt
-      "llmPath": llmSettings?.rootPath,
-      "prompt": llmSettings?.prompt,
+      "zdpp": llmSettings,
     });
 
     IO.addEntry(metadata);
@@ -455,8 +454,7 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
     final wav = await Wav.readFile(file.path);
     md["transcript"] = await Tts.fromWAV(
       params['model'] as so.OnlineModelConfig,
-      params["llmPath"],
-      params["prompt"],
+      params["zdpp"],
       Float32List.fromList(wav.channels.first.toList()),
       wav.samplesPerSecond,
     );

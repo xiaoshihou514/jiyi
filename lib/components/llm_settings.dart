@@ -60,10 +60,13 @@ class _LLMSettingsState extends State<LLMSettings> {
             ),
             IconButton(
               onPressed: () async {
-                if (_setting.name != null &&
-                    !Directory(_setting.rootPath).existsSync()) {
+                print(_setting.dyn);
+                if (_setting.rootPath == "") {
+                  await ss.write(key: ss.LLM_MODEL_SETTINGS, value: null);
+                } else if (_setting.name != null) {
                   // preset download logic
-                  if (context.mounted) {
+                  if (!Directory(_setting.rootPath).existsSync() &&
+                      context.mounted) {
                     showDialog(
                       context: context,
                       barrierDismissible: false,
@@ -73,12 +76,12 @@ class _LLMSettingsState extends State<LLMSettings> {
                       ),
                     );
                   }
+                  await ss.write(
+                    key: ss.LLM_MODEL_SETTINGS,
+                    value: _setting.json,
+                  );
                 }
 
-                await ss.write(
-                  key: ss.LLM_MODEL_SETTINGS,
-                  value: _setting.json,
-                );
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(l.settings_llm_zdpp_saved)),

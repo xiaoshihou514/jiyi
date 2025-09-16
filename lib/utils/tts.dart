@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:jiyi/src/rust/frb_generated.dart';
+import 'package:jiyi/utils/data/llm_setting.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 
 import 'package:jiyi/utils/anno.dart';
@@ -12,8 +13,7 @@ abstract class Tts {
 
   static Future<String> fromWAV(
     so.OnlineModelConfig? model,
-    String? llmPath,
-    String? prompt,
+    LLMSetting? zdppModel,
     Float32List data,
     int sampleRate,
   ) async {
@@ -35,19 +35,20 @@ abstract class Tts {
     final raw = _splitByTime(res.tokens, res.timestamps);
 
     // LLM enhancement
-    if (llmPath == null || prompt == null || raw.join().isEmpty) {
+    if (zdppModel == null || raw.join().isEmpty) {
       return raw.join("\n");
     } else {
       await RustLib.init();
-      return llmEnhance(raw.join("\n"), llmPath, prompt);
+      return llmEnhance(raw.join("\n"), zdppModel);
     }
   }
 
-  static String llmEnhance(String input, String llmPath, String prompt) {
-    print(input);
-    print(llmPath);
-    print(prompt);
-    final processed = api.prompt(root: llmPath, system: prompt, prompt: input);
+  static String llmEnhance(String input, LLMSetting s) {
+    final processed = api.prompt(
+      root: s.rootPath,
+      system: s.prompt,
+      prompt: input,
+    );
     return _trim(processed, ["\n", "\t", " ", "<think>", "</think>"]);
   }
 

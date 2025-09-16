@@ -112,6 +112,8 @@
   "metadata_save": "保存",
   "metadata_transcript_label": "转录文本",
   "metadata_transcript_hint": "输入音频转录文本",
+  "metadata_missing_llm_setting": "未配置自动排版",
+  "metadata_zdpp": "自动排版",
 
   "untitled_cd": "未命名磁带",
   "playlist_title": "选中的记录（{len}）",

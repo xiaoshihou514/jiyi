@@ -284,8 +284,7 @@ class _RecordPageState extends State<RecordPage> {
       ).dyn,
       "_token": ServicesBinding.rootIsolateToken!,
       // LLM opt
-      "llmPath": llmSettings?.rootPath,
-      "prompt": llmSettings?.prompt,
+      "zdpp": llmSettings,
     });
     IO.addEntry(metadata);
     await IO.updateIndexOnDisk();
@@ -312,8 +311,7 @@ class _RecordPageState extends State<RecordPage> {
 
     md["transcript"] = await Tts.fromWAV(
       params['model'] as so.OnlineModelConfig?,
-      params["llmPath"],
-      params["prompt"],
+      params["zdpp"],
       Float32List.fromList(bytes),
       SAMPLE_RATE,
     );
@@ -364,7 +362,7 @@ class _RecordPageState extends State<RecordPage> {
   }
 
   Future<LatLng?> _getLoc() async {
-    // FIXME
+    // DEBUG
     if (true) {
       return LatLng(0, 0);
     }

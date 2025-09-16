@@ -722,6 +722,18 @@ abstract class AppLocalizations {
   /// **'输入音频转录文本'**
   String get metadata_transcript_hint;
 
+  /// No description provided for @metadata_missing_llm_setting.
+  ///
+  /// In zh, this message translates to:
+  /// **'未配置自动排版'**
+  String get metadata_missing_llm_setting;
+
+  /// No description provided for @metadata_zdpp.
+  ///
+  /// In zh, this message translates to:
+  /// **'自动排版'**
+  String get metadata_zdpp;
+
   /// No description provided for @untitled_cd.
   ///
   /// In zh, this message translates to:

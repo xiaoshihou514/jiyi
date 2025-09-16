@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jiyi/components/style/popup.dart';
 import 'package:jiyi/pages/default_colors.dart';
+import 'package:jiyi/src/rust/frb_generated.dart';
 import 'package:jiyi/utils/anno.dart';
+import 'package:jiyi/utils/data/llm_setting.dart';
 import 'package:jiyi/utils/data/metadata.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/utils/io.dart';
+import 'package:jiyi/utils/secure_storage.dart' as ss;
+import 'package:jiyi/utils/tts.dart';
 
 @DeepSeek()
 class MdEdit extends StatefulWidget {
@@ -26,6 +30,8 @@ class _MdEditState extends State<MdEdit> {
   final _coverController = TextEditingController();
   final _transcriptController = TextEditingController();
 
+  LLMSetting? _llmSetting;
+
   @override
   void initState() {
     super.initState();
@@ -37,6 +43,16 @@ class _MdEditState extends State<MdEdit> {
     _lonController.text = widget._md.longitude?.toString() ?? '';
     _coverController.text = widget._md.cover;
     _transcriptController.text = widget._md.transcript;
+    _initLLMSetting();
+  }
+
+  Future<void> _initLLMSetting() async {
+    final s = await ss.read(key: ss.LLM_MODEL_SETTINGS);
+    if (s != null) {
+      setState(() {
+        _llmSetting = LLMSetting.fromJson(s);
+      });
+    }
   }
 
   @override
@@ -79,6 +95,12 @@ class _MdEditState extends State<MdEdit> {
     IO.updateMetadata(widget._md, updated);
 
     Navigator.pop(context, updated);
+  }
+
+  Future<void> _zdpp() async {
+    await RustLib.init();
+    final enhanced = Tts.llmEnhance(_transcriptController.text, _llmSetting!);
+    setState(() => _transcriptController.text = enhanced);
   }
 
   @override
@@ -313,6 +335,33 @@ class _MdEditState extends State<MdEdit> {
             style: TextStyle(fontSize: 3.5.em, fontFamily: "朱雀仿宋"),
           ),
         ),
+        _llmSetting != null
+            ? ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: DefaultColors.keyword,
+                  foregroundColor: DefaultColors.bg,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 4.em,
+                    vertical: 2.em,
+                  ),
+                ),
+                onPressed: _zdpp,
+                child: Text(
+                  l.metadata_zdpp,
+                  style: TextStyle(fontSize: 3.5.em, fontFamily: "朱雀仿宋"),
+                ),
+              )
+            : TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  l.metadata_missing_llm_setting,
+                  style: TextStyle(
+                    color: DefaultColors.shade_6,
+                    fontSize: 3.5.em,
+                    fontFamily: "朱雀仿宋",
+                  ),
+                ),
+              ),
       ],
     );
   }
