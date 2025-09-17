@@ -30,6 +30,19 @@ jobs:
         with:
           channel: stable
 
+      - name: Setup Flutter Rust Bridge
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          components: cargo
+        run: cargo install flutter_rust_bridge_codegen
+
+      - name: Generate Code
+        run: |
+          export FRBC="$HOME/.cargo/bin/flutter_rust_bridge_codegen"
+          $FRBC generate --stop-on-error --no-dart-format
+          dart run build_runner build --build-filter 'package:jiyi/utils/data/*'
+
       - name: Build Linux
         if: matrix.config.target == 'Linux'
         run: |
@@ -69,7 +82,7 @@ jobs:
         with:
           gradle-version: "8.9"
 
-      - name: Setup android tools (Android)
+      - name: Setup Android NDK
         if: matrix.config.target == 'Android'
         uses: android-actions/setup-android@v3
         with:
@@ -119,6 +132,7 @@ jobs:
           touch $(echo $PUB_CACHE/hosted/pub.dev/flutter_recorder-*)/web/libflutter_recorder_plugin.wasm
           touch $(echo $PUB_CACHE/hosted/pub.dev/flutter_soloud-*)/web/libflutter_soloud_plugin.wasm
 
+          ./setup_jni_libs.sh
           flutter build apk --split-per-abi
 
       - name: Upload binaries to release
