@@ -3,6 +3,7 @@ use std::{path::PathBuf, str::FromStr};
 use anyhow::Error as E;
 use candle_transformers::models::qwen3::ModelForCausalLM as Model3;
 
+use candle_core::utils::{cuda_is_available, metal_is_available};
 use candle_core::{DType, Device, Tensor};
 use candle_nn::VarBuilder;
 use candle_transformers::generation::LogitsProcessor;
@@ -232,7 +233,13 @@ fn prompt_internal(root: String, system: String, prompt: String) -> Result<Strin
     let tokenizer = Tokenizer::from_file(tokenizer_filename).map_err(E::msg)?;
 
     let config_file = concat(&root, "config.json");
-    let device = Device::Cpu;
+    let device = if cuda_is_available() {
+        Device::new_cuda(0).unwrap_or(Device::Cpu)
+    } else if metal_is_available() {
+        Device::new_metal(0).unwrap_or(Device::Cpu)
+    } else {
+        Device::Cpu
+    };
     let dtype = DType::F32;
     let vb = unsafe { VarBuilder::from_mmaped_safetensors(&filenames, dtype, &device)? };
     let model = Model3::new(&serde_json::from_slice(&std::fs::read(config_file)?)?, vb)?;

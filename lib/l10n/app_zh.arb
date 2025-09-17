@@ -114,6 +114,7 @@
   "metadata_transcript_hint": "输入音频转录文本",
   "metadata_missing_llm_setting": "未配置自动排版",
   "metadata_zdpp": "自动排版",
+  "metadata_rebuild_transcript": "重新识别语音",
 
   "untitled_cd": "未命名磁带",
   "playlist_title": "选中的记录（{len}）",

@@ -337,6 +337,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get metadata_zdpp => '自动排版';
 
   @override
+  String get metadata_rebuild_transcript => '重新识别语音';
+
+  @override
   String get untitled_cd => '未命名磁带';
 
   @override

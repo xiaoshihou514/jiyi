@@ -7,7 +7,7 @@ import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/utils/data/llm_setting.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
-import 'package:jiyi/components/settings_utils.dart';
+import 'package:jiyi/components/style/settings.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -60,7 +60,6 @@ class _LLMSettingsState extends State<LLMSettings> {
             ),
             IconButton(
               onPressed: () async {
-                print(_setting.dyn);
                 if (_setting.rootPath == "") {
                   await ss.write(key: ss.LLM_MODEL_SETTINGS, value: null);
                 } else if (_setting.name != null) {
@@ -106,7 +105,7 @@ class _LLMSettingsState extends State<LLMSettings> {
             ),
           ],
         ),
-        SUtils.flex(
+        Settings.flex(
           children: [
             Text(
               l.settings_llm_zdpp_desc,
@@ -115,7 +114,7 @@ class _LLMSettingsState extends State<LLMSettings> {
           ],
         ),
 
-        SUtils.flex(
+        Settings.flex(
           children: [
             Text(l.settings_llm_zdpp_provider),
             DropdownButton(
@@ -162,10 +161,10 @@ class _LLMSettingsState extends State<LLMSettings> {
   Widget _localLLMSettings() => Column(
     children: [
       // LLM base path
-      SUtils.flex(
+      Settings.flex(
         children: [
           Text(l.settings_llm_zdpp_root_picker_desc),
-          SUtils.buildFileChooser(
+          Settings.buildFileChooser(
             () => _selectLLMPath('encoder'),
             Icons.file_open,
             _setting.rootPath.isEmpty
@@ -177,7 +176,7 @@ class _LLMSettingsState extends State<LLMSettings> {
       ),
 
       // prompt
-      SUtils.flex(
+      Settings.flex(
         children: [
           Text(l.settings_llm_zdpp_prompt_desc),
           SizedBox(
@@ -203,11 +202,11 @@ class _LLMSettingsState extends State<LLMSettings> {
 
   TextStyle get _inputStyle => TextStyle(
     color: DefaultColors.fg,
-    fontSize: SUtils.isMobile ? 4.em : 3.em,
+    fontSize: Settings.isMobile ? 4.em : 3.em,
   );
 
   InputDecoration get _inputDecoration => InputDecoration(
-    contentPadding: SUtils.isMobile
+    contentPadding: Settings.isMobile
         ? null
         : EdgeInsets.symmetric(vertical: 1.em),
     enabledBorder: UnderlineInputBorder(

@@ -1,4 +1,9 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:jiyi/pages/record.dart';
+import 'package:jiyi/utils/data/tts_setting.dart';
+import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 import 'package:intl/intl.dart';
 import 'package:jiyi/components/style/popup.dart';
 import 'package:jiyi/pages/default_colors.dart';
@@ -10,6 +15,7 @@ import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/utils/io.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
 import 'package:jiyi/utils/tts.dart';
+import 'package:wav/wav.dart';
 
 @DeepSeek()
 class MdEdit extends StatefulWidget {
@@ -31,6 +37,7 @@ class _MdEditState extends State<MdEdit> {
   final _transcriptController = TextEditingController();
 
   LLMSetting? _llmSetting;
+  so.OnlineModelConfig? _ttsSetting;
 
   @override
   void initState() {
@@ -43,16 +50,20 @@ class _MdEditState extends State<MdEdit> {
     _lonController.text = widget._md.longitude?.toString() ?? '';
     _coverController.text = widget._md.cover;
     _transcriptController.text = widget._md.transcript;
-    _initLLMSetting();
+    _readSettings();
   }
 
-  Future<void> _initLLMSetting() async {
-    final s = await ss.read(key: ss.LLM_MODEL_SETTINGS);
-    if (s != null) {
-      setState(() {
-        _llmSetting = LLMSetting.fromJson(s);
-      });
-    }
+  Future<void> _readSettings() async {
+    final s1 = await ss.read(key: ss.LLM_MODEL_SETTINGS);
+    final s2 = await ss.read(key: ss.TTS_MODEL_SETTINGS);
+    setState(() {
+      if (s1 != null) {
+        _llmSetting = LLMSetting.fromJson(s1);
+      }
+      if (s2 != null) {
+        _ttsSetting = TtsSetting.fromJson(s2).model;
+      }
+    });
   }
 
   @override
@@ -101,6 +112,19 @@ class _MdEditState extends State<MdEdit> {
     await RustLib.init();
     final enhanced = Tts.llmEnhance(_transcriptController.text, _llmSetting!);
     setState(() => _transcriptController.text = enhanced);
+  }
+
+  Future<void> _rebuildTranscript() async {
+    final data = Float32List.fromList(
+      Wav.read(await IO.read(widget._md.path)).channels.first.toList(),
+    );
+    final newTranscript = await Tts.fromWAV(
+      _ttsSetting,
+      _llmSetting,
+      data,
+      SAMPLE_RATE,
+    );
+    setState(() => _transcriptController.text = newTranscript);
   }
 
   @override
@@ -335,6 +359,33 @@ class _MdEditState extends State<MdEdit> {
             style: TextStyle(fontSize: 3.5.em, fontFamily: "朱雀仿宋"),
           ),
         ),
+        _ttsSetting != null
+            ? ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: DefaultColors.keyword,
+                  foregroundColor: DefaultColors.bg,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 4.em,
+                    vertical: 2.em,
+                  ),
+                ),
+                onPressed: _rebuildTranscript,
+                child: Text(
+                  l.metadata_rebuild_transcript,
+                  style: TextStyle(fontSize: 3.5.em, fontFamily: "朱雀仿宋"),
+                ),
+              )
+            : TextButton(
+                onPressed: () {},
+                child: Text(
+                  l.metadata_missing_llm_setting,
+                  style: TextStyle(
+                    color: DefaultColors.shade_6,
+                    fontSize: 3.5.em,
+                    fontFamily: "朱雀仿宋",
+                  ),
+                ),
+              ),
         _llmSetting != null
             ? ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -352,7 +403,7 @@ class _MdEditState extends State<MdEdit> {
                 ),
               )
             : TextButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {},
                 child: Text(
                   l.metadata_missing_llm_setting,
                   style: TextStyle(

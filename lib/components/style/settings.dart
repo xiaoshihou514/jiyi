@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiyi/pages/default_colors.dart';
 
-abstract class SUtils {
+abstract class Settings {
   static bool get isMobile =>
       ScreenUtil().screenWidth < ScreenUtil().screenHeight;
 

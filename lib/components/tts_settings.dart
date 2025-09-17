@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:jiyi/components/download_unzip.dart';
-import 'package:jiyi/components/settings_utils.dart';
+import 'package:jiyi/components/style/settings.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
@@ -132,7 +132,7 @@ class _TTSSettingsState extends State<TTSSettings> {
           ],
         ),
 
-        SUtils.flex(
+        Settings.flex(
           children: [
             Text(l.settings_tts_provider),
             DropdownButton(
@@ -180,10 +180,10 @@ class _TTSSettingsState extends State<TTSSettings> {
   Widget _localTTSSettings() => Column(
     children: [
       // Encoder model path
-      SUtils.flex(
+      Settings.flex(
         children: [
           Text(l.settings_tts_encoder),
-          SUtils.buildFileChooser(
+          Settings.buildFileChooser(
             () => _selectModelFile('encoder'),
             Icons.file_open,
             _setting.encoder.isEmpty
@@ -195,10 +195,10 @@ class _TTSSettingsState extends State<TTSSettings> {
       ),
 
       // Decoder model path
-      SUtils.flex(
+      Settings.flex(
         children: [
           Text(l.settings_tts_decoder),
-          SUtils.buildFileChooser(
+          Settings.buildFileChooser(
             () => _selectModelFile('decoder'),
             Icons.file_open,
             _setting.decoder.isEmpty
@@ -210,10 +210,10 @@ class _TTSSettingsState extends State<TTSSettings> {
       ),
 
       // Joiner model path
-      SUtils.flex(
+      Settings.flex(
         children: [
           Text(l.settings_tts_joiner),
-          SUtils.buildFileChooser(
+          Settings.buildFileChooser(
             () => _selectModelFile('joiner'),
             Icons.file_open,
             _setting.joiner.isEmpty
@@ -225,10 +225,10 @@ class _TTSSettingsState extends State<TTSSettings> {
       ),
 
       // Tokens file path
-      SUtils.flex(
+      Settings.flex(
         children: [
           Text(l.settings_tts_tokens),
-          SUtils.buildFileChooser(
+          Settings.buildFileChooser(
             () => _selectModelFile('tokens'),
             Icons.file_open,
             _setting.tokens.isEmpty
@@ -240,7 +240,7 @@ class _TTSSettingsState extends State<TTSSettings> {
       ),
 
       // Model type
-      SUtils.flex(
+      Settings.flex(
         children: [
           Text(l.settings_tts_model_type),
           SizedBox(
@@ -285,11 +285,11 @@ class _TTSSettingsState extends State<TTSSettings> {
 
   TextStyle get _inputStyle => TextStyle(
     color: DefaultColors.fg,
-    fontSize: SUtils.isMobile ? 4.em : 3.em,
+    fontSize: Settings.isMobile ? 4.em : 3.em,
   );
 
   InputDecoration get _inputDecoration => InputDecoration(
-    contentPadding: SUtils.isMobile
+    contentPadding: Settings.isMobile
         ? null
         : EdgeInsets.symmetric(vertical: 1.em),
     enabledBorder: UnderlineInputBorder(

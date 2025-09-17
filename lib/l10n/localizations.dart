@@ -734,6 +734,12 @@ abstract class AppLocalizations {
   /// **'自动排版'**
   String get metadata_zdpp;
 
+  /// No description provided for @metadata_rebuild_transcript.
+  ///
+  /// In zh, this message translates to:
+  /// **'重新识别语音'**
+  String get metadata_rebuild_transcript;
+
   /// No description provided for @untitled_cd.
   ///
   /// In zh, this message translates to:
