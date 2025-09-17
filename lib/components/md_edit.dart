@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:jiyi/pages/record.dart';
-import 'package:jiyi/utils/data/tts_setting.dart';
+import 'package:jiyi/utils/data/asr_setting.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 import 'package:intl/intl.dart';
 import 'package:jiyi/components/style/popup.dart';
@@ -14,7 +14,7 @@ import 'package:jiyi/utils/data/metadata.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/utils/io.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
-import 'package:jiyi/utils/tts.dart';
+import 'package:jiyi/utils/asr.dart';
 import 'package:wav/wav.dart';
 
 @DeepSeek()
@@ -37,7 +37,7 @@ class _MdEditState extends State<MdEdit> {
   final _transcriptController = TextEditingController();
 
   LLMSetting? _llmSetting;
-  so.OnlineModelConfig? _ttsSetting;
+  so.OnlineModelConfig? _asrSetting;
 
   @override
   void initState() {
@@ -55,13 +55,13 @@ class _MdEditState extends State<MdEdit> {
 
   Future<void> _readSettings() async {
     final s1 = await ss.read(key: ss.LLM_MODEL_SETTINGS);
-    final s2 = await ss.read(key: ss.TTS_MODEL_SETTINGS);
+    final s2 = await ss.read(key: ss.ASR_MODEL_SETTINGS);
     setState(() {
       if (s1 != null) {
         _llmSetting = LLMSetting.fromJson(s1);
       }
       if (s2 != null) {
-        _ttsSetting = TtsSetting.fromJson(s2).model;
+        _asrSetting = AsrSetting.fromJson(s2).model;
       }
     });
   }
@@ -110,7 +110,7 @@ class _MdEditState extends State<MdEdit> {
 
   Future<void> _zdpp() async {
     await RustLib.init();
-    final enhanced = Tts.llmEnhance(_transcriptController.text, _llmSetting!);
+    final enhanced = Asr.llmEnhance(_transcriptController.text, _llmSetting!);
     setState(() => _transcriptController.text = enhanced);
   }
 
@@ -118,8 +118,8 @@ class _MdEditState extends State<MdEdit> {
     final data = Float32List.fromList(
       Wav.read(await IO.read(widget._md.path)).channels.first.toList(),
     );
-    final newTranscript = await Tts.fromWAV(
-      _ttsSetting,
+    final newTranscript = await Asr.fromWAV(
+      _asrSetting,
       _llmSetting,
       data,
       SAMPLE_RATE,
@@ -359,7 +359,7 @@ class _MdEditState extends State<MdEdit> {
             style: TextStyle(fontSize: 3.5.em, fontFamily: "朱雀仿宋"),
           ),
         ),
-        _ttsSetting != null
+        _asrSetting != null
             ? ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: DefaultColors.keyword,

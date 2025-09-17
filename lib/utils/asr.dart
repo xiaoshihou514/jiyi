@@ -6,7 +6,7 @@ import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 import 'package:jiyi/utils/anno.dart';
 import 'package:jiyi/src/rust/api.dart' as api;
 
-abstract class Tts {
+abstract class Asr {
   // split when next word later than 1 second
   // ignore: non_constant_identifier_names
   static double THRESHOLD = 1.0;

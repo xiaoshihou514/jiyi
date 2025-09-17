@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jiyi/utils/data/llm_setting.dart';
-import 'package:jiyi/utils/tts.dart';
+import 'package:jiyi/utils/asr.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 import 'package:geolocator_platform_interface/geolocator_platform_interface.dart';
 import 'package:flutter_recorder/flutter_recorder.dart';
@@ -29,7 +29,7 @@ import 'package:jiyi/components/tapewheel.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/utils/stop_model.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
-import 'package:jiyi/utils/data/tts_setting.dart';
+import 'package:jiyi/utils/data/asr_setting.dart';
 import 'package:jiyi/pages/default_colors.dart';
 
 extension on num {
@@ -259,10 +259,10 @@ class _RecordPageState extends State<RecordPage> {
         ) ??
         (l.untitled_cd, "❔");
 
-    final ttsSettings = await ss.read(key: ss.TTS_MODEL_SETTINGS);
-    final model = ttsSettings == null
+    final asrSettings = await ss.read(key: ss.ASR_MODEL_SETTINGS);
+    final model = asrSettings == null
         ? null
-        : TtsSetting.fromJson(ttsSettings).model;
+        : AsrSetting.fromJson(asrSettings).model;
     final zdppJson = await ss.read(key: ss.LLM_MODEL_SETTINGS);
     final llmSettings = zdppJson == null ? null : LLMSetting.fromJson(zdppJson);
 
@@ -309,7 +309,7 @@ class _RecordPageState extends State<RecordPage> {
       WavFormat.pcm32bit,
     ).write();
 
-    md["transcript"] = await Tts.fromWAV(
+    md["transcript"] = await Asr.fromWAV(
       params['model'] as so.OnlineModelConfig?,
       params["zdpp"],
       Float32List.fromList(bytes),

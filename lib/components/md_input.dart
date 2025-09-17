@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:jiyi/components/style/popup.dart';
 import 'package:jiyi/utils/data/llm_setting.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
-import 'package:jiyi/utils/tts.dart';
-import 'package:jiyi/utils/data/tts_setting.dart';
+import 'package:jiyi/utils/asr.dart';
+import 'package:jiyi/utils/data/asr_setting.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 import 'package:flutter/material.dart';
 import 'package:flutter_soloud/flutter_soloud.dart';
@@ -406,8 +406,8 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
       _selectedTime!.minute,
     );
 
-    final settings = await ss.read(key: ss.TTS_MODEL_SETTINGS);
-    final model = settings == null ? null : TtsSetting.fromJson(settings).model;
+    final settings = await ss.read(key: ss.ASR_MODEL_SETTINGS);
+    final model = settings == null ? null : AsrSetting.fromJson(settings).model;
     final zdppJson = await ss.read(key: ss.LLM_MODEL_SETTINGS);
     final llmSettings = zdppJson == null ? null : LLMSetting.fromJson(zdppJson);
 
@@ -452,7 +452,7 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
     IO.STORAGE = params['base_path'];
 
     final wav = await Wav.readFile(file.path);
-    md["transcript"] = await Tts.fromWAV(
+    md["transcript"] = await Asr.fromWAV(
       params['model'] as so.OnlineModelConfig,
       params["zdpp"],
       Float32List.fromList(wav.channels.first.toList()),

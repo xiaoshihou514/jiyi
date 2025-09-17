@@ -136,7 +136,7 @@ class _LLMSettingsState extends State<LLMSettings> {
                 if (value == l.settings_llm_zdpp_custom) {
                   setState(() {
                     _setting.rootPath = "";
-                    _setting.prompt = l.tts_opt_prompt;
+                    _setting.prompt = l.asr_opt_prompt;
                     _setting.name = null;
                   });
                 } else if (value != null) {
@@ -237,7 +237,7 @@ class _LLMSettingsState extends State<LLMSettings> {
     final dest = (await getApplicationSupportDirectory()).path;
     setState(() {
       _setting.rootPath = path.join(dest, name);
-      _setting.prompt = l.tts_opt_prompt;
+      _setting.prompt = l.asr_opt_prompt;
       _setting.name = name;
     });
     if (name == l.settings_llm_zdpp_qwen3_1_5B) {

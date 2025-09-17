@@ -5,7 +5,7 @@ import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
 import 'package:jiyi/components/map_settings.dart';
-import 'package:jiyi/components/tts_settings.dart';
+import 'package:jiyi/components/asr_settings.dart';
 import 'package:jiyi/components/llm_settings.dart';
 import 'package:jiyi/utils/io.dart';
 
@@ -47,7 +47,7 @@ class Settings extends StatelessWidget {
           spacing: 3.em,
           children: [
             MapSettings(l),
-            TTSSettings(l),
+            ASRSettings(l),
             LLMSettings(l),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

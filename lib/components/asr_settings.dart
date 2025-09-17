@@ -7,7 +7,7 @@ import 'package:jiyi/components/style/settings.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
-import 'package:jiyi/utils/data/tts_setting.dart';
+import 'package:jiyi/utils/data/asr_setting.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -16,17 +16,17 @@ import 'package:jiyi/utils/anno.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 @DeepSeek()
-class TTSSettings extends StatefulWidget {
+class ASRSettings extends StatefulWidget {
   final AppLocalizations loc;
-  const TTSSettings(this.loc, {super.key});
+  const ASRSettings(this.loc, {super.key});
 
   @override
-  State<TTSSettings> createState() => _TTSSettingsState();
+  State<ASRSettings> createState() => _ASRSettingsState();
 }
 
-class _TTSSettingsState extends State<TTSSettings> {
+class _ASRSettingsState extends State<ASRSettings> {
   late final AppLocalizations l;
-  late TtsSetting _setting;
+  late AsrSetting _setting;
   late List<String> list;
   List<String>? downloads;
 
@@ -37,22 +37,22 @@ class _TTSSettingsState extends State<TTSSettings> {
   void initState() {
     super.initState();
     l = widget.loc;
-    _setting = TtsSetting(
+    _setting = AsrSetting(
       encoder: '',
       decoder: '',
       joiner: '',
       tokens: '',
       modelType: '',
     );
-    list = [l.settings_tts_custom, l.settings_tts_zh_en_streaming_zipformer];
-    _loadTTSSettings();
+    list = [l.settings_asr_custom, l.settings_asr_zh_en_streaming_zipformer];
+    _loadASRSettings();
   }
 
-  Future<void> _loadTTSSettings() async {
-    final settings = await ss.read(key: ss.TTS_MODEL_SETTINGS);
+  Future<void> _loadASRSettings() async {
+    final settings = await ss.read(key: ss.ASR_MODEL_SETTINGS);
     if (settings != null) {
       setState(() {
-        _setting = TtsSetting.fromJson(settings);
+        _setting = AsrSetting.fromJson(settings);
         _modelTypeController.text = _setting.modelType;
       });
     }
@@ -60,7 +60,7 @@ class _TTSSettingsState extends State<TTSSettings> {
 
   void _updateSetting(String field, String value) {
     setState(() {
-      _setting = TtsSetting(
+      _setting = AsrSetting(
         encoder: field == 'encoder' ? value : _setting.encoder,
         decoder: field == 'decoder' ? value : _setting.decoder,
         joiner: field == 'joiner' ? value : _setting.joiner,
@@ -79,7 +79,7 @@ class _TTSSettingsState extends State<TTSSettings> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              l.settings_tts_model,
+              l.settings_asr_model,
               style: TextStyle(fontSize: 8.em, fontWeight: FontWeight.bold),
             ),
             IconButton(
@@ -88,14 +88,14 @@ class _TTSSettingsState extends State<TTSSettings> {
                 _updateSetting('modelType', _modelTypeController.text);
 
                 await ss.write(
-                  key: ss.TTS_MODEL_SETTINGS,
+                  key: ss.ASR_MODEL_SETTINGS,
                   value: _setting.json,
                 );
 
                 if (context.mounted) {
                   ScaffoldMessenger.of(
                     context,
-                  ).showSnackBar(SnackBar(content: Text(l.settings_tts_saved)));
+                  ).showSnackBar(SnackBar(content: Text(l.settings_asr_saved)));
                 }
 
                 // preset download logic
@@ -134,9 +134,9 @@ class _TTSSettingsState extends State<TTSSettings> {
 
         Settings.flex(
           children: [
-            Text(l.settings_tts_provider),
+            Text(l.settings_asr_provider),
             DropdownButton(
-              value: _setting.name ?? l.settings_tts_custom,
+              value: _setting.name ?? l.settings_asr_custom,
               icon: Icon(Icons.arrow_drop_down, size: 5.em),
               style: TextStyle(
                 color: DefaultColors.fg,
@@ -151,7 +151,7 @@ class _TTSSettingsState extends State<TTSSettings> {
                 color: DefaultColors.fg,
               ),
               onChanged: (String? value) => setState(() {
-                if (value == l.settings_tts_custom) {
+                if (value == l.settings_asr_custom) {
                   _setting.name = null;
                   _setting.encoder = '';
                   _setting.decoder = '';
@@ -172,22 +172,22 @@ class _TTSSettingsState extends State<TTSSettings> {
           ],
         ),
 
-        if (_setting.name == null) _localTTSSettings(),
+        if (_setting.name == null) _localASRSettings(),
       ],
     );
   }
 
-  Widget _localTTSSettings() => Column(
+  Widget _localASRSettings() => Column(
     children: [
       // Encoder model path
       Settings.flex(
         children: [
-          Text(l.settings_tts_encoder),
+          Text(l.settings_asr_encoder),
           Settings.buildFileChooser(
             () => _selectModelFile('encoder'),
             Icons.file_open,
             _setting.encoder.isEmpty
-                ? Text(l.settings_tts_picker_desc, style: _hintStyle)
+                ? Text(l.settings_asr_picker_desc, style: _hintStyle)
                 : Text(path.basename(_setting.encoder), style: _fileStyle),
             DefaultColors.constant,
           ),
@@ -197,12 +197,12 @@ class _TTSSettingsState extends State<TTSSettings> {
       // Decoder model path
       Settings.flex(
         children: [
-          Text(l.settings_tts_decoder),
+          Text(l.settings_asr_decoder),
           Settings.buildFileChooser(
             () => _selectModelFile('decoder'),
             Icons.file_open,
             _setting.decoder.isEmpty
-                ? Text(l.settings_tts_picker_desc, style: _hintStyle)
+                ? Text(l.settings_asr_picker_desc, style: _hintStyle)
                 : Text(path.basename(_setting.decoder), style: _fileStyle),
             DefaultColors.constant,
           ),
@@ -212,12 +212,12 @@ class _TTSSettingsState extends State<TTSSettings> {
       // Joiner model path
       Settings.flex(
         children: [
-          Text(l.settings_tts_joiner),
+          Text(l.settings_asr_joiner),
           Settings.buildFileChooser(
             () => _selectModelFile('joiner'),
             Icons.file_open,
             _setting.joiner.isEmpty
-                ? Text(l.settings_tts_picker_desc, style: _hintStyle)
+                ? Text(l.settings_asr_picker_desc, style: _hintStyle)
                 : Text(path.basename(_setting.joiner), style: _fileStyle),
             DefaultColors.constant,
           ),
@@ -227,12 +227,12 @@ class _TTSSettingsState extends State<TTSSettings> {
       // Tokens file path
       Settings.flex(
         children: [
-          Text(l.settings_tts_tokens),
+          Text(l.settings_asr_tokens),
           Settings.buildFileChooser(
             () => _selectModelFile('tokens'),
             Icons.file_open,
             _setting.tokens.isEmpty
-                ? Text(l.settings_tts_picker_desc, style: _hintStyle)
+                ? Text(l.settings_asr_picker_desc, style: _hintStyle)
                 : Text(path.basename(_setting.tokens), style: _fileStyle),
             DefaultColors.constant,
           ),
@@ -242,7 +242,7 @@ class _TTSSettingsState extends State<TTSSettings> {
       // Model type
       Settings.flex(
         children: [
-          Text(l.settings_tts_model_type),
+          Text(l.settings_asr_model_type),
           SizedBox(
             height: 6.em,
             width: 50.em,
@@ -257,7 +257,7 @@ class _TTSSettingsState extends State<TTSSettings> {
       ),
       InkWell(
         child: Text(
-          l.settings_tts_download_desc,
+          l.settings_asr_download_desc,
           style: TextStyle(
             decoration: TextDecoration.underline,
             decorationColor: DefaultColors.info,
@@ -271,7 +271,7 @@ class _TTSSettingsState extends State<TTSSettings> {
         ),
       ),
       Text(
-        l.settings_tts_download_exp,
+        l.settings_asr_download_exp,
         style: TextStyle(color: DefaultColors.fg),
       ),
     ],
@@ -319,7 +319,7 @@ class _TTSSettingsState extends State<TTSSettings> {
 
   Future<void> _usePreset(String name) async {
     _setting.name = name;
-    if (name == l.settings_tts_zh_en_streaming_zipformer) {
+    if (name == l.settings_asr_zh_en_streaming_zipformer) {
       final dest = (await getApplicationSupportDirectory()).path;
       final prefix =
           "sherpa-onnx-streaming-zipformer-bilingual-zh-en-2023-02-20";

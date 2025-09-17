@@ -386,83 +386,83 @@ abstract class AppLocalizations {
   /// **'重新建立日志索引'**
   String get settings_reset_index_desc;
 
-  /// No description provided for @settings_tts_model.
+  /// No description provided for @settings_asr_model.
   ///
   /// In zh, this message translates to:
   /// **'语音识别设置'**
-  String get settings_tts_model;
+  String get settings_asr_model;
 
-  /// No description provided for @settings_tts_provider.
+  /// No description provided for @settings_asr_provider.
   ///
   /// In zh, this message translates to:
   /// **'选择语音识别模型'**
-  String get settings_tts_provider;
+  String get settings_asr_provider;
 
-  /// No description provided for @settings_tts_custom.
+  /// No description provided for @settings_asr_custom.
   ///
   /// In zh, this message translates to:
   /// **'本地语音识别模型'**
-  String get settings_tts_custom;
+  String get settings_asr_custom;
 
-  /// No description provided for @settings_tts_saved.
+  /// No description provided for @settings_asr_saved.
   ///
   /// In zh, this message translates to:
   /// **'语音识别设置已保存'**
-  String get settings_tts_saved;
+  String get settings_asr_saved;
 
-  /// No description provided for @settings_tts_encoder.
+  /// No description provided for @settings_asr_encoder.
   ///
   /// In zh, this message translates to:
   /// **'编码器（encoder）模型路径'**
-  String get settings_tts_encoder;
+  String get settings_asr_encoder;
 
-  /// No description provided for @settings_tts_decoder.
+  /// No description provided for @settings_asr_decoder.
   ///
   /// In zh, this message translates to:
   /// **'解码器（decoder）模型路径'**
-  String get settings_tts_decoder;
+  String get settings_asr_decoder;
 
-  /// No description provided for @settings_tts_joiner.
+  /// No description provided for @settings_asr_joiner.
   ///
   /// In zh, this message translates to:
   /// **'拼接器（joiner）模型路径'**
-  String get settings_tts_joiner;
+  String get settings_asr_joiner;
 
-  /// No description provided for @settings_tts_tokens.
+  /// No description provided for @settings_asr_tokens.
   ///
   /// In zh, this message translates to:
   /// **'词元文件（tokens.txt）路径'**
-  String get settings_tts_tokens;
+  String get settings_asr_tokens;
 
-  /// No description provided for @settings_tts_model_type.
+  /// No description provided for @settings_asr_model_type.
   ///
   /// In zh, this message translates to:
   /// **'模型类型（例：zipformer）'**
-  String get settings_tts_model_type;
+  String get settings_asr_model_type;
 
-  /// No description provided for @settings_tts_picker_desc.
+  /// No description provided for @settings_asr_picker_desc.
   ///
   /// In zh, this message translates to:
   /// **'选择模型'**
-  String get settings_tts_picker_desc;
+  String get settings_asr_picker_desc;
 
-  /// No description provided for @settings_tts_download_desc.
+  /// No description provided for @settings_asr_download_desc.
   ///
   /// In zh, this message translates to:
   /// **'请自行从sherpa-onnx下载模型，如果懒得搞可以使用预配置'**
-  String get settings_tts_download_desc;
+  String get settings_asr_download_desc;
 
-  /// No description provided for @settings_tts_download_exp.
+  /// No description provided for @settings_asr_download_exp.
   ///
   /// In zh, this message translates to:
   /// **'一般格式为xxx-streaming-zipformer-语言，自行下载解压后即可看到模型（onnx）文件。一般来说中端手机跑500M的模型是没什么问题的。'**
-  String get settings_tts_download_exp;
+  String get settings_asr_download_exp;
 
-  /// No description provided for @settings_tts_zh_en_streaming_zipformer.
+  /// No description provided for @settings_asr_zh_en_streaming_zipformer.
   ///
   /// In zh, this message translates to:
   /// **'中英双语识别'**
-  String get settings_tts_zh_en_streaming_zipformer;
+  String get settings_asr_zh_en_streaming_zipformer;
 
   /// No description provided for @settings_llm_zdpp_model.
   ///
@@ -782,11 +782,11 @@ abstract class AppLocalizations {
   /// **'未识别到文本'**
   String get transcript_empty;
 
-  /// No description provided for @tts_opt_prompt.
+  /// No description provided for @asr_opt_prompt.
   ///
   /// In zh, this message translates to:
   /// **'你是一个文本整理专家。请严格按照以下规则处理用户输入：\n1.  删除填充词：删除所有“呃”、“额”、“嗯”、“这个”、“那个”等无意义词。\n2.  修正错误：合并重复的字词（如“其其其”改为“其”），修正明显的错别字（如“键键期”改为“关键期”）。\n3.  添加标点：在合适的位置添加句号（。）、逗号（，）、顿号（、），使其成为通顺的句子。\n4.  调整语序：微调语序，使其符合中文书面语习惯。\n5.  保持原意：绝对忠实于原文的语义，不添加原文中没有的信息，不删去原文中有的句子\n请参考以下示例进行操作\n【用户输入】\n故故博物馆救称为紫禁城臣位于北京市中心是中国明明清两代的皇家宫殿也是世界上现现现存存LY最大保存最最为完整的物质结构结构构ER古建县主朱主布主席群之一之之一\n【修正输出】\n故宫博物馆旧称为紫禁城，位于北京市中心，是中国明清两代的皇家宫殿，也是世界上现存最大、保存最为完整的木质结构古建筑群之一。\n【用户输入】\n现在我们来来测测试一下他他这这个用大大大模型型优化哈啊比较短的那一句一一段断你这个\n录录音大大大概需要多久久那现在的话大大概是十几秒左右左右左右左右\n【修正输出】\n现在我们来测试一下，用大模型优化较短的一段录音大概需要多久。现在的话，大概是十几秒左右。'**
-  String get tts_opt_prompt;
+  String get asr_opt_prompt;
 }
 
 class _AppLocalizationsDelegate

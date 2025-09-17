@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 
-part "tts_setting.g.dart";
+part "asr_setting.g.dart";
 
 @JsonSerializable(includeIfNull: false)
-class TtsSetting {
+class AsrSetting {
   String encoder;
   String decoder;
   String joiner;
@@ -13,7 +13,7 @@ class TtsSetting {
   String modelType;
   String? name;
 
-  TtsSetting({
+  AsrSetting({
     required this.encoder,
     required this.decoder,
     required this.joiner,
@@ -22,11 +22,11 @@ class TtsSetting {
     this.name,
   });
 
-  factory TtsSetting.fromDyn(Map<String, dynamic> dyn) =>
-      _$TtsSettingFromJson(dyn);
-  factory TtsSetting.fromJson(String json) =>
-      _$TtsSettingFromJson(jsonDecode(json));
-  Map<String, dynamic> get dyn => _$TtsSettingToJson(this);
+  factory AsrSetting.fromDyn(Map<String, dynamic> dyn) =>
+      _$AsrSettingFromJson(dyn);
+  factory AsrSetting.fromJson(String json) =>
+      _$AsrSettingFromJson(jsonDecode(json));
+  Map<String, dynamic> get dyn => _$AsrSettingToJson(this);
   String get json => jsonEncode(dyn);
   so.OnlineModelConfig get model => so.OnlineModelConfig(
     transducer: so.OnlineTransducerModelConfig(
