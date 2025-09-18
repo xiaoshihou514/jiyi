@@ -81,74 +81,64 @@ class _MapSettingsState extends State<MapSettings> {
               l.settings_map,
               style: TextStyle(fontSize: 8.em, fontWeight: FontWeight.bold),
             ),
-            IconButton(
-              onPressed: () async {
-                _setting.pattern = _localPatternController.text;
-                // 一坨屎
-                if (_custom && !_setting.isLocal) {
-                  // 自定义网络地图
-                  _setting.urlFmt = _customPatternController.text;
-                  _setting.header = _customHeaderController.text.isEmpty
-                      ? "{}"
-                      : _customHeaderController.text;
-                  final s = _setting.dynCustomNetwork;
-                  s["name"] =
-                      "${l.settings_map_custom}${_setting.urlFmt.hashCode}";
-                  await ss.write(key: ss.MAP_SETTINGS, value: jsonEncode(s));
-                  if (context.mounted) {
+            Row(
+              children: [
+                Settings.settingOpButton(() async {
+                  await ss.write(key: ss.MAP_SETTINGS, value: null);
+                }, Icons.undo),
+                Settings.settingOpButton(() async {
+                  _setting.pattern = _localPatternController.text;
+                  // 一坨屎
+                  if (_custom && !_setting.isLocal) {
+                    // 自定义网络地图
+                    _setting.urlFmt = _customPatternController.text;
+                    _setting.header = _customHeaderController.text.isEmpty
+                        ? "{}"
+                        : _customHeaderController.text;
+                    final s = _setting.dynCustomNetwork;
+                    s["name"] =
+                        "${l.settings_map_custom}${_setting.urlFmt.hashCode}";
+                    await ss.write(key: ss.MAP_SETTINGS, value: jsonEncode(s));
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(l.settings_map_save_success)),
+                      );
+                    }
+                  } else if (_custom && _setting.isLocal) {
+                    // 本地地图
+                    _setting.urlFmt = _customPatternController.text;
+                    _setting.header = _customHeaderController.text.isEmpty
+                        ? "{}"
+                        : _customHeaderController.text;
+                    final s = _setting.dynCustomLocal;
+                    s["name"] =
+                        "${l.settings_map_custom}${_setting.urlFmt.hashCode}";
+                    await ss.write(key: ss.MAP_SETTINGS, value: jsonEncode(s));
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(l.settings_map_save_success)),
+                      );
+                    }
+                  } else if (!_setting.isLocal ||
+                      ((_setting.path ?? "").isNotEmpty &&
+                          (_setting.pattern ?? "").isNotEmpty)) {
+                    // 内置配置
+                    _setting.urlFmt = _setting.isLocal
+                        ? path.join(_setting.path!, _setting.pattern!)
+                        : _setting.urlFmt;
+                    await ss.write(key: ss.MAP_SETTINGS, value: _setting.json);
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(l.settings_map_save_success)),
+                      );
+                    }
+                  } else if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(l.settings_map_save_success)),
+                      SnackBar(content: Text(l.settings_map_loc_missing_field)),
                     );
                   }
-                } else if (_custom && _setting.isLocal) {
-                  // 本地地图
-                  _setting.urlFmt = _customPatternController.text;
-                  _setting.header = _customHeaderController.text.isEmpty
-                      ? "{}"
-                      : _customHeaderController.text;
-                  final s = _setting.dynCustomLocal;
-                  s["name"] =
-                      "${l.settings_map_custom}${_setting.urlFmt.hashCode}";
-                  await ss.write(key: ss.MAP_SETTINGS, value: jsonEncode(s));
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(l.settings_map_save_success)),
-                    );
-                  }
-                } else if (!_setting.isLocal ||
-                    ((_setting.path ?? "").isNotEmpty &&
-                        (_setting.pattern ?? "").isNotEmpty)) {
-                  // 内置配置
-                  _setting.urlFmt = _setting.isLocal
-                      ? path.join(_setting.path!, _setting.pattern!)
-                      : _setting.urlFmt;
-                  await ss.write(key: ss.MAP_SETTINGS, value: _setting.json);
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(l.settings_map_save_success)),
-                    );
-                  }
-                } else if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(l.settings_map_loc_missing_field)),
-                  );
-                }
-              },
-              iconSize: 6.em,
-              alignment: Alignment.center,
-              icon: Container(
-                decoration: BoxDecoration(
-                  color: DefaultColors.info,
-                  borderRadius: BorderRadius.circular(40),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 2.em,
-                    vertical: 1.em,
-                  ),
-                  child: Icon(Icons.save, color: DefaultColors.bg),
-                ),
-              ),
+                }, Icons.save),
+              ],
             ),
           ],
         ),

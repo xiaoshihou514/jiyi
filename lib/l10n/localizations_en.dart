@@ -165,7 +165,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_reset_index_desc => 'Rebuild the log index';
 
   @override
-  String get settings_asr_model => 'STT settings';
+  String get settings_asr_model => 'ASR settings';
 
   @override
   String get settings_asr_provider => '选择语音识别模型';
@@ -174,7 +174,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_asr_custom => '本地语音识别模型';
 
   @override
-  String get settings_asr_saved => 'STT settings saved';
+  String get settings_asr_saved => 'ASR settings saved';
 
   @override
   String get settings_asr_encoder => 'Encoder model path';
@@ -345,6 +345,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get metadata_missing_llm_setting => '未配置自动排版';
 
   @override
+  String get metadata_missing_asr_setting => '未配置语音识别';
+
+  @override
   String get metadata_zdpp => '自动排版';
 
   @override
@@ -379,5 +382,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get asr_opt_prompt =>
-      '你是一个文本整理专家。请严格按照以下规则处理用户输入：\n1.  删除填充词：删除所有“呃”、“额”、“嗯”、“这个”、“那个”等无意义词。\n2.  修正错误：合并重复的字词（如“其其其”改为“其”），修正明显的错别字（如“键键期”改为“关键期”）。\n3.  添加标点：在合适的位置添加句号（。）、逗号（，）、顿号（、），使其成为通顺的句子。\n4.  调整语序：微调语序，使其符合中文书面语习惯。\n5.  保持原意：绝对忠实于原文的语义，不添加原文中没有的信息，不删去原文中有的句子\n请参考以下示例进行操作\n【用户输入】\n故故博物馆救称为紫禁城臣位于北京市中心是中国明明清两代的皇家宫殿也是世界上现现现存存LY最大保存最最为完整的物质结构结构构ER古建县主朱主布主席群之一之之一\n【修正输出】\n故宫博物馆旧称为紫禁城，位于北京市中心，是中国明清两代的皇家宫殿，也是世界上现存最大、保存最为完整的木质结构古建筑群之一。\n【用户输入】\n现在我们来来测测试一下他他这这个用大大大模型型优化哈啊比较短的那一句一一段断你这个\n录录音大大大概需要多久久那现在的话大大概是十几秒左右左右左右左右\n【修正输出】\n现在我们来测试一下，用大模型优化较短的一段录音大概需要多久。现在的话，大概是十几秒左右。';
+      '你是一个文本整理专家。请严格按照以下规则处理用户输入：\n1.  删除填充词：删除所有“呃”、“额”、“嗯”、“这个”、“那个”等无意义词。\n2.  修正错误：合并重复的字词（如“其其其”改为“其”），修正明显的错别字（如“键键期”改为“关键期”）。\n3.  添加标点：在合适的位置添加句号（。）、逗号（，）、顿号（、），使其成为通顺的句子。\n4.  调整语序：微调语序，使其符合中文书面语习惯。\n5.  保持原意：绝对忠实于原文的语义，不添加原文中没有的信息，不删去原文中有的句子\n6. 保留段落结构：严格保持原文的段落结构，每段内容整理后仍独立成段，不得合并不同段落的内容。\n请参考以下示例进行操作\n【用户输入】\n故故博物馆救称为紫禁城臣位于北京市中心是中国明明清两代的皇家宫殿也是世界上现现现存存LY最大保存最最为完整的物质结构结构构ER古建县主朱主布主席群之一之之一\n【修正输出】\n故宫博物馆旧称为紫禁城，位于北京市中心，是中国明清两代的皇家宫殿，也是世界上现存最大、保存最为完整的木质结构古建筑群之一。\n【用户输入】\n现在我们来来测测试一下他他这这个用大大大模型型优化哈啊比较短的那一句一一段断你这个\n录录音大大大概需要多久久那现在的话大大概是十几秒左右左右左右左右\n【修正输出】\n现在我们来测试一下，用大模型优化较短的一段录音大概需要多久。现在的话，大概是十几秒左右。';
+
+  @override
+  String get missing_map_settings => '未配置地图源，地理视图不可用';
+
+  @override
+  String get missing_asr_settings => '未配置转录模型，语音转文字不可用';
+
+  @override
+  String get missing_llm_settings => '未配置自动排版模型，自动排版不可用';
 }

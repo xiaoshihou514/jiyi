@@ -49,6 +49,23 @@ abstract class Settings {
       ),
     );
   }
+
+  static Widget settingOpButton(void Function() cb, IconData icon) =>
+      IconButton(
+        onPressed: cb,
+        iconSize: 6.em,
+        alignment: Alignment.center,
+        icon: Container(
+          decoration: BoxDecoration(
+            color: DefaultColors.info,
+            borderRadius: BorderRadius.circular(40),
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 2.em, vertical: 1.em),
+            child: Icon(icon, color: DefaultColors.bg),
+          ),
+        ),
+      );
 }
 
 extension SettingsEM on num {

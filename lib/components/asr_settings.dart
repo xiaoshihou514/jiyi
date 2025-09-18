@@ -82,52 +82,44 @@ class _ASRSettingsState extends State<ASRSettings> {
               l.settings_asr_model,
               style: TextStyle(fontSize: 8.em, fontWeight: FontWeight.bold),
             ),
-            IconButton(
-              onPressed: () async {
-                // Update model type from controller
-                _updateSetting('modelType', _modelTypeController.text);
+            Row(
+              children: [
+                Settings.settingOpButton(() async {
+                  await ss.write(key: ss.ASR_MODEL_SETTINGS, value: null);
+                }, Icons.undo),
+                Settings.settingOpButton(() async {
+                  // Update model type from controller
+                  _updateSetting('modelType', _modelTypeController.text);
 
-                await ss.write(
-                  key: ss.ASR_MODEL_SETTINGS,
-                  value: _setting.json,
-                );
+                  await ss.write(
+                    key: ss.ASR_MODEL_SETTINGS,
+                    value: _setting.json,
+                  );
 
-                if (context.mounted) {
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text(l.settings_asr_saved)));
-                }
-
-                // preset download logic
-                if (_setting.name != null &&
-                    !Directory(path.basename(_setting.encoder)).existsSync()) {
-                  final dest = (await getApplicationSupportDirectory()).path;
-                  // download
                   if (context.mounted) {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (context) =>
-                          DownloadUnzipDialog(urls: downloads!, dest: dest),
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(l.settings_asr_saved)),
                     );
                   }
-                }
-              },
-              iconSize: 6.em,
-              alignment: Alignment.center,
-              icon: Container(
-                decoration: BoxDecoration(
-                  color: DefaultColors.info,
-                  borderRadius: BorderRadius.circular(40),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 2.em,
-                    vertical: 1.em,
-                  ),
-                  child: Icon(Icons.save, color: DefaultColors.bg),
-                ),
-              ),
+
+                  // preset download logic
+                  if (_setting.name != null &&
+                      !Directory(
+                        path.basename(_setting.encoder),
+                      ).existsSync()) {
+                    final dest = (await getApplicationSupportDirectory()).path;
+                    // download
+                    if (context.mounted) {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) =>
+                            DownloadUnzipDialog(urls: downloads!, dest: dest),
+                      );
+                    }
+                  }
+                }, Icons.save),
+              ],
             ),
           ],
         ),

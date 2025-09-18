@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:jiyi/pages/record.dart';
 import 'package:jiyi/utils/data/asr_setting.dart';
@@ -109,8 +110,10 @@ class _MdEditState extends State<MdEdit> {
   }
 
   Future<void> _zdpp() async {
-    await RustLib.init();
-    final enhanced = Asr.llmEnhance(_transcriptController.text, _llmSetting!);
+    final enhanced = await compute((Map<String, dynamic> params) async {
+      await RustLib.init();
+      return Asr.llmEnhance(params['input'], params['setting']);
+    }, {'input': _transcriptController.text, 'setting': _llmSetting!});
     setState(() => _transcriptController.text = enhanced);
   }
 
@@ -378,7 +381,7 @@ class _MdEditState extends State<MdEdit> {
             : TextButton(
                 onPressed: () {},
                 child: Text(
-                  l.metadata_missing_llm_setting,
+                  l.metadata_missing_asr_setting,
                   style: TextStyle(
                     color: DefaultColors.shade_6,
                     fontSize: 3.5.em,

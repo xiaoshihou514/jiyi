@@ -23,3 +23,6 @@ unexpected_cfgs = { level = "warn", check-cfg = ['cfg(frb_expand)'] }
 # https://github.com/huggingface/candle/issues/1625#issuecomment-3013742081
 [profile.dev.package.gemm-f16]
 opt-level = 3
+
+[profile.dev]
+opt-level = 3

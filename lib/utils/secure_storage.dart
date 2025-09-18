@@ -4,8 +4,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 final String MASTER_KEY = "JIYI_MASTER_KEY";
 final String STORAGE_PATH = "JIYI_STORAGE";
 final String MAP_SETTINGS = "JIYI_MAP_SETTINGS";
-final String ASR_MODEL_SETTINGS =
-    "JIYI_TTS_SETTINGS"; // for backwards compatibility
+// JIYI_TTS_SETTINGS in 1.0.0, JIYI_ASR_SETTINGS since 1.0.1
+final String ASR_MODEL_SETTINGS = "JIYI_ASR_SETTINGS";
 final String LLM_MODEL_SETTINGS = "JIYI_LLM_SETTINGS";
 
 final storage = FlutterSecureStorage();

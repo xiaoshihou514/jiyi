@@ -58,50 +58,41 @@ class _LLMSettingsState extends State<LLMSettings> {
               l.settings_llm_zdpp_model,
               style: TextStyle(fontSize: 8.em, fontWeight: FontWeight.bold),
             ),
-            IconButton(
-              onPressed: () async {
-                if (_setting.rootPath == "") {
+            Row(
+              children: [
+                Settings.settingOpButton(() async {
                   await ss.write(key: ss.LLM_MODEL_SETTINGS, value: null);
-                } else if (_setting.name != null) {
-                  // preset download logic
-                  if (!Directory(_setting.rootPath).existsSync() &&
-                      context.mounted) {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (context) => DownloadUnzipDialog(
-                        urls: _download!,
-                        dest: _setting.rootPath,
-                      ),
+                }, Icons.undo),
+                Settings.settingOpButton(() async {
+                  if (_setting.rootPath == "") {
+                    await ss.write(key: ss.LLM_MODEL_SETTINGS, value: null);
+                  } else {
+                    // preset download logic
+                    if (_setting.name != null &&
+                        !Directory(_setting.rootPath).existsSync() &&
+                        context.mounted) {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) => DownloadUnzipDialog(
+                          urls: _download!,
+                          dest: _setting.rootPath,
+                        ),
+                      );
+                    }
+                    await ss.write(
+                      key: ss.LLM_MODEL_SETTINGS,
+                      value: _setting.json,
                     );
                   }
-                  await ss.write(
-                    key: ss.LLM_MODEL_SETTINGS,
-                    value: _setting.json,
-                  );
-                }
 
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(l.settings_llm_zdpp_saved)),
-                  );
-                }
-              },
-              iconSize: 6.em,
-              alignment: Alignment.center,
-              icon: Container(
-                decoration: BoxDecoration(
-                  color: DefaultColors.info,
-                  borderRadius: BorderRadius.circular(40),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 2.em,
-                    vertical: 1.em,
-                  ),
-                  child: Icon(Icons.save, color: DefaultColors.bg),
-                ),
-              ),
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(l.settings_llm_zdpp_saved)),
+                    );
+                  }
+                }, Icons.save),
+              ],
             ),
           ],
         ),

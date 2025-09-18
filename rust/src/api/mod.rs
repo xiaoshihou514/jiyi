@@ -251,9 +251,9 @@ fn prompt_internal(root: String, system: String, prompt: String) -> Result<Strin
         model,
         tokenizer,
         1145141919810,
-        Some(0.),
+        Some(0.5),
         None,
-        1.1,
+        1.5,
         64,
         &device,
     );
