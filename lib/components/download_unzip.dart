@@ -58,6 +58,10 @@ class _DownloadUnzipDialogState extends State<DownloadUnzipDialog> {
   }
 
   Future<void> _startDownload() async {
+    final d = Directory(widget.dest);
+    if (!d.existsSync()) {
+      d.createSync();
+    }
     final tmp = await getApplicationCacheDirectory();
 
     for (final (i, url) in widget.urls.indexed) {
@@ -68,6 +72,10 @@ class _DownloadUnzipDialogState extends State<DownloadUnzipDialog> {
         continue;
       }
       final tmpDownloadPath = path.join(tmp.path, base);
+      final tmpFile = File(tmpDownloadPath);
+      if (tmpFile.existsSync()) {
+        tmp.deleteSync();
+      }
       Dio()
           .download(
             url,

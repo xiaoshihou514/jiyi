@@ -60,6 +60,7 @@ class _MdEditState extends State<MdEdit> {
     setState(() {
       if (s1 != null) {
         _llmSetting = LLMSetting.fromJson(s1);
+        print(_llmSetting?.dyn);
       }
       if (s2 != null) {
         _asrSetting = AsrSetting.fromJson(s2).model;

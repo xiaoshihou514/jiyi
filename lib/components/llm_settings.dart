@@ -32,7 +32,11 @@ class _LLMSettingsState extends State<LLMSettings> {
   void initState() {
     super.initState();
     l = widget.loc;
-    list = [l.settings_llm_zdpp_custom, l.settings_llm_zdpp_qwen3_1_5B];
+    list = [
+      l.settings_llm_zdpp_custom,
+      l.settings_llm_zdpp_qwen3_1_7B,
+      l.settings_llm_zdpp_qwen3_4B,
+    ];
     _setting = LLMSetting(rootPath: '', prompt: '');
     _loadLLMSettings();
   }
@@ -231,15 +235,31 @@ class _LLMSettingsState extends State<LLMSettings> {
       _setting.prompt = l.asr_opt_prompt;
       _setting.name = name;
     });
-    if (name == l.settings_llm_zdpp_qwen3_1_5B) {
-      final prefix = l.localeName.contains("zh")
-          ? "https://modelscope.cn/models/Qwen/Qwen3-1.7B/resolve/master"
-          : "https://huggingface.co/Qwen/Qwen3-1.7B/resolve/main";
+    final cn = l.localeName.contains("zh");
+    final source = cn
+        ? "https://modelscope.cn/models/"
+        : "https://huggingface.co/";
+    if (name == l.settings_llm_zdpp_qwen3_1_7B) {
+      final prefix = cn
+          ? "$source/Qwen/Qwen3-1.7B/resolve/master"
+          : "$source/Qwen/Qwen3-1.7B/resolve/main";
       _download = [
         "$prefix/config.json",
         "$prefix/model.safetensors.index.json",
         "$prefix/model-00001-of-00002.safetensors",
         "$prefix/model-00002-of-00002.safetensors",
+        "$prefix/tokenizer.json",
+      ];
+    } else if (name == l.settings_llm_zdpp_qwen3_4B) {
+      final prefix = cn
+          ? "$source/Qwen/Qwen3-4B/resolve/master"
+          : "$source/Qwen/Qwen3-4B/resolve/main";
+      _download = [
+        "$prefix/config.json",
+        "$prefix/model.safetensors.index.json",
+        "$prefix/model-00001-of-00003.safetensors",
+        "$prefix/model-00002-of-00003.safetensors",
+        "$prefix/model-00003-of-00003.safetensors",
         "$prefix/tokenizer.json",
       ];
     }

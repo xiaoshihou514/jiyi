@@ -161,6 +161,8 @@ impl TextGeneration {
             Some(token) => token,
             None => anyhow::bail!("cannot find the <|im_end|> token"),
         };
+        let mut generated_tokens = 0usize;
+        let start_gen = std::time::Instant::now();
         for index in 0..sample_len {
             let context_size = if index > 0 { 1 } else { tokens.len() };
             let start_pos = tokens.len().saturating_sub(context_size);
@@ -181,6 +183,7 @@ impl TextGeneration {
 
             let next_token = self.logits_processor.sample(&logits)?;
             tokens.push(next_token);
+            generated_tokens += 1;
             if next_token == eos_token || next_token == eos_token2 {
                 break;
             }
@@ -195,16 +198,17 @@ impl TextGeneration {
             std::io::stdout().flush()?;
             output.push_str(rest.as_str());
         }
+        let dt = start_gen.elapsed();
+        println!(
+            "\n\nActual generation took {:?}, {generated_tokens} tokens generated ({:.2} token/s)",
+            dt, generated_tokens as f64 / dt.as_secs_f64(),
+        );
         std::io::stdout().flush()?;
         Ok(output)
     }
 }
 
 fn prompt_internal(root: String, system: String, prompt: String) -> Result<String, E> {
-    println!(
-        "temp: {:.2} repeat-penalty: {:.2} repeat-last-n: {}",
-        0., 1.1, 64,
-    );
     println!("root: {root}");
 
     let start = std::time::Instant::now();
@@ -245,23 +249,29 @@ fn prompt_internal(root: String, system: String, prompt: String) -> Result<Strin
     let model = Model3::new(&serde_json::from_slice(&std::fs::read(config_file)?)?, vb)?;
 
     println!("loaded the model in {:?}", start.elapsed());
+    let temp = 0.1;
+    let top_p = 0.5;
+    let repeat_penalty = 1.5;
+    let repeat_last_n = 32;
+    println!(
+        "temp: {:.2}, top_p: {:.2}, repeat-penalty: {:.2}, repeat-last-n: {}",
+        temp, top_p, repeat_penalty, repeat_last_n,
+    );
 
-    let start_gen = std::time::Instant::now();
     let mut pipeline = TextGeneration::new(
         model,
         tokenizer,
         1145141919810,
-        Some(0.5),
-        None,
-        1.5,
-        64,
+        Some(temp),
+        Some(top_p),
+        repeat_penalty,
+        repeat_last_n,
         &device,
     );
     let result = pipeline.run(
         format!("<|im_start|>system\n{system}\n<|im_start|>user\n{prompt}\n<|im_end|>",).as_str(),
         10000,
     );
-    println!("\ndone generation in {:?}", start_gen.elapsed());
     result
 }
 
