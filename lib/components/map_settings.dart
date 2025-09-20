@@ -209,25 +209,7 @@ class _MapSettingsState extends State<MapSettings> {
                     selectionHandleColor: DefaultColors.shade_4,
                   ),
                 ),
-                child: TextField(
-                  controller: _customPatternController,
-                  style: TextStyle(
-                    color: DefaultColors.fg,
-                    fontSize: Settings.isMobile ? 4.em : 3.em,
-                  ),
-                  cursorColor: DefaultColors.shade_6,
-                  decoration: InputDecoration(
-                    contentPadding: Settings.isMobile
-                        ? null
-                        : EdgeInsets.symmetric(vertical: 1.em),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: DefaultColors.fg),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: DefaultColors.fg),
-                    ),
-                  ),
-                ),
+                child: Settings.singleLineTF(_customPatternController),
               ),
             ),
           ],
@@ -245,25 +227,7 @@ class _MapSettingsState extends State<MapSettings> {
                     selectionHandleColor: DefaultColors.shade_4,
                   ),
                 ),
-                child: TextField(
-                  controller: _customHeaderController,
-                  style: TextStyle(
-                    color: DefaultColors.fg,
-                    fontSize: Settings.isMobile ? 4.em : 3.em,
-                  ),
-                  cursorColor: DefaultColors.shade_6,
-                  decoration: InputDecoration(
-                    contentPadding: Settings.isMobile
-                        ? null
-                        : EdgeInsets.symmetric(vertical: 1.em),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: DefaultColors.fg),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: DefaultColors.fg),
-                    ),
-                  ),
-                ),
+                child: Settings.singleLineTF(_customHeaderController),
               ),
             ),
           ],
@@ -334,25 +298,7 @@ class _MapSettingsState extends State<MapSettings> {
                     selectionHandleColor: DefaultColors.shade_4,
                   ),
                 ),
-                child: TextField(
-                  controller: _localPatternController,
-                  style: TextStyle(
-                    color: DefaultColors.fg,
-                    fontSize: Settings.isMobile ? 4.em : 3.em,
-                  ),
-                  cursorColor: DefaultColors.shade_6,
-                  decoration: InputDecoration(
-                    contentPadding: Settings.isMobile
-                        ? null
-                        : EdgeInsets.symmetric(vertical: 1.em),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: DefaultColors.fg),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: DefaultColors.fg),
-                    ),
-                  ),
-                ),
+                child: Settings.singleLineTF(_localPatternController),
               ),
             ),
           ],

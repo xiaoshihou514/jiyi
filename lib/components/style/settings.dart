@@ -72,6 +72,26 @@ abstract class Settings {
 
   static TextStyle get fBFileStyle =>
       TextStyle(fontSize: 3.em, color: DefaultColors.bg, fontFamily: "朱雀仿宋");
+
+  static TextField singleLineTF(TextEditingController controller) => TextField(
+    controller: controller,
+    style: TextStyle(
+      color: DefaultColors.fg,
+      fontSize: Settings.isMobile ? 4.em : 3.em,
+    ),
+    cursorColor: DefaultColors.shade_6,
+    decoration: InputDecoration(
+      contentPadding: Settings.isMobile
+          ? null
+          : EdgeInsets.symmetric(vertical: 1.em),
+      enabledBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: DefaultColors.fg),
+      ),
+      focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: DefaultColors.fg),
+      ),
+    ),
+  );
 }
 
 extension SettingsEM on num {

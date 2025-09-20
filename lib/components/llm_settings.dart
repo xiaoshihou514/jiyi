@@ -67,35 +67,7 @@ class _LLMSettingsState extends State<LLMSettings> {
                 Settings.settingOpButton(() async {
                   await ss.write(key: ss.LLM_MODEL_SETTINGS, value: null);
                 }, Icons.undo),
-                Settings.settingOpButton(() async {
-                  if (_setting.rootPath == "") {
-                    await ss.write(key: ss.LLM_MODEL_SETTINGS, value: null);
-                  } else {
-                    // preset download logic
-                    if (_setting.name != null &&
-                        !Directory(_setting.rootPath).existsSync() &&
-                        context.mounted) {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (context) => DownloadUnzipDialog(
-                          urls: _download!,
-                          dest: _setting.rootPath,
-                        ),
-                      );
-                    }
-                    await ss.write(
-                      key: ss.LLM_MODEL_SETTINGS,
-                      value: _setting.json,
-                    );
-                  }
-
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(l.settings_llm_saved)),
-                    );
-                  }
-                }, Icons.save),
+                Settings.settingOpButton(_save, Icons.save),
               ],
             ),
           ],
@@ -140,68 +112,71 @@ class _LLMSettingsState extends State<LLMSettings> {
           ],
         ),
 
-        if (_setting.name == null) _localLLMSettings(),
+        if (_setting.name == null)
+          Column(
+            children: [
+              // LLM base path
+              Settings.flex(
+                children: [
+                  Text(l.settings_llm_root_picker_desc),
+                  Settings.buildFileChooser(
+                    _selectLLMPath,
+                    Icons.file_open,
+                    _setting.rootPath.isEmpty
+                        ? Text(
+                            l.settings_llm_root_picker_cover,
+                            style: Settings.fBHintStyle,
+                          )
+                        : Text(_setting.rootPath, style: Settings.fBFileStyle),
+                    DefaultColors.constant,
+                  ),
+                ],
+              ),
+
+              // prompt
+              Settings.flex(
+                children: [
+                  Text(l.settings_llm_prompt_desc),
+                  SizedBox(
+                    height: 6.em,
+                    width: 50.em,
+                    child: Settings.singleLineTF(_promptController),
+                  ),
+                ],
+              ),
+            ],
+          ),
       ],
     );
   }
 
-  Widget _localLLMSettings() => Column(
-    children: [
-      // LLM base path
-      Settings.flex(
-        children: [
-          Text(l.settings_llm_root_picker_desc),
-          Settings.buildFileChooser(
-            () => _selectLLMPath('encoder'),
-            Icons.file_open,
-            _setting.rootPath.isEmpty
-                ? Text(
-                    l.settings_llm_root_picker_cover,
-                    style: Settings.fBHintStyle,
-                  )
-                : Text(_setting.rootPath, style: Settings.fBFileStyle),
-            DefaultColors.constant,
-          ),
-        ],
-      ),
+  Future<void> _save() async {
+    _setting.prompt = _promptController.text;
+    if (_setting.rootPath == "") {
+      await ss.write(key: ss.LLM_MODEL_SETTINGS, value: null);
+    } else {
+      // preset download logic
+      if (_setting.name != null &&
+          !Directory(_setting.rootPath).existsSync() &&
+          context.mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) =>
+              DownloadUnzipDialog(urls: _download!, dest: _setting.rootPath),
+        );
+      }
+      await ss.write(key: ss.LLM_MODEL_SETTINGS, value: _setting.json);
+    }
 
-      // prompt
-      Settings.flex(
-        children: [
-          Text(l.settings_llm_prompt_desc),
-          SizedBox(
-            height: 6.em,
-            width: 50.em,
-            child: TextField(
-              controller: _promptController,
-              style: _inputStyle,
-              decoration: _inputDecoration,
-              onChanged: (value) => setState(() => _setting.prompt = value),
-            ),
-          ),
-        ],
-      ),
-    ],
-  );
+    if (mounted) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l.settings_llm_saved)));
+    }
+  }
 
-  TextStyle get _inputStyle => TextStyle(
-    color: DefaultColors.fg,
-    fontSize: Settings.isMobile ? 4.em : 3.em,
-  );
-
-  InputDecoration get _inputDecoration => InputDecoration(
-    contentPadding: Settings.isMobile
-        ? null
-        : EdgeInsets.symmetric(vertical: 1.em),
-    enabledBorder: UnderlineInputBorder(
-      borderSide: BorderSide(color: DefaultColors.fg),
-    ),
-    focusedBorder: UnderlineInputBorder(
-      borderSide: BorderSide(color: DefaultColors.fg),
-    ),
-  );
-
-  Future<void> _selectLLMPath(String field) async {
+  Future<void> _selectLLMPath() async {
     if (Platform.isAndroid) {
       if (!await Permission.storage.status.isGranted) {
         await Permission.storage.request();
