@@ -40,7 +40,7 @@ class ASRSettings extends StatefulWidget {
 class _ASRSettingsState extends State<ASRSettings> {
   late final AppLocalizations l;
   late AsrSetting _setting;
-  late List<String> modelTypes;
+  late List<String> customAndPresets;
   List<String>? downloads;
 
   @override
@@ -48,11 +48,12 @@ class _ASRSettingsState extends State<ASRSettings> {
     super.initState();
     l = widget.loc;
     _setting = AsrSetting(tokens: '', modelType: 'transducer');
-    modelTypes = [
+    customAndPresets = [
       l.settings_asr_custom,
       l.settings_asr_zh_en_streaming_zipformer,
       l.settings_asr_zh_en_streaming_paraformer,
       l.settings_asr_zh_streaming_ctc,
+      l.settings_asr_en_nemo_ctc,
     ];
     _loadASRSettings();
   }
@@ -152,7 +153,7 @@ class _ASRSettingsState extends State<ASRSettings> {
                   if (_setting.name != null &&
                       !Directory(
                         // hack
-                        path.basename((_setting.single ?? _setting.encoder)!),
+                        path.dirname((_setting.single ?? _setting.encoder)!),
                       ).existsSync()) {
                     final dest = (await getApplicationSupportDirectory()).path;
                     // download
@@ -201,7 +202,7 @@ class _ASRSettingsState extends State<ASRSettings> {
                   _usePreset(value!);
                 }
               }),
-              items: modelTypes
+              items: customAndPresets
                   .map(
                     (String value) =>
                         DropdownMenuItem(value: value, child: Text(value)),
@@ -227,8 +228,14 @@ class _ASRSettingsState extends State<ASRSettings> {
               () => _selectModelFile((p, s) => s.single = p),
               Icons.file_open,
               _setting.single == null
-                  ? Text(l.settings_asr_picker_desc, style: _hintStyle)
-                  : Text(path.basename(_setting.single!), style: _fileStyle),
+                  ? Text(
+                      l.settings_asr_picker_desc,
+                      style: Settings.fBHintStyle,
+                    )
+                  : Text(
+                      path.basename(_setting.single!),
+                      style: Settings.fBFileStyle,
+                    ),
               DefaultColors.constant,
             ),
           ],
@@ -243,8 +250,14 @@ class _ASRSettingsState extends State<ASRSettings> {
               () => _selectModelFile((p, s) => s.encoder = p),
               Icons.file_open,
               _setting.encoder == null
-                  ? Text(l.settings_asr_picker_desc, style: _hintStyle)
-                  : Text(path.basename(_setting.encoder!), style: _fileStyle),
+                  ? Text(
+                      l.settings_asr_picker_desc,
+                      style: Settings.fBHintStyle,
+                    )
+                  : Text(
+                      path.basename(_setting.encoder!),
+                      style: Settings.fBFileStyle,
+                    ),
               DefaultColors.constant,
             ),
           ],
@@ -259,8 +272,14 @@ class _ASRSettingsState extends State<ASRSettings> {
               () => _selectModelFile((p, s) => s.decoder = p),
               Icons.file_open,
               _setting.decoder == null
-                  ? Text(l.settings_asr_picker_desc, style: _hintStyle)
-                  : Text(path.basename(_setting.decoder!), style: _fileStyle),
+                  ? Text(
+                      l.settings_asr_picker_desc,
+                      style: Settings.fBHintStyle,
+                    )
+                  : Text(
+                      path.basename(_setting.decoder!),
+                      style: Settings.fBFileStyle,
+                    ),
               DefaultColors.constant,
             ),
           ],
@@ -275,8 +294,14 @@ class _ASRSettingsState extends State<ASRSettings> {
               () => _selectModelFile((p, s) => s.joiner = p),
               Icons.file_open,
               _setting.joiner == null
-                  ? Text(l.settings_asr_picker_desc, style: _hintStyle)
-                  : Text(path.basename(_setting.joiner!), style: _fileStyle),
+                  ? Text(
+                      l.settings_asr_picker_desc,
+                      style: Settings.fBHintStyle,
+                    )
+                  : Text(
+                      path.basename(_setting.joiner!),
+                      style: Settings.fBFileStyle,
+                    ),
               DefaultColors.constant,
             ),
           ],
@@ -290,8 +315,11 @@ class _ASRSettingsState extends State<ASRSettings> {
             () => _selectModelFile((p, s) => s.tokens = p),
             Icons.file_open,
             _setting.tokens.isEmpty
-                ? Text(l.settings_asr_picker_desc, style: _hintStyle)
-                : Text(path.basename(_setting.tokens), style: _fileStyle),
+                ? Text(l.settings_asr_picker_desc, style: Settings.fBHintStyle)
+                : Text(
+                    path.basename(_setting.tokens),
+                    style: Settings.fBFileStyle,
+                  ),
             DefaultColors.constant,
           ),
         ],
@@ -351,12 +379,6 @@ class _ASRSettingsState extends State<ASRSettings> {
       ),
     ],
   );
-
-  TextStyle get _hintStyle =>
-      TextStyle(fontSize: 5.em, color: DefaultColors.bg, fontFamily: "朱雀仿宋");
-
-  TextStyle get _fileStyle =>
-      TextStyle(fontSize: 3.em, color: DefaultColors.bg, fontFamily: "朱雀仿宋");
 
   Future<void> _selectModelFile(
     void Function(String, AsrSetting) modify,
@@ -418,6 +440,12 @@ class _ASRSettingsState extends State<ASRSettings> {
       _setting.single = path.join(dest, name, "model.int8.onnx");
       _setting.tokens = path.join(dest, name, "tokens.txt");
       _setting.modelType = ZIPFORMER2CTC;
+      downloads = ["$urlPrefix/$name.tar.bz2"];
+    } else if (name == l.settings_asr_en_nemo_ctc) {
+      final name = "sherpa-onnx-nemo-ctc-en-conformer-small";
+      _setting.single = path.join(dest, name, "model.int8.onnx");
+      _setting.tokens = path.join(dest, name, "tokens.txt");
+      _setting.modelType = NEMOCTC;
       downloads = ["$urlPrefix/$name.tar.bz2"];
     }
   }

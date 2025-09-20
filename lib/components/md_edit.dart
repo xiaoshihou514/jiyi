@@ -4,13 +4,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:jiyi/pages/record.dart';
 import 'package:jiyi/utils/data/asr_setting.dart';
+import 'package:jiyi/utils/data/zdpp_setting.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 import 'package:intl/intl.dart';
 import 'package:jiyi/components/style/popup.dart';
 import 'package:jiyi/pages/default_colors.dart';
-import 'package:jiyi/src/rust/frb_generated.dart';
 import 'package:jiyi/utils/anno.dart';
-import 'package:jiyi/utils/data/llm_setting.dart';
 import 'package:jiyi/utils/data/metadata.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/utils/io.dart';
@@ -37,7 +36,7 @@ class _MdEditState extends State<MdEdit> {
   final _coverController = TextEditingController();
   final _transcriptController = TextEditingController();
 
-  LLMSetting? _llmSetting;
+  so.OfflinePunctuationConfig? _zdppSetting;
   so.OnlineModelConfig? _asrSetting;
 
   @override
@@ -55,12 +54,11 @@ class _MdEditState extends State<MdEdit> {
   }
 
   Future<void> _readSettings() async {
-    final s1 = await ss.read(key: ss.LLM_MODEL_SETTINGS);
+    final s1 = await ss.read(key: ss.ZDPP_MODEL_SETTINGS);
     final s2 = await ss.read(key: ss.ASR_MODEL_SETTINGS);
     setState(() {
       if (s1 != null) {
-        _llmSetting = LLMSetting.fromJson(s1);
-        print(_llmSetting?.dyn);
+        _zdppSetting = ZdppSetting.fromJson(s1).model;
       }
       if (s2 != null) {
         _asrSetting = AsrSetting.fromJson(s2).model;
@@ -111,11 +109,12 @@ class _MdEditState extends State<MdEdit> {
   }
 
   Future<void> _zdpp() async {
-    // final enhanced = await compute((Map<String, dynamic> params) async {
-    //   await RustLib.init();
-    //   return Asr.llmEnhance(params['input'], params['setting']);
-    // }, {'input': _transcriptController.text, 'setting': _llmSetting!});
-    // setState(() => _transcriptController.text = enhanced);
+    setState(
+      () => _transcriptController.text = Asr.zdpp(
+        _transcriptController.text,
+        _zdppSetting!,
+      ),
+    );
   }
 
   Future<void> _rebuildTranscript() async {
@@ -124,7 +123,7 @@ class _MdEditState extends State<MdEdit> {
     );
     final newTranscript = await Asr.fromWAV(
       _asrSetting,
-      _llmSetting,
+      _zdppSetting,
       data,
       SAMPLE_RATE,
     );
@@ -390,7 +389,7 @@ class _MdEditState extends State<MdEdit> {
                   ),
                 ),
               ),
-        _llmSetting != null
+        _zdppSetting != null
             ? ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: DefaultColors.keyword,

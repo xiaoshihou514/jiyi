@@ -3,7 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:jiyi/components/style/popup.dart';
-import 'package:jiyi/utils/data/llm_setting.dart';
+import 'package:jiyi/utils/data/zdpp_setting.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
 import 'package:jiyi/utils/asr.dart';
 import 'package:jiyi/utils/data/asr_setting.dart';
@@ -408,8 +408,10 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
 
     final settings = await ss.read(key: ss.ASR_MODEL_SETTINGS);
     final model = settings == null ? null : AsrSetting.fromJson(settings).model;
-    final zdppJson = await ss.read(key: ss.LLM_MODEL_SETTINGS);
-    final llmSettings = zdppJson == null ? null : LLMSetting.fromJson(zdppJson);
+    final zdppJson = await ss.read(key: ss.ZDPP_MODEL_SETTINGS);
+    final zdppSettings = zdppJson == null
+        ? null
+        : ZdppSetting.fromJson(zdppJson);
 
     final metadata = await compute(_import, {
       'model': model,
@@ -432,8 +434,7 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
         transcript: '',
       ).dyn,
       "_token": ServicesBinding.rootIsolateToken!,
-      // LLM opt
-      "zdpp": llmSettings,
+      "zdpp": zdppSettings,
     });
 
     IO.addEntry(metadata);

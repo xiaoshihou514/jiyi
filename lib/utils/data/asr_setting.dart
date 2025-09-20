@@ -55,6 +55,7 @@ class AsrSetting {
   so.OnlineModelConfig get model {
     if (modelType == "transducer") {
       return so.OnlineModelConfig(
+        numThreads: 4,
         tokens: tokens,
         transducer: so.OnlineTransducerModelConfig(
           encoder: encoder!,
@@ -64,6 +65,7 @@ class AsrSetting {
       );
     } else if (modelType == "paraformer") {
       return so.OnlineModelConfig(
+        numThreads: 4,
         tokens: tokens,
         paraformer: so.OnlineParaformerModelConfig(
           encoder: encoder!,
@@ -72,16 +74,19 @@ class AsrSetting {
       );
     } else if (modelType == "zipformer2Ctc") {
       return so.OnlineModelConfig(
+        numThreads: 4,
         tokens: tokens,
         zipformer2Ctc: so.OnlineZipformer2CtcModelConfig(model: single!),
       );
     } else if (modelType == "nemoCtc") {
       return so.OnlineModelConfig(
+        numThreads: 4,
         tokens: tokens,
         nemoCtc: so.OnlineNemoCtcModelConfig(model: single!),
       );
     } else if (modelType == "toneCtc") {
       return so.OnlineModelConfig(
+        numThreads: 4,
         tokens: tokens,
         toneCtc: so.OnlineToneCtcModelConfig(model: single!),
       );

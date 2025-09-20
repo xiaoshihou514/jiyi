@@ -7,6 +7,7 @@ final String MAP_SETTINGS = "JIYI_MAP_SETTINGS";
 // JIYI_TTS_SETTINGS in 1.0.0, JIYI_ASR_SETTINGS since 1.0.1
 final String ASR_MODEL_SETTINGS = "JIYI_ASR_SETTINGS";
 final String LLM_MODEL_SETTINGS = "JIYI_LLM_SETTINGS";
+final String ZDPP_MODEL_SETTINGS = "JIYI_ZDPP_SETTINGS";
 
 final storage = FlutterSecureStorage();
 

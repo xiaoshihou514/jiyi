@@ -155,8 +155,11 @@ class _LLMSettingsState extends State<LLMSettings> {
             () => _selectLLMPath('encoder'),
             Icons.file_open,
             _setting.rootPath.isEmpty
-                ? Text(l.settings_llm_root_picker_cover, style: _hintStyle)
-                : Text(_setting.rootPath, style: _fileStyle),
+                ? Text(
+                    l.settings_llm_root_picker_cover,
+                    style: Settings.fBHintStyle,
+                  )
+                : Text(_setting.rootPath, style: Settings.fBFileStyle),
             DefaultColors.constant,
           ),
         ],
@@ -180,12 +183,6 @@ class _LLMSettingsState extends State<LLMSettings> {
       ),
     ],
   );
-
-  TextStyle get _hintStyle =>
-      TextStyle(fontSize: 5.em, color: DefaultColors.bg, fontFamily: "朱雀仿宋");
-
-  TextStyle get _fileStyle =>
-      TextStyle(fontSize: 3.em, color: DefaultColors.bg, fontFamily: "朱雀仿宋");
 
   TextStyle get _inputStyle => TextStyle(
     color: DefaultColors.fg,

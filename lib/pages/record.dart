@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:jiyi/utils/data/llm_setting.dart';
 import 'package:jiyi/utils/asr.dart';
+import 'package:jiyi/utils/data/zdpp_setting.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 import 'package:geolocator_platform_interface/geolocator_platform_interface.dart';
 import 'package:flutter_recorder/flutter_recorder.dart';
@@ -263,8 +263,10 @@ class _RecordPageState extends State<RecordPage> {
     final model = asrSettings == null
         ? null
         : AsrSetting.fromJson(asrSettings).model;
-    final zdppJson = await ss.read(key: ss.LLM_MODEL_SETTINGS);
-    final llmSettings = zdppJson == null ? null : LLMSetting.fromJson(zdppJson);
+    final zdppJson = await ss.read(key: ss.ZDPP_MODEL_SETTINGS);
+    final zdppSettings = zdppJson == null
+        ? null
+        : ZdppSetting.fromJson(zdppJson);
 
     final metadata = await compute(_save, {
       'model': model,
@@ -284,7 +286,7 @@ class _RecordPageState extends State<RecordPage> {
       ).dyn,
       "_token": ServicesBinding.rootIsolateToken!,
       // LLM opt
-      "zdpp": llmSettings,
+      "zdpp": zdppSettings,
     });
     IO.addEntry(metadata);
     await IO.updateIndexOnDisk();

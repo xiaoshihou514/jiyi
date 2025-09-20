@@ -66,6 +66,12 @@ abstract class Settings {
           ),
         ),
       );
+
+  static TextStyle get fBHintStyle =>
+      TextStyle(fontSize: 5.em, color: DefaultColors.bg, fontFamily: "朱雀仿宋");
+
+  static TextStyle get fBFileStyle =>
+      TextStyle(fontSize: 3.em, color: DefaultColors.bg, fontFamily: "朱雀仿宋");
 }
 
 extension SettingsEM on num {

@@ -467,7 +467,7 @@ abstract class AppLocalizations {
   /// No description provided for @settings_asr_missing_fields.
   ///
   /// In zh, this message translates to:
-  /// **'语音识别配置缺失'**
+  /// **'语音识别配置不完整'**
   String get settings_asr_missing_fields;
 
   /// No description provided for @settings_asr_zh_en_streaming_zipformer.
@@ -487,6 +487,12 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'中文识别（~700M）'**
   String get settings_asr_zh_streaming_ctc;
+
+  /// No description provided for @settings_asr_en_nemo_ctc.
+  ///
+  /// In zh, this message translates to:
+  /// **'英文识别（~50M）'**
+  String get settings_asr_en_nemo_ctc;
 
   /// No description provided for @settings_llm_model.
   ///
@@ -541,6 +547,66 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'大模型设置已保存'**
   String get settings_llm_saved;
+
+  /// No description provided for @settings_zdpp_custom.
+  ///
+  /// In zh, this message translates to:
+  /// **'本地排版模型'**
+  String get settings_zdpp_custom;
+
+  /// No description provided for @settings_zdpp_zh_en.
+  ///
+  /// In zh, this message translates to:
+  /// **'中英排版模型'**
+  String get settings_zdpp_zh_en;
+
+  /// No description provided for @settings_zdpp_zh_en_int8.
+  ///
+  /// In zh, this message translates to:
+  /// **'中英排版模型（int8）'**
+  String get settings_zdpp_zh_en_int8;
+
+  /// No description provided for @settings_zdpp_model.
+  ///
+  /// In zh, this message translates to:
+  /// **'自动排版设置'**
+  String get settings_zdpp_model;
+
+  /// No description provided for @settings_zdpp_missing_fields.
+  ///
+  /// In zh, this message translates to:
+  /// **'自动排版配置不完整'**
+  String get settings_zdpp_missing_fields;
+
+  /// No description provided for @settings_zdpp_saved.
+  ///
+  /// In zh, this message translates to:
+  /// **'自动排版设置已保存'**
+  String get settings_zdpp_saved;
+
+  /// No description provided for @settings_zdpp_provider.
+  ///
+  /// In zh, this message translates to:
+  /// **'选择自动排版模型'**
+  String get settings_zdpp_provider;
+
+  /// No description provided for @settings_zdpp_path.
+  ///
+  /// In zh, this message translates to:
+  /// **'模型路径'**
+  String get settings_zdpp_path;
+
+  /// No description provided for @settings_zdpp_download_desc.
+  ///
+  /// In zh, this message translates to:
+  /// **'请自行从sherpa-onnx下载模型，如果懒得搞可以使用预配置'**
+  String get settings_zdpp_download_desc;
+
+  /// No description provided for @settings_zdpp_download_exp.
+  ///
+  /// In zh, this message translates to:
+  /// **'sherpa-onnx一共就提供了三个模型，自己看着办吧'**
+  String get settings_zdpp_download_exp;
 
   /// No description provided for @download_title.
   ///

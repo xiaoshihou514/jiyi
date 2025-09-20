@@ -206,7 +206,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'The format is usually xxx-streaming-zipformer-language, after you have downloaded and extracted the archive you should see the model (onnx) files. A modest phone should be able to run a 500M model.';
 
   @override
-  String get settings_asr_missing_fields => '语音识别配置缺失';
+  String get settings_asr_missing_fields => '语音识别配置不完整';
 
   @override
   String get settings_asr_zh_en_streaming_zipformer => '中英双语识别（~500M）';
@@ -216,6 +216,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settings_asr_zh_streaming_ctc => '中文识别（~700M）';
+
+  @override
+  String get settings_asr_en_nemo_ctc => '英文识别（~50M）';
 
   @override
   String get settings_llm_model => '大模型设置';
@@ -243,6 +246,36 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settings_llm_saved => '大模型设置已保存';
+
+  @override
+  String get settings_zdpp_custom => '本地排版模型';
+
+  @override
+  String get settings_zdpp_zh_en => '中英排版模型';
+
+  @override
+  String get settings_zdpp_zh_en_int8 => '中英排版模型（int8）';
+
+  @override
+  String get settings_zdpp_model => '自动排版设置';
+
+  @override
+  String get settings_zdpp_missing_fields => '自动排版配置不完整';
+
+  @override
+  String get settings_zdpp_saved => '自动排版设置已保存';
+
+  @override
+  String get settings_zdpp_provider => '选择自动排版模型';
+
+  @override
+  String get settings_zdpp_path => '模型路径';
+
+  @override
+  String get settings_zdpp_download_desc => '请自行从sherpa-onnx下载模型，如果懒得搞可以使用预配置';
+
+  @override
+  String get settings_zdpp_download_exp => 'sherpa-onnx一共就提供了三个模型，自己看着办吧';
 
   @override
   String get download_title => 'Download';

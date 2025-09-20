@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:jiyi/components/zdpp_settings.dart';
 
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
@@ -48,6 +49,7 @@ class Settings extends StatelessWidget {
           children: [
             MapSettings(l),
             ASRSettings(l),
+            ZdppSettings(l),
             LLMSettings(l),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
