@@ -177,6 +177,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_asr_saved => 'ASR settings saved';
 
   @override
+  String get settings_asr_single => '单个模型路径（适用于Ctc系列模型）';
+
+  @override
   String get settings_asr_encoder => 'Encoder model path';
 
   @override
@@ -203,37 +206,43 @@ class AppLocalizationsEn extends AppLocalizations {
       'The format is usually xxx-streaming-zipformer-language, after you have downloaded and extracted the archive you should see the model (onnx) files. A modest phone should be able to run a 500M model.';
 
   @override
-  String get settings_asr_zh_en_streaming_zipformer => '中英双语识别';
+  String get settings_asr_missing_fields => '语音识别配置缺失';
 
   @override
-  String get settings_llm_zdpp_model => '自动排版设置';
+  String get settings_asr_zh_en_streaming_zipformer => '中英双语识别（~500M）';
 
   @override
-  String get settings_llm_zdpp_desc => '自动排版会调用大语言模型帮你把语音内容加上标点符号、自动分段';
+  String get settings_asr_zh_en_streaming_paraformer => '中英双语识别（~1G）';
 
   @override
-  String get settings_llm_zdpp_provider => '选择大模型';
+  String get settings_asr_zh_streaming_ctc => '中文识别（~700M）';
 
   @override
-  String get settings_llm_zdpp_custom => '本地大语言模型';
+  String get settings_llm_model => '大模型设置';
 
   @override
-  String get settings_llm_zdpp_qwen3_1_7B => '千问3-1.7B';
+  String get settings_llm_provider => '选择大模型';
 
   @override
-  String get settings_llm_zdpp_qwen3_4B => '千问3-4B（需要大量内存）';
+  String get settings_llm_custom => '本地大语言模型';
 
   @override
-  String get settings_llm_zdpp_root_picker_desc => '选择模型所在文件夹';
+  String get settings_llm_qwen3_1_7B => '千问3-1.7B';
 
   @override
-  String get settings_llm_zdpp_root_picker_cover => '选择文件夹';
+  String get settings_llm_qwen3_4B => '千问3-4B（需要大量内存）';
 
   @override
-  String get settings_llm_zdpp_prompt_desc => '自动排版提示词';
+  String get settings_llm_root_picker_desc => '选择模型所在文件夹';
 
   @override
-  String get settings_llm_zdpp_saved => '自动排版设置已保存';
+  String get settings_llm_root_picker_cover => '选择文件夹';
+
+  @override
+  String get settings_llm_prompt_desc => '提示词';
+
+  @override
+  String get settings_llm_saved => '大模型设置已保存';
 
   @override
   String get download_title => 'Download';

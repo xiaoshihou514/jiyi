@@ -168,19 +168,22 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_asr_saved => '语音识别设置已保存';
 
   @override
+  String get settings_asr_single => '单个模型路径（适用于Ctc系列模型）';
+
+  @override
   String get settings_asr_encoder => '编码器（encoder）模型路径';
 
   @override
   String get settings_asr_decoder => '解码器（decoder）模型路径';
 
   @override
-  String get settings_asr_joiner => '拼接器（joiner）模型路径';
+  String get settings_asr_joiner => '拼接器（joiner）模型路径（适用于transducer模型）';
 
   @override
   String get settings_asr_tokens => '词元文件（tokens.txt）路径';
 
   @override
-  String get settings_asr_model_type => '模型类型（例：zipformer）';
+  String get settings_asr_model_type => '模型类型（根据模型名称判断）';
 
   @override
   String get settings_asr_picker_desc => '选择模型';
@@ -190,40 +193,46 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get settings_asr_download_exp =>
-      '一般格式为xxx-streaming-zipformer-语言，自行下载解压后即可看到模型（onnx）文件。一般来说中端手机跑500M的模型是没什么问题的。';
+      '一般格式为sherpa-onnx-<架构>-<支持的语言>，自行下载解压后即可看到模型（onnx）文件。如果模型文件名称中有int8意味着会牺牲部分精确度换取速度和更小的内存需求。';
 
   @override
-  String get settings_asr_zh_en_streaming_zipformer => '中英双语识别';
+  String get settings_asr_missing_fields => '语音识别配置缺失';
 
   @override
-  String get settings_llm_zdpp_model => '自动排版设置';
+  String get settings_asr_zh_en_streaming_zipformer => '中英双语识别（~500M）';
 
   @override
-  String get settings_llm_zdpp_desc => '自动排版会调用大语言模型帮你把语音内容加上标点符号、自动分段';
+  String get settings_asr_zh_en_streaming_paraformer => '中英双语识别（~1G）';
 
   @override
-  String get settings_llm_zdpp_provider => '选择大模型';
+  String get settings_asr_zh_streaming_ctc => '中文识别（~700M）';
 
   @override
-  String get settings_llm_zdpp_custom => '本地大语言模型';
+  String get settings_llm_model => '大模型设置';
 
   @override
-  String get settings_llm_zdpp_qwen3_1_7B => '千问3-1.7B';
+  String get settings_llm_provider => '选择大模型';
 
   @override
-  String get settings_llm_zdpp_qwen3_4B => '千问3-4B（需要大量内存）';
+  String get settings_llm_custom => '本地大语言模型';
 
   @override
-  String get settings_llm_zdpp_root_picker_desc => '选择模型所在文件夹';
+  String get settings_llm_qwen3_1_7B => '千问3-1.7B';
 
   @override
-  String get settings_llm_zdpp_root_picker_cover => '选择文件夹';
+  String get settings_llm_qwen3_4B => '千问3-4B（需要大量内存）';
 
   @override
-  String get settings_llm_zdpp_prompt_desc => '自动排版提示词';
+  String get settings_llm_root_picker_desc => '选择模型所在文件夹';
 
   @override
-  String get settings_llm_zdpp_saved => '自动排版设置已保存';
+  String get settings_llm_root_picker_cover => '选择文件夹';
+
+  @override
+  String get settings_llm_prompt_desc => '提示词';
+
+  @override
+  String get settings_llm_saved => '大模型设置已保存';
 
   @override
   String get download_title => '下载';

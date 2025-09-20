@@ -410,6 +410,12 @@ abstract class AppLocalizations {
   /// **'语音识别设置已保存'**
   String get settings_asr_saved;
 
+  /// No description provided for @settings_asr_single.
+  ///
+  /// In zh, this message translates to:
+  /// **'单个模型路径（适用于Ctc系列模型）'**
+  String get settings_asr_single;
+
   /// No description provided for @settings_asr_encoder.
   ///
   /// In zh, this message translates to:
@@ -425,7 +431,7 @@ abstract class AppLocalizations {
   /// No description provided for @settings_asr_joiner.
   ///
   /// In zh, this message translates to:
-  /// **'拼接器（joiner）模型路径'**
+  /// **'拼接器（joiner）模型路径（适用于transducer模型）'**
   String get settings_asr_joiner;
 
   /// No description provided for @settings_asr_tokens.
@@ -437,7 +443,7 @@ abstract class AppLocalizations {
   /// No description provided for @settings_asr_model_type.
   ///
   /// In zh, this message translates to:
-  /// **'模型类型（例：zipformer）'**
+  /// **'模型类型（根据模型名称判断）'**
   String get settings_asr_model_type;
 
   /// No description provided for @settings_asr_picker_desc.
@@ -455,74 +461,86 @@ abstract class AppLocalizations {
   /// No description provided for @settings_asr_download_exp.
   ///
   /// In zh, this message translates to:
-  /// **'一般格式为xxx-streaming-zipformer-语言，自行下载解压后即可看到模型（onnx）文件。一般来说中端手机跑500M的模型是没什么问题的。'**
+  /// **'一般格式为sherpa-onnx-<架构>-<支持的语言>，自行下载解压后即可看到模型（onnx）文件。如果模型文件名称中有int8意味着会牺牲部分精确度换取速度和更小的内存需求。'**
   String get settings_asr_download_exp;
+
+  /// No description provided for @settings_asr_missing_fields.
+  ///
+  /// In zh, this message translates to:
+  /// **'语音识别配置缺失'**
+  String get settings_asr_missing_fields;
 
   /// No description provided for @settings_asr_zh_en_streaming_zipformer.
   ///
   /// In zh, this message translates to:
-  /// **'中英双语识别'**
+  /// **'中英双语识别（~500M）'**
   String get settings_asr_zh_en_streaming_zipformer;
 
-  /// No description provided for @settings_llm_zdpp_model.
+  /// No description provided for @settings_asr_zh_en_streaming_paraformer.
   ///
   /// In zh, this message translates to:
-  /// **'自动排版设置'**
-  String get settings_llm_zdpp_model;
+  /// **'中英双语识别（~1G）'**
+  String get settings_asr_zh_en_streaming_paraformer;
 
-  /// No description provided for @settings_llm_zdpp_desc.
+  /// No description provided for @settings_asr_zh_streaming_ctc.
   ///
   /// In zh, this message translates to:
-  /// **'自动排版会调用大语言模型帮你把语音内容加上标点符号、自动分段'**
-  String get settings_llm_zdpp_desc;
+  /// **'中文识别（~700M）'**
+  String get settings_asr_zh_streaming_ctc;
 
-  /// No description provided for @settings_llm_zdpp_provider.
+  /// No description provided for @settings_llm_model.
+  ///
+  /// In zh, this message translates to:
+  /// **'大模型设置'**
+  String get settings_llm_model;
+
+  /// No description provided for @settings_llm_provider.
   ///
   /// In zh, this message translates to:
   /// **'选择大模型'**
-  String get settings_llm_zdpp_provider;
+  String get settings_llm_provider;
 
-  /// No description provided for @settings_llm_zdpp_custom.
+  /// No description provided for @settings_llm_custom.
   ///
   /// In zh, this message translates to:
   /// **'本地大语言模型'**
-  String get settings_llm_zdpp_custom;
+  String get settings_llm_custom;
 
-  /// No description provided for @settings_llm_zdpp_qwen3_1_7B.
+  /// No description provided for @settings_llm_qwen3_1_7B.
   ///
   /// In zh, this message translates to:
   /// **'千问3-1.7B'**
-  String get settings_llm_zdpp_qwen3_1_7B;
+  String get settings_llm_qwen3_1_7B;
 
-  /// No description provided for @settings_llm_zdpp_qwen3_4B.
+  /// No description provided for @settings_llm_qwen3_4B.
   ///
   /// In zh, this message translates to:
   /// **'千问3-4B（需要大量内存）'**
-  String get settings_llm_zdpp_qwen3_4B;
+  String get settings_llm_qwen3_4B;
 
-  /// No description provided for @settings_llm_zdpp_root_picker_desc.
+  /// No description provided for @settings_llm_root_picker_desc.
   ///
   /// In zh, this message translates to:
   /// **'选择模型所在文件夹'**
-  String get settings_llm_zdpp_root_picker_desc;
+  String get settings_llm_root_picker_desc;
 
-  /// No description provided for @settings_llm_zdpp_root_picker_cover.
+  /// No description provided for @settings_llm_root_picker_cover.
   ///
   /// In zh, this message translates to:
   /// **'选择文件夹'**
-  String get settings_llm_zdpp_root_picker_cover;
+  String get settings_llm_root_picker_cover;
 
-  /// No description provided for @settings_llm_zdpp_prompt_desc.
+  /// No description provided for @settings_llm_prompt_desc.
   ///
   /// In zh, this message translates to:
-  /// **'自动排版提示词'**
-  String get settings_llm_zdpp_prompt_desc;
+  /// **'提示词'**
+  String get settings_llm_prompt_desc;
 
-  /// No description provided for @settings_llm_zdpp_saved.
+  /// No description provided for @settings_llm_saved.
   ///
   /// In zh, this message translates to:
-  /// **'自动排版设置已保存'**
-  String get settings_llm_zdpp_saved;
+  /// **'大模型设置已保存'**
+  String get settings_llm_saved;
 
   /// No description provided for @download_title.
   ///

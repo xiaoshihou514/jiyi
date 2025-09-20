@@ -111,11 +111,11 @@ class _MdEditState extends State<MdEdit> {
   }
 
   Future<void> _zdpp() async {
-    final enhanced = await compute((Map<String, dynamic> params) async {
-      await RustLib.init();
-      return Asr.llmEnhance(params['input'], params['setting']);
-    }, {'input': _transcriptController.text, 'setting': _llmSetting!});
-    setState(() => _transcriptController.text = enhanced);
+    // final enhanced = await compute((Map<String, dynamic> params) async {
+    //   await RustLib.init();
+    //   return Asr.llmEnhance(params['input'], params['setting']);
+    // }, {'input': _transcriptController.text, 'setting': _llmSetting!});
+    // setState(() => _transcriptController.text = enhanced);
   }
 
   Future<void> _rebuildTranscript() async {

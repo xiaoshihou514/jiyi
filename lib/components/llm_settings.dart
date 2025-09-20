@@ -33,9 +33,9 @@ class _LLMSettingsState extends State<LLMSettings> {
     super.initState();
     l = widget.loc;
     list = [
-      l.settings_llm_zdpp_custom,
-      l.settings_llm_zdpp_qwen3_1_7B,
-      l.settings_llm_zdpp_qwen3_4B,
+      l.settings_llm_custom,
+      l.settings_llm_qwen3_1_7B,
+      l.settings_llm_qwen3_4B,
     ];
     _setting = LLMSetting(rootPath: '', prompt: '');
     _loadLLMSettings();
@@ -59,7 +59,7 @@ class _LLMSettingsState extends State<LLMSettings> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              l.settings_llm_zdpp_model,
+              l.settings_llm_model,
               style: TextStyle(fontSize: 8.em, fontWeight: FontWeight.bold),
             ),
             Row(
@@ -92,7 +92,7 @@ class _LLMSettingsState extends State<LLMSettings> {
 
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(l.settings_llm_zdpp_saved)),
+                      SnackBar(content: Text(l.settings_llm_saved)),
                     );
                   }
                 }, Icons.save),
@@ -100,20 +100,12 @@ class _LLMSettingsState extends State<LLMSettings> {
             ),
           ],
         ),
-        Settings.flex(
-          children: [
-            Text(
-              l.settings_llm_zdpp_desc,
-              style: TextStyle(color: DefaultColors.keyword, fontSize: 4.em),
-            ),
-          ],
-        ),
 
         Settings.flex(
           children: [
-            Text(l.settings_llm_zdpp_provider),
+            Text(l.settings_llm_provider),
             DropdownButton(
-              value: _setting.name ?? l.settings_llm_zdpp_custom,
+              value: _setting.name ?? l.settings_llm_custom,
               icon: Icon(Icons.arrow_drop_down, size: 5.em),
               style: TextStyle(
                 color: DefaultColors.fg,
@@ -128,7 +120,7 @@ class _LLMSettingsState extends State<LLMSettings> {
                 color: DefaultColors.fg,
               ),
               onChanged: (String? value) {
-                if (value == l.settings_llm_zdpp_custom) {
+                if (value == l.settings_llm_custom) {
                   setState(() {
                     _setting.rootPath = "";
                     _setting.prompt = l.asr_opt_prompt;
@@ -158,12 +150,12 @@ class _LLMSettingsState extends State<LLMSettings> {
       // LLM base path
       Settings.flex(
         children: [
-          Text(l.settings_llm_zdpp_root_picker_desc),
+          Text(l.settings_llm_root_picker_desc),
           Settings.buildFileChooser(
             () => _selectLLMPath('encoder'),
             Icons.file_open,
             _setting.rootPath.isEmpty
-                ? Text(l.settings_llm_zdpp_root_picker_cover, style: _hintStyle)
+                ? Text(l.settings_llm_root_picker_cover, style: _hintStyle)
                 : Text(_setting.rootPath, style: _fileStyle),
             DefaultColors.constant,
           ),
@@ -173,7 +165,7 @@ class _LLMSettingsState extends State<LLMSettings> {
       // prompt
       Settings.flex(
         children: [
-          Text(l.settings_llm_zdpp_prompt_desc),
+          Text(l.settings_llm_prompt_desc),
           SizedBox(
             height: 6.em,
             width: 50.em,
@@ -239,7 +231,7 @@ class _LLMSettingsState extends State<LLMSettings> {
     final source = cn
         ? "https://modelscope.cn/models/"
         : "https://huggingface.co/";
-    if (name == l.settings_llm_zdpp_qwen3_1_7B) {
+    if (name == l.settings_llm_qwen3_1_7B) {
       final prefix = cn
           ? "$source/Qwen/Qwen3-1.7B/resolve/master"
           : "$source/Qwen/Qwen3-1.7B/resolve/main";
@@ -250,7 +242,7 @@ class _LLMSettingsState extends State<LLMSettings> {
         "$prefix/model-00002-of-00002.safetensors",
         "$prefix/tokenizer.json",
       ];
-    } else if (name == l.settings_llm_zdpp_qwen3_4B) {
+    } else if (name == l.settings_llm_qwen3_4B) {
       final prefix = cn
           ? "$source/Qwen/Qwen3-4B/resolve/master"
           : "$source/Qwen/Qwen3-4B/resolve/main";

@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -15,6 +17,17 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:jiyi/utils/anno.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+const TRANSDUCER = "transducer";
+const PARAFORMER = "paraformer";
+const ZIPFORMER2CTC = "zipformer2Ctc";
+const NEMOCTC = "nemoCtc";
+const TONECTC = "toneCtc";
+const ASR_TYPES = [TRANSDUCER, PARAFORMER, ZIPFORMER2CTC, NEMOCTC, TONECTC];
+const ASR_TYPES_ENCODER = [TRANSDUCER, PARAFORMER];
+const ASR_TYPES_DECODER = [TRANSDUCER, PARAFORMER];
+const ASR_TYPES_JOINER = [TRANSDUCER];
+const ASR_TYPES_SINGLE = [ZIPFORMER2CTC, NEMOCTC, TONECTC];
+
 @DeepSeek()
 class ASRSettings extends StatefulWidget {
   final AppLocalizations loc;
@@ -27,48 +40,28 @@ class ASRSettings extends StatefulWidget {
 class _ASRSettingsState extends State<ASRSettings> {
   late final AppLocalizations l;
   late AsrSetting _setting;
-  late List<String> list;
+  late List<String> modelTypes;
   List<String>? downloads;
-
-  // Model type controller remains as it's a text input
-  final _modelTypeController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     l = widget.loc;
-    _setting = AsrSetting(
-      encoder: '',
-      decoder: '',
-      joiner: '',
-      tokens: '',
-      modelType: '',
-    );
-    list = [l.settings_asr_custom, l.settings_asr_zh_en_streaming_zipformer];
+    _setting = AsrSetting(tokens: '', modelType: 'transducer');
+    modelTypes = [
+      l.settings_asr_custom,
+      l.settings_asr_zh_en_streaming_zipformer,
+      l.settings_asr_zh_en_streaming_paraformer,
+      l.settings_asr_zh_streaming_ctc,
+    ];
     _loadASRSettings();
   }
 
   Future<void> _loadASRSettings() async {
     final settings = await ss.read(key: ss.ASR_MODEL_SETTINGS);
     if (settings != null) {
-      setState(() {
-        _setting = AsrSetting.fromJson(settings);
-        _modelTypeController.text = _setting.modelType;
-      });
+      setState(() => _setting = AsrSetting.fromJson(settings));
     }
-  }
-
-  void _updateSetting(String field, String value) {
-    setState(() {
-      _setting = AsrSetting(
-        encoder: field == 'encoder' ? value : _setting.encoder,
-        decoder: field == 'decoder' ? value : _setting.decoder,
-        joiner: field == 'joiner' ? value : _setting.joiner,
-        tokens: field == 'tokens' ? value : _setting.tokens,
-        modelType: field == 'modelType' ? value : _setting.modelType,
-        name: field == 'name' ? value : _setting.name,
-      );
-    });
   }
 
   @override
@@ -88,8 +81,61 @@ class _ASRSettingsState extends State<ASRSettings> {
                   await ss.write(key: ss.ASR_MODEL_SETTINGS, value: null);
                 }, Icons.undo),
                 Settings.settingOpButton(() async {
-                  // Update model type from controller
-                  _updateSetting('modelType', _modelTypeController.text);
+                  if (_setting.tokens.isEmpty) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(l.settings_asr_missing_fields)),
+                      );
+                    }
+                    return;
+                  } else if (_setting.modelType == "transducer" &&
+                      [
+                        _setting.encoder,
+                        _setting.decoder,
+                        _setting.joiner,
+                      ].any((x) => x == null)) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(l.settings_asr_missing_fields)),
+                      );
+                    }
+                    return;
+                  } else if (_setting.modelType == "paraformer" &&
+                      [
+                        _setting.encoder,
+                        _setting.decoder,
+                      ].any((x) => x == null)) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(l.settings_asr_missing_fields)),
+                      );
+                    }
+                    return;
+                  } else if (_setting.modelType == "zipformer2Ctc" &&
+                      _setting.single == null) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(l.settings_asr_missing_fields)),
+                      );
+                    }
+                    return;
+                  } else if (_setting.modelType == "nemoCtc" &&
+                      _setting.single == null) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(l.settings_asr_missing_fields)),
+                      );
+                    }
+                    return;
+                  } else if (_setting.modelType == "toneCtc" &&
+                      _setting.single == null) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(l.settings_asr_missing_fields)),
+                      );
+                    }
+                    return;
+                  }
 
                   await ss.write(
                     key: ss.ASR_MODEL_SETTINGS,
@@ -105,7 +151,8 @@ class _ASRSettingsState extends State<ASRSettings> {
                   // preset download logic
                   if (_setting.name != null &&
                       !Directory(
-                        path.basename(_setting.encoder),
+                        // hack
+                        path.basename((_setting.single ?? _setting.encoder)!),
                       ).existsSync()) {
                     final dest = (await getApplicationSupportDirectory()).path;
                     // download
@@ -145,16 +192,16 @@ class _ASRSettingsState extends State<ASRSettings> {
               onChanged: (String? value) => setState(() {
                 if (value == l.settings_asr_custom) {
                   _setting.name = null;
-                  _setting.encoder = '';
-                  _setting.decoder = '';
-                  _setting.joiner = '';
-                  _setting.tokens = '';
-                  _setting.modelType = '';
+                  _setting.encoder = null;
+                  _setting.decoder = null;
+                  _setting.joiner = null;
+                  _setting.tokens = "";
+                  _setting.modelType = 'transducer';
                 } else {
                   _usePreset(value!);
                 }
               }),
-              items: list
+              items: modelTypes
                   .map(
                     (String value) =>
                         DropdownMenuItem(value: value, child: Text(value)),
@@ -171,57 +218,76 @@ class _ASRSettingsState extends State<ASRSettings> {
 
   Widget _localASRSettings() => Column(
     children: [
+      // Single model path
+      if (ASR_TYPES_SINGLE.contains(_setting.modelType))
+        Settings.flex(
+          children: [
+            Text(l.settings_asr_single),
+            Settings.buildFileChooser(
+              () => _selectModelFile((p, s) => s.single = p),
+              Icons.file_open,
+              _setting.single == null
+                  ? Text(l.settings_asr_picker_desc, style: _hintStyle)
+                  : Text(path.basename(_setting.single!), style: _fileStyle),
+              DefaultColors.constant,
+            ),
+          ],
+        ),
+
       // Encoder model path
-      Settings.flex(
-        children: [
-          Text(l.settings_asr_encoder),
-          Settings.buildFileChooser(
-            () => _selectModelFile('encoder'),
-            Icons.file_open,
-            _setting.encoder.isEmpty
-                ? Text(l.settings_asr_picker_desc, style: _hintStyle)
-                : Text(path.basename(_setting.encoder), style: _fileStyle),
-            DefaultColors.constant,
-          ),
-        ],
-      ),
+      if (ASR_TYPES_ENCODER.contains(_setting.modelType))
+        Settings.flex(
+          children: [
+            Text(l.settings_asr_encoder),
+            Settings.buildFileChooser(
+              () => _selectModelFile((p, s) => s.encoder = p),
+              Icons.file_open,
+              _setting.encoder == null
+                  ? Text(l.settings_asr_picker_desc, style: _hintStyle)
+                  : Text(path.basename(_setting.encoder!), style: _fileStyle),
+              DefaultColors.constant,
+            ),
+          ],
+        ),
 
       // Decoder model path
-      Settings.flex(
-        children: [
-          Text(l.settings_asr_decoder),
-          Settings.buildFileChooser(
-            () => _selectModelFile('decoder'),
-            Icons.file_open,
-            _setting.decoder.isEmpty
-                ? Text(l.settings_asr_picker_desc, style: _hintStyle)
-                : Text(path.basename(_setting.decoder), style: _fileStyle),
-            DefaultColors.constant,
-          ),
-        ],
-      ),
+      if (ASR_TYPES_DECODER.contains(_setting.modelType))
+        Settings.flex(
+          children: [
+            Text(l.settings_asr_decoder),
+            Settings.buildFileChooser(
+              () => _selectModelFile((p, s) => s.decoder = p),
+              Icons.file_open,
+              _setting.decoder == null
+                  ? Text(l.settings_asr_picker_desc, style: _hintStyle)
+                  : Text(path.basename(_setting.decoder!), style: _fileStyle),
+              DefaultColors.constant,
+            ),
+          ],
+        ),
 
       // Joiner model path
-      Settings.flex(
-        children: [
-          Text(l.settings_asr_joiner),
-          Settings.buildFileChooser(
-            () => _selectModelFile('joiner'),
-            Icons.file_open,
-            _setting.joiner.isEmpty
-                ? Text(l.settings_asr_picker_desc, style: _hintStyle)
-                : Text(path.basename(_setting.joiner), style: _fileStyle),
-            DefaultColors.constant,
-          ),
-        ],
-      ),
+      if (ASR_TYPES_JOINER.contains(_setting.modelType))
+        Settings.flex(
+          children: [
+            Text(l.settings_asr_joiner),
+            Settings.buildFileChooser(
+              () => _selectModelFile((p, s) => s.joiner = p),
+              Icons.file_open,
+              _setting.joiner == null
+                  ? Text(l.settings_asr_picker_desc, style: _hintStyle)
+                  : Text(path.basename(_setting.joiner!), style: _fileStyle),
+              DefaultColors.constant,
+            ),
+          ],
+        ),
 
       // Tokens file path
       Settings.flex(
         children: [
           Text(l.settings_asr_tokens),
           Settings.buildFileChooser(
-            () => _selectModelFile('tokens'),
+            () => _selectModelFile((p, s) => s.tokens = p),
             Icons.file_open,
             _setting.tokens.isEmpty
                 ? Text(l.settings_asr_picker_desc, style: _hintStyle)
@@ -235,15 +301,32 @@ class _ASRSettingsState extends State<ASRSettings> {
       Settings.flex(
         children: [
           Text(l.settings_asr_model_type),
-          SizedBox(
-            height: 6.em,
-            width: 50.em,
-            child: TextField(
-              controller: _modelTypeController,
-              style: _inputStyle,
-              decoration: _inputDecoration,
-              onChanged: (value) => _updateSetting('modelType', value),
+          DropdownButton(
+            value: _setting.modelType,
+            icon: Icon(Icons.arrow_drop_down, size: 5.em),
+            style: TextStyle(
+              color: DefaultColors.fg,
+              fontSize: 5.em,
+              decoration: TextDecoration.none,
+              fontFamily: "朱雀仿宋",
             ),
+            dropdownColor: DefaultColors.shade_3,
+            underline: Container(
+              height: 1.5,
+              width: 1.2,
+              color: DefaultColors.fg,
+            ),
+            onChanged: (String? value) => setState(() {
+              if (value != null) {
+                _setting.modelType = value;
+              }
+            }),
+            items: ASR_TYPES
+                .map(
+                  (String value) =>
+                      DropdownMenuItem(value: value, child: Text(value)),
+                )
+                .toList(),
           ),
         ],
       ),
@@ -275,24 +358,9 @@ class _ASRSettingsState extends State<ASRSettings> {
   TextStyle get _fileStyle =>
       TextStyle(fontSize: 3.em, color: DefaultColors.bg, fontFamily: "朱雀仿宋");
 
-  TextStyle get _inputStyle => TextStyle(
-    color: DefaultColors.fg,
-    fontSize: Settings.isMobile ? 4.em : 3.em,
-  );
-
-  InputDecoration get _inputDecoration => InputDecoration(
-    contentPadding: Settings.isMobile
-        ? null
-        : EdgeInsets.symmetric(vertical: 1.em),
-    enabledBorder: UnderlineInputBorder(
-      borderSide: BorderSide(color: DefaultColors.fg),
-    ),
-    focusedBorder: UnderlineInputBorder(
-      borderSide: BorderSide(color: DefaultColors.fg),
-    ),
-  );
-
-  Future<void> _selectModelFile(String field) async {
+  Future<void> _selectModelFile(
+    void Function(String, AsrSetting) modify,
+  ) async {
     if (Platform.isAndroid) {
       if (!await Permission.storage.status.isGranted) {
         await Permission.storage.request();
@@ -305,43 +373,52 @@ class _ASRSettingsState extends State<ASRSettings> {
     );
 
     if (result != null && result.files.single.path != null) {
-      _updateSetting(field, result.files.single.path!);
+      setState(() => modify(result.files.single.path!, _setting));
     }
   }
 
   Future<void> _usePreset(String name) async {
     _setting.name = name;
+    // ghfast.top墙内加速
+    final urlPrefix = l.localeName.contains("zh")
+        ? "https://ghfast.top/github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/"
+        : "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/";
+    final dest = (await getApplicationSupportDirectory()).path;
+
     if (name == l.settings_asr_zh_en_streaming_zipformer) {
-      final dest = (await getApplicationSupportDirectory()).path;
-      final prefix =
-          "sherpa-onnx-streaming-zipformer-bilingual-zh-en-2023-02-20";
+      final name = "sherpa-onnx-streaming-zipformer-bilingual-zh-en-2023-02-20";
       _setting.encoder = path.join(
         dest,
-        prefix,
+        name,
         "encoder-epoch-99-avg-1.int8.onnx",
       );
       _setting.decoder = path.join(
         dest,
-        prefix,
+        name,
         "decoder-epoch-99-avg-1.int8.onnx",
       );
       _setting.joiner = path.join(
         dest,
-        prefix,
+        name,
         "joiner-epoch-99-avg-1.int8.onnx",
       );
-      _setting.tokens = path.join(dest, prefix, "tokens.txt");
-      _setting.modelType = 'zipformer';
-      if (l.localeName.contains("zh")) {
-        // ghfast.top墙内加速
-        downloads = [
-          "https://ghfast.top/github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-streaming-zipformer-bilingual-zh-en-2023-02-20.tar.bz2",
-        ];
-      } else {
-        downloads = [
-          "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-streaming-zipformer-bilingual-zh-en-2023-02-20.tar.bz2",
-        ];
-      }
+      _setting.tokens = path.join(dest, name, "tokens.txt");
+      _setting.modelType = TRANSDUCER;
+      downloads = ["$urlPrefix/$name.tar.bz2"];
+    } else if (name == l.settings_asr_zh_en_streaming_paraformer) {
+      final name = "sherpa-onnx-streaming-paraformer-bilingual-zh-en";
+      _setting.encoder = path.join(dest, name, "encoder.onnx");
+      _setting.decoder = path.join(dest, name, "decoder.onnx");
+      _setting.tokens = path.join(dest, name, "tokens.txt");
+      _setting.modelType = PARAFORMER;
+      downloads = ["$urlPrefix/$name.tar.bz2"];
+    } else if (name == l.settings_asr_zh_streaming_ctc) {
+      final name =
+          "sherpa-onnx-streaming-zipformer-ctc-zh-xlarge-int8-2025-06-30";
+      _setting.single = path.join(dest, name, "model.int8.onnx");
+      _setting.tokens = path.join(dest, name, "tokens.txt");
+      _setting.modelType = ZIPFORMER2CTC;
+      downloads = ["$urlPrefix/$name.tar.bz2"];
     }
   }
 }
