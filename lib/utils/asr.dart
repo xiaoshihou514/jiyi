@@ -30,6 +30,8 @@ abstract class Asr {
     }
     final res = asrModel.getResult(stream);
     final raw = res.text;
+    asrModel.free();
+    stream.free();
 
     if (zdppConfig == null || raw.isEmpty) {
       return raw;

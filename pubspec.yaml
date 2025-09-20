@@ -47,6 +47,7 @@ dependencies:
   jiyi_native:
     path: rust_builder
   flutter_rust_bridge: ^2.11.1
+  geocoder_offline: ^0.2.1
 
 dependency_overrides:
   geolocator_android:

@@ -233,6 +233,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.0.6"
+  csv:
+    dependency: transitive
+    description:
+      name: csv
+      sha256: "63ed2871dd6471193dffc52c0e6c76fb86269c00244d244297abbb355c84a86e"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "5.1.1"
   dart_earcut:
     dependency: transitive
     description:
@@ -517,6 +525,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.1.1"
+  geocoder_offline:
+    dependency: "direct main"
+    description:
+      name: geocoder_offline
+      sha256: a3aa644528bbab3d2ea6b069d73bf645f898d4a869e5615927aebc93b04e64e7
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.2.1"
   geolocator:
     dependency: "direct main"
     description:
@@ -709,6 +725,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "6.11.1"
+  kdtree:
+    dependency: transitive
+    description:
+      name: kdtree
+      sha256: "3500ab3ad9669a726c7d9837ce7025583fef88f85fd66bcba23bb7fe280e6486"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.2.0"
   latlong2:
     dependency: "direct main"
     description:

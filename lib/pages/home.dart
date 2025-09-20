@@ -162,15 +162,18 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
+        // upload
         _floatingBtn(isMobile, DefaultColors.func, Icons.upload, () async {
           await showMetadataInputDialog(context);
           if (mounted) {
             context.read<Notifier>().trigger();
           }
         }),
+        // text search
         _floatingBtn(isMobile, DefaultColors.keyword, Icons.search, () {
           Navigator.push(context, SmoothRouter.builder(Search()));
         }),
+        // record
         _floatingBtn(isMobile, DefaultColors.special, Icons.mic, () {
           Navigator.push(
             context,
