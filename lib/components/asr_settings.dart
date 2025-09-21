@@ -80,6 +80,11 @@ class _ASRSettingsState extends State<ASRSettings> {
               children: [
                 Settings.settingOpButton(() async {
                   await ss.write(key: ss.ASR_MODEL_SETTINGS, value: null);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(l.settings_asr_reset)),
+                    );
+                  }
                 }, Icons.undo),
                 Settings.settingOpButton(() async {
                   if (_setting.tokens.isEmpty) {

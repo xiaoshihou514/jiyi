@@ -26,7 +26,7 @@ class _LLMSettingsState extends State<LLMSettings> {
   late LLMSetting _setting;
   List<String>? _download;
 
-  final _promptController = TextEditingController();
+  final _imageinPromptController = TextEditingController();
 
   @override
   void initState() {
@@ -37,7 +37,7 @@ class _LLMSettingsState extends State<LLMSettings> {
       l.settings_llm_qwen3_1_7B,
       l.settings_llm_qwen3_4B,
     ];
-    _setting = LLMSetting(rootPath: '', prompt: '');
+    _setting = LLMSetting(rootPath: '', imaginePrompt: '');
     _loadLLMSettings();
   }
 
@@ -46,7 +46,7 @@ class _LLMSettingsState extends State<LLMSettings> {
     if (settings != null) {
       setState(() {
         _setting = LLMSetting.fromJson(settings);
-        _promptController.text = _setting.prompt;
+        _imageinPromptController.text = _setting.imaginePrompt;
       });
     }
   }
@@ -95,7 +95,7 @@ class _LLMSettingsState extends State<LLMSettings> {
                 if (value == l.settings_llm_custom) {
                   setState(() {
                     _setting.rootPath = "";
-                    _setting.prompt = l.asr_opt_prompt;
+                    _setting.imaginePrompt = l.imagine_default_prompt;
                     _setting.name = null;
                   });
                 } else if (value != null) {
@@ -136,11 +136,11 @@ class _LLMSettingsState extends State<LLMSettings> {
               // prompt
               Settings.flex(
                 children: [
-                  Text(l.settings_llm_prompt_desc),
+                  Text(l.settings_llm_imagine_prompt_desc),
                   SizedBox(
                     height: 6.em,
                     width: 50.em,
-                    child: Settings.singleLineTF(_promptController),
+                    child: Settings.singleLineTF(_imageinPromptController),
                   ),
                 ],
               ),
@@ -151,9 +151,14 @@ class _LLMSettingsState extends State<LLMSettings> {
   }
 
   Future<void> _save() async {
-    _setting.prompt = _promptController.text;
+    _setting.imaginePrompt = _imageinPromptController.text;
     if (_setting.rootPath == "") {
       await ss.write(key: ss.LLM_MODEL_SETTINGS, value: null);
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l.settings_llm_reset)));
+      }
     } else {
       // preset download logic
       if (_setting.name != null &&
@@ -196,7 +201,7 @@ class _LLMSettingsState extends State<LLMSettings> {
     final dest = (await getApplicationSupportDirectory()).path;
     setState(() {
       _setting.rootPath = path.join(dest, name);
-      _setting.prompt = l.asr_opt_prompt;
+      _setting.imaginePrompt = l.imagine_default_prompt;
       _setting.name = name;
     });
     final cn = l.localeName.contains("zh");

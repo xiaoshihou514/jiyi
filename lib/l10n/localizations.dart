@@ -296,11 +296,17 @@ abstract class AppLocalizations {
   /// **'最大缩放比例'**
   String get settings_map_max_zoom;
 
-  /// No description provided for @settings_map_save_success.
+  /// No description provided for @settings_map_saved.
   ///
   /// In zh, this message translates to:
   /// **'地图设置已保存'**
-  String get settings_map_save_success;
+  String get settings_map_saved;
+
+  /// No description provided for @settings_map_reset.
+  ///
+  /// In zh, this message translates to:
+  /// **'地图设置已重置'**
+  String get settings_map_reset;
 
   /// No description provided for @settings_map_settings_dne.
   ///
@@ -409,6 +415,12 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'语音识别设置已保存'**
   String get settings_asr_saved;
+
+  /// No description provided for @settings_asr_reset.
+  ///
+  /// In zh, this message translates to:
+  /// **'语音识别设置已重置'**
+  String get settings_asr_reset;
 
   /// No description provided for @settings_asr_single.
   ///
@@ -536,17 +548,23 @@ abstract class AppLocalizations {
   /// **'选择文件夹'**
   String get settings_llm_root_picker_cover;
 
-  /// No description provided for @settings_llm_prompt_desc.
+  /// No description provided for @settings_llm_imagine_prompt_desc.
   ///
   /// In zh, this message translates to:
-  /// **'提示词'**
-  String get settings_llm_prompt_desc;
+  /// **'畅想功能提示词'**
+  String get settings_llm_imagine_prompt_desc;
 
   /// No description provided for @settings_llm_saved.
   ///
   /// In zh, this message translates to:
   /// **'大模型设置已保存'**
   String get settings_llm_saved;
+
+  /// No description provided for @settings_llm_reset.
+  ///
+  /// In zh, this message translates to:
+  /// **'大模型设置已重置'**
+  String get settings_llm_reset;
 
   /// No description provided for @settings_zdpp_custom.
   ///
@@ -583,6 +601,12 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'自动排版设置已保存'**
   String get settings_zdpp_saved;
+
+  /// No description provided for @settings_zdpp_reset.
+  ///
+  /// In zh, this message translates to:
+  /// **'自动排版设置已重置'**
+  String get settings_zdpp_reset;
 
   /// No description provided for @settings_zdpp_provider.
   ///
@@ -878,12 +902,6 @@ abstract class AppLocalizations {
   /// **'未识别到文本'**
   String get transcript_empty;
 
-  /// No description provided for @asr_opt_prompt.
-  ///
-  /// In zh, this message translates to:
-  /// **'你是一个文本整理专家，请严格按照以下规则处理输入文本。任何偏离都将导致错误。\n【核心规则】\n绝对忠于原意，仅修改表达形式。不添加不存在的信息，不删除原有的内容。\n【必须执行的操作】\n1.  删除填充词：立即删除“呃、额、嗯、这个、那个、然后的话、反正、就是、嘛、啥的吧”等所有无意义的语气词和填充词。\n2.  按以下规则修正以下错误：\n合并重复：立即合并所有重复字词，如“过了一遍”不能变为“过了一遍一遍”。\n修正别字（重点）：你必须根据上下文修正发音类似的错别字。比如：\n“修好” -> “消耗”\n“游好” -> “友好”\n“二千” -> “而浅” 或 “而且浅”\n“一部” -> “一步”\n推断含义：将“阿巴阿巴”等无意义音节替换为“[语意不清]”。将逻辑混乱的句子尽力通顺。\n3.  添加标点与分句：你必须严格分句，一个逗号只表示一个短暂停顿，一个句号表示一个完整语义的结束。确保每句话都独立通顺。\n4.  调整语序：将口语化的、倒装的语序调整为标准的书面语序。\n【严禁出现的问题 - 负面清单】\n严禁保留任何填充词。\n严禁忽略同音别字，必须修正。\n严禁输出冗长、不分句的段落。\n严禁改变原文的核心事实和情感。\n严禁输出处理后的文本以外的内容。\n【输出示例】\n错误示例：“如果你想推进中日游的话” (未修正别字、逻辑跳跃)\n正确示例：“如果你想推进中日友好的话。”'**
-  String get asr_opt_prompt;
-
   /// No description provided for @missing_map_settings.
   ///
   /// In zh, this message translates to:
@@ -899,8 +917,38 @@ abstract class AppLocalizations {
   /// No description provided for @missing_llm_settings.
   ///
   /// In zh, this message translates to:
-  /// **'未配置自动排版模型，自动排版不可用'**
+  /// **'未配置语言大模型，畅想不可用'**
   String get missing_llm_settings;
+
+  /// No description provided for @missing_zdpp_settings.
+  ///
+  /// In zh, this message translates to:
+  /// **'未配置自动排版模型，自动排版不可用'**
+  String get missing_zdpp_settings;
+
+  /// No description provided for @imagine_download_geo_desc.
+  ///
+  /// In zh, this message translates to:
+  /// **'畅想功能需要从www.geonames.org下载一次数据，用来离线获取坐标对应的城市，是否同意下载？'**
+  String get imagine_download_geo_desc;
+
+  /// No description provided for @imagine_download_geo_yes.
+  ///
+  /// In zh, this message translates to:
+  /// **'确认下载'**
+  String get imagine_download_geo_yes;
+
+  /// No description provided for @imagine_download_geo_no.
+  ///
+  /// In zh, this message translates to:
+  /// **'下次吧'**
+  String get imagine_download_geo_no;
+
+  /// No description provided for @imagine_default_prompt.
+  ///
+  /// In zh, this message translates to:
+  /// **'TODO'**
+  String get imagine_default_prompt;
 }
 
 class _AppLocalizationsDelegate

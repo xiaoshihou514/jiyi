@@ -108,7 +108,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_map_max_zoom => '最大缩放比例';
 
   @override
-  String get settings_map_save_success => '地图设置已保存';
+  String get settings_map_saved => '地图设置已保存';
+
+  @override
+  String get settings_map_reset => '地图设置已重置';
 
   @override
   String get settings_map_settings_dne => '您还未配置地图源，请在设置配置';
@@ -166,6 +169,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get settings_asr_saved => '语音识别设置已保存';
+
+  @override
+  String get settings_asr_reset => '语音识别设置已重置';
 
   @override
   String get settings_asr_single => '单个模型路径（适用于Ctc系列模型）';
@@ -232,10 +238,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_llm_root_picker_cover => '选择文件夹';
 
   @override
-  String get settings_llm_prompt_desc => '提示词';
+  String get settings_llm_imagine_prompt_desc => '畅想功能提示词';
 
   @override
   String get settings_llm_saved => '大模型设置已保存';
+
+  @override
+  String get settings_llm_reset => '大模型设置已重置';
 
   @override
   String get settings_zdpp_custom => '本地排版模型';
@@ -254,6 +263,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get settings_zdpp_saved => '自动排版设置已保存';
+
+  @override
+  String get settings_zdpp_reset => '自动排版设置已重置';
 
   @override
   String get settings_zdpp_provider => '选择自动排版模型';
@@ -415,15 +427,27 @@ class AppLocalizationsZh extends AppLocalizations {
   String get transcript_empty => '未识别到文本';
 
   @override
-  String get asr_opt_prompt =>
-      '你是一个文本整理专家，请严格按照以下规则处理输入文本。任何偏离都将导致错误。\n【核心规则】\n绝对忠于原意，仅修改表达形式。不添加不存在的信息，不删除原有的内容。\n【必须执行的操作】\n1.  删除填充词：立即删除“呃、额、嗯、这个、那个、然后的话、反正、就是、嘛、啥的吧”等所有无意义的语气词和填充词。\n2.  按以下规则修正以下错误：\n合并重复：立即合并所有重复字词，如“过了一遍”不能变为“过了一遍一遍”。\n修正别字（重点）：你必须根据上下文修正发音类似的错别字。比如：\n“修好” -> “消耗”\n“游好” -> “友好”\n“二千” -> “而浅” 或 “而且浅”\n“一部” -> “一步”\n推断含义：将“阿巴阿巴”等无意义音节替换为“[语意不清]”。将逻辑混乱的句子尽力通顺。\n3.  添加标点与分句：你必须严格分句，一个逗号只表示一个短暂停顿，一个句号表示一个完整语义的结束。确保每句话都独立通顺。\n4.  调整语序：将口语化的、倒装的语序调整为标准的书面语序。\n【严禁出现的问题 - 负面清单】\n严禁保留任何填充词。\n严禁忽略同音别字，必须修正。\n严禁输出冗长、不分句的段落。\n严禁改变原文的核心事实和情感。\n严禁输出处理后的文本以外的内容。\n【输出示例】\n错误示例：“如果你想推进中日游的话” (未修正别字、逻辑跳跃)\n正确示例：“如果你想推进中日友好的话。”';
-
-  @override
   String get missing_map_settings => '未配置地图源，地理视图不可用';
 
   @override
   String get missing_asr_settings => '未配置转录模型，语音转文字不可用';
 
   @override
-  String get missing_llm_settings => '未配置自动排版模型，自动排版不可用';
+  String get missing_llm_settings => '未配置语言大模型，畅想不可用';
+
+  @override
+  String get missing_zdpp_settings => '未配置自动排版模型，自动排版不可用';
+
+  @override
+  String get imagine_download_geo_desc =>
+      '畅想功能需要从www.geonames.org下载一次数据，用来离线获取坐标对应的城市，是否同意下载？';
+
+  @override
+  String get imagine_download_geo_yes => '确认下载';
+
+  @override
+  String get imagine_download_geo_no => '下次吧';
+
+  @override
+  String get imagine_default_prompt => 'TODO';
 }

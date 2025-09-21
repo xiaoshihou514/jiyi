@@ -62,6 +62,11 @@ class _ZdppSettingsState extends State<ZdppSettings> {
               children: [
                 Settings.settingOpButton(() async {
                   await ss.write(key: ss.ZDPP_MODEL_SETTINGS, value: null);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(l.settings_zdpp_reset)),
+                    );
+                  }
                 }, Icons.undo),
                 Settings.settingOpButton(() async {
                   // check completeness

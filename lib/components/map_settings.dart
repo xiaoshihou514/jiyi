@@ -85,6 +85,11 @@ class _MapSettingsState extends State<MapSettings> {
               children: [
                 Settings.settingOpButton(() async {
                   await ss.write(key: ss.MAP_SETTINGS, value: null);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(l.settings_map_reset)),
+                    );
+                  }
                 }, Icons.undo),
                 Settings.settingOpButton(() async {
                   _setting.pattern = _localPatternController.text;
@@ -101,7 +106,7 @@ class _MapSettingsState extends State<MapSettings> {
                     await ss.write(key: ss.MAP_SETTINGS, value: jsonEncode(s));
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(l.settings_map_save_success)),
+                        SnackBar(content: Text(l.settings_map_saved)),
                       );
                     }
                   } else if (_custom && _setting.isLocal) {
@@ -116,7 +121,7 @@ class _MapSettingsState extends State<MapSettings> {
                     await ss.write(key: ss.MAP_SETTINGS, value: jsonEncode(s));
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(l.settings_map_save_success)),
+                        SnackBar(content: Text(l.settings_map_saved)),
                       );
                     }
                   } else if (!_setting.isLocal ||
@@ -129,7 +134,7 @@ class _MapSettingsState extends State<MapSettings> {
                     await ss.write(key: ss.MAP_SETTINGS, value: _setting.json);
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(l.settings_map_save_success)),
+                        SnackBar(content: Text(l.settings_map_saved)),
                       );
                     }
                   } else if (context.mounted) {
