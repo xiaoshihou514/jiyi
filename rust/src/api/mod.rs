@@ -201,14 +201,23 @@ impl TextGeneration {
         let dt = start_gen.elapsed();
         println!(
             "\n\nActual generation took {:?}, {generated_tokens} tokens generated ({:.2} token/s)",
-            dt, generated_tokens as f64 / dt.as_secs_f64(),
+            dt,
+            generated_tokens as f64 / dt.as_secs_f64(),
         );
         std::io::stdout().flush()?;
         Ok(output)
     }
 }
 
-fn prompt_internal(root: String, system: String, prompt: String) -> Result<String, E> {
+fn prompt_internal(
+    root: String,
+    system: String,
+    prompt: String,
+    temp: f64,
+    top_p: f64,
+    repeat_penalty: f32,
+    repeat_last_n: usize,
+) -> Result<String, E> {
     println!("root: {root}");
 
     let start = std::time::Instant::now();
@@ -249,10 +258,6 @@ fn prompt_internal(root: String, system: String, prompt: String) -> Result<Strin
     let model = Model3::new(&serde_json::from_slice(&std::fs::read(config_file)?)?, vb)?;
 
     println!("loaded the model in {:?}", start.elapsed());
-    let temp = 0.1;
-    let top_p = 0.5;
-    let repeat_penalty = 1.5;
-    let repeat_last_n = 32;
     println!(
         "temp: {:.2}, top_p: {:.2}, repeat-penalty: {:.2}, repeat-last-n: {}",
         temp, top_p, repeat_penalty, repeat_last_n,
@@ -276,6 +281,24 @@ fn prompt_internal(root: String, system: String, prompt: String) -> Result<Strin
 }
 
 #[frb(sync)]
-pub fn prompt(root: String, system: String, prompt: String) -> String {
-    prompt_internal(root, system, prompt).unwrap()
+pub fn prompt(
+    root: String,
+    system: String,
+    prompt: String,
+
+    temp: f64,
+    top_p: f64,
+    repeat_penalty: f32,
+    repeat_last_n: usize,
+) -> String {
+    prompt_internal(
+        root,
+        system,
+        prompt,
+        temp,
+        top_p,
+        repeat_penalty,
+        repeat_last_n,
+    )
+    .unwrap()
 }

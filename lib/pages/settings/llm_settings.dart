@@ -66,6 +66,11 @@ class _LLMSettingsState extends State<LLMSettings> {
               children: [
                 Settings.settingOpButton(() async {
                   await ss.write(key: ss.LLM_MODEL_SETTINGS, value: null);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(l.settings_llm_reset)),
+                    );
+                  }
                 }, Icons.undo),
                 Settings.settingOpButton(_save, Icons.save),
               ],
@@ -154,11 +159,6 @@ class _LLMSettingsState extends State<LLMSettings> {
     _setting.imaginePrompt = _imageinPromptController.text;
     if (_setting.rootPath == "") {
       await ss.write(key: ss.LLM_MODEL_SETTINGS, value: null);
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(l.settings_llm_reset)));
-      }
     } else {
       // preset download logic
       if (_setting.name != null &&
