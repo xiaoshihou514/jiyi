@@ -949,6 +949,12 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'TODO'**
   String get imagine_default_prompt;
+
+  /// No description provided for @imagine_unknown_place.
+  ///
+  /// In zh, this message translates to:
+  /// **'未知地点'**
+  String get imagine_unknown_place;
 }
 
 class _AppLocalizationsDelegate

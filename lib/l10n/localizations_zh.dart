@@ -450,4 +450,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get imagine_default_prompt => 'TODO';
+
+  @override
+  String get imagine_unknown_place => '未知地点';
 }

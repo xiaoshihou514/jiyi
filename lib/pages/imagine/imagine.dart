@@ -3,10 +3,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:geocoder_offline/geocoder_offline.dart';
 import 'package:jiyi/components/download_unzip.dart';
 import 'package:jiyi/components/yes_no.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/utils/data/llm_setting.dart';
+import 'package:jiyi/utils/geocoder.dart';
 import 'package:jiyi/utils/io.dart';
 import 'package:jiyi/utils/llm.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
@@ -14,6 +16,8 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
 const GEO_DATA = "cities15000.txt";
+const HEADERS =
+    "geonameid\tname\tasciiname\talternatenames\tlatitude\tlongitude\tfeature class\tfeature code\tcountry code\tcc2\tadmin1 code\tadmin2 code\tadmin3 code\tadmin4 code\tpopulation\televation\tdem\ttimezone\tmodification date\n";
 
 class Imagine extends StatefulWidget {
   const Imagine({super.key});
@@ -34,16 +38,36 @@ class _ImagineState extends State<Imagine> {
   Future<void> _loadSettings() async {
     final settings = await ss.read(key: ss.LLM_MODEL_SETTINGS);
     setState(() => _llmSetting = LLMSetting.fromJson(settings!));
-    testLLM();
+    if (mounted) {
+      testLLM(context);
+    }
   }
 
-  static Future<void> testLLM() async {
+  static Future<void> testLLM(BuildContext context) async {
+    final l = AppLocalizations.of(context)!;
     final mds = await IO.indexFuture;
+    final dest = (await getApplicationSupportDirectory()).path;
+    final geocoder = GeocodeData(
+      HEADERS + File(path.join(dest, GEO_DATA)).readAsStringSync(),
+      'alternatenames',
+      'name',
+      'latitude',
+      'longitude',
+      fieldDelimiter: '\t',
+      eol: '\n',
+    );
 
     for (final md in mds) {
       final ts = md.time;
       final now = DateTime.now().toLocal();
-      final input = "${ts.year}年${ts.month}月${ts.day}日录制于上海：${md.transcript}";
+
+      var place =
+          Geocoder.placeOf(geocoder, md, l.localeName) ??
+          l.imagine_unknown_place;
+
+      print(place);
+      final input =
+          "${ts.year}年${ts.month}月${ts.day}日录制于$place：${md.transcript}";
       final x = await Llm.imagine(
         LLMSetting(
           rootPath:
@@ -51,13 +75,20 @@ class _ImagineState extends State<Imagine> {
           name: "千问3-1.7B",
           imaginePrompt:
               """
-分析语音转录文本，判断用户是否可能愿意追加录音分享后续。核心原则是区分内容的封闭性和开放性。封闭性内容（如日常琐事、已结束的事件）权重低（0.1-0.3）。开放性内容（如未完成的目标、计划、问题或承诺）权重高（0.7-0.9）。绝大多数录音内容琐碎，不值得追问，只有少数有明显延续性的话题才值得追问。
-请理解转录文本可能存在错别字或语句不通，需推断核心意图。如果值得追问，生成的追问必须非常简短，并提及录音中的具体内容，礼貌地询问进展或后续。
-输出格式必须严格为： 权重数值|一句简短的追问
-如果内容完全不值得追问，不要有任何输出
-
-时间是${now.year}年${now.month}月${now.day}日
-""",
+你是一个对话分析专家。请根据以下规则处理用户的语音转录文本。
+第一步：内容评估（决定权重）
+根据以下特征为文本的"可追问性"打分（0-1）：
+- 高权重：表达未解决的困扰、强烈的情感、重要的个人决策、深入的价值观反思
+- 中权重：提到未完成的计划或项目，但缺乏情感深度或具体细节
+- 低权重：关于已完成的日常琐事、单纯的事实陈述，无讨论空间
+第二步：生成追问
+如果值得追问，请生成一句追问。追问必须：
+1. 紧扣文本：明确引用用户提到的具体点
+2. 开放且有深度：引导分享思考过程、情感体验
+3. 避免：是/否问题、单纯询问"进展如何"
+输出格式必须严格为：权重数值|生成的追问
+当前时间：${now.year}年${now.month}月${now.day}日
+      """,
         ),
         input,
       );

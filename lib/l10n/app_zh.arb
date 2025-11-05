@@ -157,5 +157,6 @@
   "imagine_download_geo_yes": "确认下载",
   "imagine_download_geo_no": "下次吧",
 
-  "imagine_default_prompt": "TODO"
+  "imagine_default_prompt": "TODO",
+  "imagine_unknown_place": "未知地点"
 }
