@@ -34,16 +34,11 @@ sudo dnf install \
     libsecret-devel \                                # Save sensitive data
     gtk3-devel \                                     # Linux UI
     squashfs-tools                                   # Linux Appimage packaging
-# for rust bindings, install cargo when you are installing rustup (comes by default)
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-cargo install flutter_rust_bridge_codegen
 ```
 
 ```shell
-frbc generate --stop-on-error --no-dart-format
 dart run build_runner build --build-filter 'package:jiyi/utils/data/*'
 # Android
-./setup_jni_libs.sh
 flutter build apk --release
 # Linux
 flutter build linux --release

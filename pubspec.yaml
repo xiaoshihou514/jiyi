@@ -44,10 +44,8 @@ dependencies:
   audioplayers: ^6.4.0
   icons_launcher: ^3.0.1
   sherpa_onnx: ^1.12.1
-  jiyi_native:
-    path: rust_builder
-  flutter_rust_bridge: ^2.11.1
   geocoder_offline: ^0.2.1
+  ollama_dart: ^0.3.0+1
 
 dependency_overrides:
   geolocator_android:

@@ -1,7 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'package:jiyi/src/rust/api.dart' as api;
-import 'package:jiyi/src/rust/frb_generated.dart';
 import 'package:jiyi/utils/anno.dart';
 import 'package:jiyi/utils/data/llm_setting.dart';
 
@@ -62,21 +60,7 @@ abstract class Llm {
     required double repeatPenalty,
     required int repeatLastN,
   }) async {
-    if (!init) {
-      await RustLib.init();
-      init = true;
-    }
-    return trim(
-      api.prompt(
-        root: root,
-        system: system,
-        prompt: input,
-        temp: temp,
-        topP: topP,
-        repeatPenalty: repeatPenalty,
-        repeatLastN: BigInt.from(repeatLastN),
-      ),
-    );
+    return "TODO";
   }
 
   static Future<String> imagine(LLMSetting setting, String input) async =>
