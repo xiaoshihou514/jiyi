@@ -231,35 +231,4 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
       }
     }
   }
-
-  // Future<void> _checkSettings() async {
-  //   final l = AppLocalizations.of(context)!;
-  //
-  //   if (await ss.read(key: ss.MAP_SETTINGS) == null && mounted) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text(l.missing_map_settings),
-  //         duration: Duration(seconds: 2),
-  //       ),
-  //     );
-  //   }
-  //
-  //   if (await ss.read(key: ss.ASR_MODEL_SETTINGS) == null && mounted) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text(l.missing_asr_settings),
-  //         duration: Duration(seconds: 2),
-  //       ),
-  //     );
-  //   }
-  //
-  //   if (await ss.read(key: ss.MAP_SETTINGS) == null && mounted) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text(l.missing_llm_settings),
-  //         duration: Duration(seconds: 2),
-  //       ),
-  //     );
-  //   }
-  // }
 }

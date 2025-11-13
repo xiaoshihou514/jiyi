@@ -27,6 +27,18 @@ class _LLMSettingsState extends State<LLMSettings> {
   List<String>? _download;
 
   final _imageinPromptController = TextEditingController();
+  TextStyle get _titleStyle => TextStyle(
+        fontSize: 8.em,
+        fontWeight: FontWeight.bold,
+        color: DefaultColors.fg,
+        fontFamily: "朱雀仿宋",
+      );
+
+  TextStyle get _labelStyle => TextStyle(
+        fontSize: 5.em,
+        color: DefaultColors.fg,
+        fontFamily: "朱雀仿宋",
+      );
 
   @override
   void initState() {
@@ -60,7 +72,7 @@ class _LLMSettingsState extends State<LLMSettings> {
           children: [
             Text(
               l.settings_llm_model,
-              style: TextStyle(fontSize: 8.em, fontWeight: FontWeight.bold),
+              style: _titleStyle,
             ),
             Row(
               children: [
@@ -80,16 +92,11 @@ class _LLMSettingsState extends State<LLMSettings> {
 
         Settings.flex(
           children: [
-            Text(l.settings_llm_provider),
+            Text(l.settings_llm_provider, style: _labelStyle),
             DropdownButton(
               value: _setting.name ?? l.settings_llm_custom,
               icon: Icon(Icons.arrow_drop_down, size: 5.em),
-              style: TextStyle(
-                color: DefaultColors.fg,
-                fontSize: 5.em,
-                decoration: TextDecoration.none,
-                fontFamily: "朱雀仿宋",
-              ),
+              style: _labelStyle.copyWith(decoration: TextDecoration.none),
               dropdownColor: DefaultColors.shade_3,
               underline: Container(
                 height: 1.5,
@@ -123,7 +130,7 @@ class _LLMSettingsState extends State<LLMSettings> {
               // LLM base path
               Settings.flex(
                 children: [
-                  Text(l.settings_llm_root_picker_desc),
+                  Text(l.settings_llm_root_picker_desc, style: _labelStyle),
                   Settings.buildFileChooser(
                     _selectLLMPath,
                     Icons.file_open,
@@ -141,7 +148,7 @@ class _LLMSettingsState extends State<LLMSettings> {
               // prompt
               Settings.flex(
                 children: [
-                  Text(l.settings_llm_imagine_prompt_desc),
+                  Text(l.settings_llm_imagine_prompt_desc, style: _labelStyle),
                   SizedBox(
                     height: 6.em,
                     width: 50.em,
