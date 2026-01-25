@@ -10,7 +10,7 @@ AppDir:
     id: com.github.xiaoshihou.jiyi
     name: jiyi
     icon: icon
-    version: 1.0.0
+    version: 1.0.1
     exec: jiyi
     exec_args: $@
   files:

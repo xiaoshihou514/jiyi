@@ -79,51 +79,63 @@ class _CalendarState extends State<Calendar> {
   }
 
   List<Widget> _buildMonthSections(BuildContext context) =>
-      (_entriesByMonth.keys.toList()..sort((a, b) => b.compareTo(a))).map((
-        monthKey,
-      ) {
-        final dates = _entriesByMonth[monthKey]!;
-        final firstDate = dates.first;
-        final monthTitle = '${firstDate.year}.${firstDate.month}';
+      (_entriesByMonth.keys.toList()..sort((a, b) {
+            int year1 = int.parse(a.substring(0, 4));
+            int year2 = int.parse(b.substring(0, 4));
 
-        return Container(
-          margin: EdgeInsets.only(bottom: 9.em),
-          decoration: BoxDecoration(
-            color: DefaultColors.shade_1,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(5.em),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 30.em,
-                  child: Text(
-                    monthTitle,
-                    style: TextStyle(
-                      color: DefaultColors.fg,
-                      fontSize: 7.5.em,
-                      fontWeight: FontWeight.bold,
+            if (year1 != year2) {
+              return year2.compareTo(year1);
+            } else {
+              return int.parse(
+                b.substring(5),
+              ).compareTo(int.parse(a.substring(5)));
+            }
+          }))
+          .map((monthKey) {
+            final dates = _entriesByMonth[monthKey]!;
+            final firstDate = dates.first;
+            final monthTitle = '${firstDate.year}.${firstDate.month}';
+
+            return Container(
+              margin: EdgeInsets.only(bottom: 9.em),
+              decoration: BoxDecoration(
+                color: DefaultColors.shade_1,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(5.em),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 30.em,
+                      child: Text(
+                        monthTitle,
+                        style: TextStyle(
+                          color: DefaultColors.fg,
+                          fontSize: 7.5.em,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                  ),
+                    Expanded(
+                      child: Wrap(
+                        spacing: 4.5.em,
+                        runSpacing: 4.5.em,
+                        children: dates
+                            .map(
+                              (date) =>
+                                  _buildDateStatus(_dailyCovers[date]!, date),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  child: Wrap(
-                    spacing: 4.5.em,
-                    runSpacing: 4.5.em,
-                    children: dates
-                        .map(
-                          (date) => _buildDateStatus(_dailyCovers[date]!, date),
-                        )
-                        .toList(),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      }).toList();
+              ),
+            );
+          })
+          .toList();
 
   Widget _buildDateStatus(List<String> covers, DateTime date) {
     final shown = covers.sublist(0, min(covers.length, 2));

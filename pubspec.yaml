@@ -2,7 +2,7 @@ name: jiyi
 description: "Cross platform encrypted audio logging app"
 publish_to: "none"
 
-version: 1.0.0+11
+version: 1.0.1+12
 
 environment:
   sdk: "^3.8.0"
@@ -14,7 +14,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.20.2
-  flutter_secure_storage: ^9.2.4
+  flutter_secure_storage: ^10.0.0
   pointycastle: ^4.0.0
   flutter_recorder: ^1.1.1
   collection: ^1.19.1
@@ -44,10 +44,6 @@ dependencies:
   audioplayers: ^6.4.0
   icons_launcher: ^3.0.1
   sherpa_onnx: ^1.12.1
-  jiyi_native:
-    path: rust_builder
-  flutter_rust_bridge: ^2.11.1
-  geocoder_offline: ^0.2.1
 
 dependency_overrides:
   geolocator_android:

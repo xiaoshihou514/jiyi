@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:jiyi/pages/imagine/imagine.dart';
 import 'package:provider/provider.dart';
 
 import 'package:jiyi/pages/home/calendar.dart';
@@ -163,12 +162,6 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        // imagine
-        _floatingBtn(isMobile, DefaultColors.type, Icons.psychology, () async {
-          if (await maybeDownloadGeoData(context) && mounted) {
-            Navigator.push(context, SmoothRouter.builder(Imagine()));
-          }
-        }),
         // upload
         _floatingBtn(isMobile, DefaultColors.func, Icons.upload, () async {
           await showMetadataInputDialog(context);
