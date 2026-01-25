@@ -71,7 +71,7 @@ jobs:
         if: matrix.config.target == 'Android'
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: "8.9"
+          gradle-version: "8.14"
 
       - name: Setup Android NDK
         if: matrix.config.target == 'Android'
@@ -83,6 +83,9 @@ jobs:
         if: matrix.config.target == 'Android'
         run: |
           set -ex
+          sudo apt-get update
+          sudo apt-get install -y pandoc
+
           export JIYI=$(pwd)
           export PUB_CACHE="$(pwd)/.pub-cache"
           cd $HOME
@@ -98,7 +101,7 @@ jobs:
           git -C $SHERPA_ONNX checkout -f "v$SHERPA_VERSION"
           flutter config --no-analytics
           flutter pub get
-          sed -i -e 's/ndkVersion .*/ndkVersion = "27.2.12479018"/' {android/app,$PUB_CACHE/hosted/pub.dev/{flutter_recorder-*,flutter_soloud-*,sherpa_onnx_android-*}/android}/build.gradle
+          # sed -i -e 's/ndkVersion .*/ndkVersion = "27.2.12479018"/' {$PUB_CACHE/hosted/pub.dev/{flutter_recorder-*,flutter_soloud-*,sherpa_onnx_android-*}/android}/build.gradle.kts
 
           find $PUB_CACHE -type f -regex ".*\.\(wasm\|so\|zip\|gz\|exe\)$" -exec rm -f {} \;
           rm -rf $PUB_CACHE/hosted/pub.dev/gsettings-*/test/dconf/test

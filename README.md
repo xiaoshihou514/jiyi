@@ -36,16 +36,11 @@ sudo dnf install \
     libsecret-devel \                                # 储存敏感信息
     gtk3-devel \                                     # Linux界面
     squashfs-tools                                   # Linux打包Appimage
-# rust绑定相关依赖，安装rustup的时候请勾选有cargo的选项（默认应该是有的）
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-cargo install flutter_rust_bridge_codegen
 ```
 
 ```shell
-frbc generate --stop-on-error --no-dart-format
 dart run build_runner build --build-filter 'package:jiyi/utils/data/*'
 # 安卓
-./setup_jni_libs.sh
 flutter build apk --release
 # Linux
 flutter build linux --release
