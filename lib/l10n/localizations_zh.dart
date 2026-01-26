@@ -217,36 +217,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_asr_en_nemo_ctc => '英文识别（~50M）';
 
   @override
-  String get settings_llm_model => '大模型设置';
-
-  @override
-  String get settings_llm_provider => '选择大模型';
-
-  @override
-  String get settings_llm_custom => '本地大语言模型';
-
-  @override
-  String get settings_llm_qwen3_1_7B => '千问3-1.7B';
-
-  @override
-  String get settings_llm_qwen3_4B => '千问3-4B（需要大量内存）';
-
-  @override
-  String get settings_llm_root_picker_desc => '选择模型所在文件夹';
-
-  @override
-  String get settings_llm_root_picker_cover => '选择文件夹';
-
-  @override
-  String get settings_llm_imagine_prompt_desc => '畅想功能提示词';
-
-  @override
-  String get settings_llm_saved => '大模型设置已保存';
-
-  @override
-  String get settings_llm_reset => '大模型设置已重置';
-
-  @override
   String get settings_zdpp_custom => '本地排版模型';
 
   @override
@@ -388,9 +358,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get metadata_transcript_hint => '输入音频转录文本';
 
   @override
-  String get metadata_missing_llm_setting => '未配置自动排版';
-
-  @override
   String get metadata_missing_asr_setting => '未配置语音识别';
 
   @override
@@ -433,21 +400,5 @@ class AppLocalizationsZh extends AppLocalizations {
   String get missing_asr_settings => '未配置转录模型，语音转文字不可用';
 
   @override
-  String get missing_llm_settings => '未配置语言大模型，畅想不可用';
-
-  @override
   String get missing_zdpp_settings => '未配置自动排版模型，自动排版不可用';
-
-  @override
-  String get imagine_download_geo_desc =>
-      '畅想功能需要从www.geonames.org下载一次数据，用来离线获取坐标对应的城市，是否同意下载？';
-
-  @override
-  String get imagine_download_geo_yes => '确认下载';
-
-  @override
-  String get imagine_download_geo_no => '下次吧';
-
-  @override
-  String get imagine_default_prompt => 'TODO';
 }

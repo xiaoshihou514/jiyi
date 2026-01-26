@@ -506,66 +506,6 @@ abstract class AppLocalizations {
   /// **'英文识别（~50M）'**
   String get settings_asr_en_nemo_ctc;
 
-  /// No description provided for @settings_llm_model.
-  ///
-  /// In zh, this message translates to:
-  /// **'大模型设置'**
-  String get settings_llm_model;
-
-  /// No description provided for @settings_llm_provider.
-  ///
-  /// In zh, this message translates to:
-  /// **'选择大模型'**
-  String get settings_llm_provider;
-
-  /// No description provided for @settings_llm_custom.
-  ///
-  /// In zh, this message translates to:
-  /// **'本地大语言模型'**
-  String get settings_llm_custom;
-
-  /// No description provided for @settings_llm_qwen3_1_7B.
-  ///
-  /// In zh, this message translates to:
-  /// **'千问3-1.7B'**
-  String get settings_llm_qwen3_1_7B;
-
-  /// No description provided for @settings_llm_qwen3_4B.
-  ///
-  /// In zh, this message translates to:
-  /// **'千问3-4B（需要大量内存）'**
-  String get settings_llm_qwen3_4B;
-
-  /// No description provided for @settings_llm_root_picker_desc.
-  ///
-  /// In zh, this message translates to:
-  /// **'选择模型所在文件夹'**
-  String get settings_llm_root_picker_desc;
-
-  /// No description provided for @settings_llm_root_picker_cover.
-  ///
-  /// In zh, this message translates to:
-  /// **'选择文件夹'**
-  String get settings_llm_root_picker_cover;
-
-  /// No description provided for @settings_llm_imagine_prompt_desc.
-  ///
-  /// In zh, this message translates to:
-  /// **'畅想功能提示词'**
-  String get settings_llm_imagine_prompt_desc;
-
-  /// No description provided for @settings_llm_saved.
-  ///
-  /// In zh, this message translates to:
-  /// **'大模型设置已保存'**
-  String get settings_llm_saved;
-
-  /// No description provided for @settings_llm_reset.
-  ///
-  /// In zh, this message translates to:
-  /// **'大模型设置已重置'**
-  String get settings_llm_reset;
-
   /// No description provided for @settings_zdpp_custom.
   ///
   /// In zh, this message translates to:
@@ -836,12 +776,6 @@ abstract class AppLocalizations {
   /// **'输入音频转录文本'**
   String get metadata_transcript_hint;
 
-  /// No description provided for @metadata_missing_llm_setting.
-  ///
-  /// In zh, this message translates to:
-  /// **'未配置自动排版'**
-  String get metadata_missing_llm_setting;
-
   /// No description provided for @metadata_missing_asr_setting.
   ///
   /// In zh, this message translates to:
@@ -914,41 +848,11 @@ abstract class AppLocalizations {
   /// **'未配置转录模型，语音转文字不可用'**
   String get missing_asr_settings;
 
-  /// No description provided for @missing_llm_settings.
-  ///
-  /// In zh, this message translates to:
-  /// **'未配置语言大模型，畅想不可用'**
-  String get missing_llm_settings;
-
   /// No description provided for @missing_zdpp_settings.
   ///
   /// In zh, this message translates to:
   /// **'未配置自动排版模型，自动排版不可用'**
   String get missing_zdpp_settings;
-
-  /// No description provided for @imagine_download_geo_desc.
-  ///
-  /// In zh, this message translates to:
-  /// **'畅想功能需要从www.geonames.org下载一次数据，用来离线获取坐标对应的城市，是否同意下载？'**
-  String get imagine_download_geo_desc;
-
-  /// No description provided for @imagine_download_geo_yes.
-  ///
-  /// In zh, this message translates to:
-  /// **'确认下载'**
-  String get imagine_download_geo_yes;
-
-  /// No description provided for @imagine_download_geo_no.
-  ///
-  /// In zh, this message translates to:
-  /// **'下次吧'**
-  String get imagine_download_geo_no;
-
-  /// No description provided for @imagine_default_prompt.
-  ///
-  /// In zh, this message translates to:
-  /// **'TODO'**
-  String get imagine_default_prompt;
 }
 
 class _AppLocalizationsDelegate

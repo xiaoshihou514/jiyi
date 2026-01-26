@@ -72,16 +72,6 @@
   "settings_asr_zh_en_streaming_paraformer": "中英双语识别（~1G）",
   "settings_asr_zh_streaming_ctc": "中文识别（~700M）",
   "settings_asr_en_nemo_ctc": "英文识别（~50M）",
-  "settings_llm_model": "大模型设置",
-  "settings_llm_provider": "选择大模型",
-  "settings_llm_custom": "本地大语言模型",
-  "settings_llm_qwen3_1_7B": "千问3-1.7B",
-  "settings_llm_qwen3_4B": "千问3-4B（需要大量内存）",
-  "settings_llm_root_picker_desc": "选择模型所在文件夹",
-  "settings_llm_root_picker_cover": "选择文件夹",
-  "settings_llm_imagine_prompt_desc": "畅想功能提示词",
-  "settings_llm_saved": "大模型设置已保存",
-  "settings_llm_reset": "大模型设置已重置",
   "settings_zdpp_custom": "本地排版模型",
   "settings_zdpp_zh_en": "中英排版模型",
   "settings_zdpp_zh_en_int8": "中英排版模型（int8）",
@@ -131,7 +121,6 @@
   "metadata_save": "保存",
   "metadata_transcript_label": "转录文本",
   "metadata_transcript_hint": "输入音频转录文本",
-  "metadata_missing_llm_setting": "未配置自动排版",
   "metadata_missing_asr_setting": "未配置语音识别",
   "metadata_zdpp": "自动排版",
   "metadata_rebuild_transcript": "重新识别语音",
@@ -147,15 +136,7 @@
 
   "transcript_empty": "未识别到文本",
 
-
   "missing_map_settings": "未配置地图源，地理视图不可用",
   "missing_asr_settings": "未配置转录模型，语音转文字不可用",
-  "missing_llm_settings": "未配置语言大模型，畅想不可用",
-  "missing_zdpp_settings": "未配置自动排版模型，自动排版不可用",
-
-  "imagine_download_geo_desc": "畅想功能需要从www.geonames.org下载一次数据，用来离线获取坐标对应的城市，是否同意下载？",
-  "imagine_download_geo_yes": "确认下载",
-  "imagine_download_geo_no": "下次吧",
-
-  "imagine_default_prompt": "TODO"
+  "missing_zdpp_settings": "未配置自动排版模型，自动排版不可用"
 }
