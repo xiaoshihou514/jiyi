@@ -776,12 +776,6 @@ abstract class AppLocalizations {
   /// **'输入音频转录文本'**
   String get metadata_transcript_hint;
 
-  /// No description provided for @metadata_missing_asr_setting.
-  ///
-  /// In zh, this message translates to:
-  /// **'未配置语音识别'**
-  String get metadata_missing_asr_setting;
-
   /// No description provided for @metadata_zdpp.
   ///
   /// In zh, this message translates to:

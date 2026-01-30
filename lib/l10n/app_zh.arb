@@ -121,7 +121,6 @@
   "metadata_save": "保存",
   "metadata_transcript_label": "转录文本",
   "metadata_transcript_hint": "输入音频转录文本",
-  "metadata_missing_asr_setting": "未配置语音识别",
   "metadata_zdpp": "自动排版",
   "metadata_rebuild_transcript": "重新识别语音",
 

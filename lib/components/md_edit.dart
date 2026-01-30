@@ -381,7 +381,7 @@ class _MdEditState extends State<MdEdit> {
             : TextButton(
                 onPressed: () {},
                 child: Text(
-                  l.metadata_missing_asr_setting,
+                  l.missing_asr_settings,
                   style: TextStyle(
                     color: DefaultColors.shade_6,
                     fontSize: 3.5.em,
@@ -408,7 +408,7 @@ class _MdEditState extends State<MdEdit> {
             : TextButton(
                 onPressed: () {},
                 child: Text(
-                  l.metadata_missing_llm_setting,
+                  l.missing_zdpp_settings,
                   style: TextStyle(
                     color: DefaultColors.shade_6,
                     fontSize: 3.5.em,

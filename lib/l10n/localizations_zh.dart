@@ -358,9 +358,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get metadata_transcript_hint => '输入音频转录文本';
 
   @override
-  String get metadata_missing_asr_setting => '未配置语音识别';
-
-  @override
   String get metadata_zdpp => '自动排版';
 
   @override
