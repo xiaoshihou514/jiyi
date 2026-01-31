@@ -1,0 +1,14 @@
+[
+  {
+    "name": "codeberg",
+    "url": "ssh://git@codeberg.org/xiaoshihou/jiyi.git"
+  },
+  {
+    "name": "sourcehut",
+    "url": "git@git.sr.ht:~xiaoshihou/jiyi"
+  },
+  {
+    "name": "gitlab",
+    "url": "git@gitlab.com:xiaoshihou/jiyi.git"
+  }
+]
