@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:jiyi/components/md_edit.dart';
 import 'package:jiyi/pages/home.dart';
+import 'package:jiyi/utils/app_lifecycle_overlay.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
 import 'package:provider/provider.dart';
 
@@ -170,8 +171,9 @@ class _CalendarState extends State<Calendar> {
                 Navigator.pushReplacement(
                   context,
                   PageRouteBuilder(
-                    pageBuilder: (_, _, _) =>
-                        HomePage(true, storagePath!, masterKey!),
+                    pageBuilder: (_, _, _) => AppLifecycleOverlay(
+                      child: HomePage(true, storagePath!, masterKey!),
+                    ),
                   ),
                 );
               }

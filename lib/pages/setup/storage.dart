@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiyi/components/spinner.dart';
+import 'package:jiyi/utils/app_lifecycle_overlay.dart';
 
 import 'package:jiyi/utils/em.dart';
 import 'package:jiyi/l10n/localizations.dart';
@@ -49,7 +50,11 @@ class _StoragePage extends State<StoragePage> {
     _writeStoragePath();
     Navigator.pushReplacement(
       context,
-      SmoothRouter.builder(HomePage(true, _storagePath, widget.masterKey)),
+      SmoothRouter.builder(
+        AppLifecycleOverlay(
+          child: HomePage(true, _storagePath, widget.masterKey),
+        ),
+      ),
     );
   }
 
@@ -119,11 +124,11 @@ class _StoragePage extends State<StoragePage> {
                 Padding(
                   padding: ScreenUtil().scaleWidth < ScreenUtil().scaleHeight
                       ?
-                      // mobile
-                      EdgeInsets.symmetric(vertical: 7.5.em)
+                        // mobile
+                        EdgeInsets.symmetric(vertical: 7.5.em)
                       :
-                      // desktop / tablet
-                      EdgeInsets.zero,
+                        // desktop / tablet
+                        EdgeInsets.zero,
                   child: Text(
                     l.st_title,
                     style: TextStyle(

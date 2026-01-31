@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiyi/components/spinner.dart';
 import 'package:jiyi/pages/home.dart';
+import 'package:jiyi/utils/app_lifecycle_overlay.dart';
 
 import 'package:jiyi/utils/em.dart';
 import 'package:jiyi/l10n/localizations.dart';
@@ -54,7 +55,9 @@ class _MasterKeyPage extends State<MasterKeyPage> {
       SmoothRouter.builder(
         widget.storagePath == null
             ? StoragePage(_controller.text)
-            : HomePage(true, widget.storagePath!, _controller.text),
+            : AppLifecycleOverlay(
+                child: HomePage(true, widget.storagePath!, _controller.text),
+              ),
       ),
     );
   }
@@ -103,11 +106,11 @@ class _MasterKeyPage extends State<MasterKeyPage> {
                 Padding(
                   padding: ScreenUtil().scaleWidth < ScreenUtil().scaleHeight
                       ?
-                      // mobile
-                      EdgeInsets.symmetric(vertical: 7.5.em)
+                        // mobile
+                        EdgeInsets.symmetric(vertical: 7.5.em)
                       :
-                      // desktop / tablet
-                      EdgeInsets.zero,
+                        // desktop / tablet
+                        EdgeInsets.zero,
                   child: Text(
                     l.mk_title,
                     style: TextStyle(
@@ -131,11 +134,11 @@ class _MasterKeyPage extends State<MasterKeyPage> {
                   child: Padding(
                     padding: ScreenUtil().scaleWidth < ScreenUtil().scaleHeight
                         ?
-                        // mobile
-                        EdgeInsets.symmetric(vertical: 4.em, horizontal: 2.em)
+                          // mobile
+                          EdgeInsets.symmetric(vertical: 4.em, horizontal: 2.em)
                         :
-                        // desktop / tablet
-                        EdgeInsets.symmetric(vertical: 2.5.em),
+                          // desktop / tablet
+                          EdgeInsets.symmetric(vertical: 2.5.em),
                     child: AutofillGroup(
                       // input field
                       child: TextField(

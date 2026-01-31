@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:jiyi/pages/home.dart';
 import 'package:jiyi/pages/setup/welcome.dart';
 import 'package:jiyi/l10n/localizations.dart';
+import 'package:jiyi/utils/app_lifecycle_overlay.dart';
 
 class App extends StatelessWidget {
   final String? masterKey;
@@ -14,7 +15,9 @@ class App extends StatelessWidget {
     return MaterialApp(
       home: (masterKey == null || storagePath == null)
           ? WelcomePage(masterKey, storagePath)
-          : HomePage(false, storagePath!, masterKey!),
+          : AppLifecycleOverlay(
+              child: HomePage(false, storagePath!, masterKey!),
+            ),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
