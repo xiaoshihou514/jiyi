@@ -111,10 +111,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_map_max_zoom => 'Maximum zoom level';
 
   @override
-  String get settings_map_saved => '地图设置已保存';
+  String get settings_map_saved => 'Map settings saved';
 
   @override
-  String get settings_map_reset => '地图设置已重置';
+  String get settings_map_reset => 'Map settings reset';
 
   @override
   String get settings_map_settings_dne =>
@@ -171,19 +171,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_asr_model => 'ASR settings';
 
   @override
-  String get settings_asr_provider => '选择语音识别模型';
+  String get settings_asr_provider => 'Select speech recognition model';
 
   @override
-  String get settings_asr_custom => '本地语音识别模型';
+  String get settings_asr_custom => 'Local speech recognition model';
 
   @override
   String get settings_asr_saved => 'ASR settings saved';
 
   @override
-  String get settings_asr_reset => '语音识别设置已重置';
+  String get settings_asr_reset => 'Speech recognition settings reset';
 
   @override
-  String get settings_asr_single => '单个模型路径（适用于Ctc系列模型）';
+  String get settings_asr_single => 'Single model path (for Ctc series models)';
 
   @override
   String get settings_asr_encoder => 'Encoder model path';
@@ -212,52 +212,59 @@ class AppLocalizationsEn extends AppLocalizations {
       'The format is usually xxx-streaming-zipformer-language, after you have downloaded and extracted the archive you should see the model (onnx) files. A modest phone should be able to run a 500M model.';
 
   @override
-  String get settings_asr_missing_fields => '语音识别配置不完整';
+  String get settings_asr_missing_fields =>
+      'Speech recognition configuration incomplete';
 
   @override
-  String get settings_asr_zh_en_streaming_zipformer => '中英双语识别（~500M）';
+  String get settings_asr_zh_en_streaming_zipformer =>
+      'Chinese-English bilingual recognition (~500M)';
 
   @override
-  String get settings_asr_zh_en_streaming_paraformer => '中英双语识别（~1G）';
+  String get settings_asr_zh_en_streaming_paraformer =>
+      'Chinese-English bilingual recognition (~1G)';
 
   @override
-  String get settings_asr_zh_streaming_ctc => '中文识别（~700M）';
+  String get settings_asr_zh_streaming_ctc => 'Chinese recognition (~700M)';
 
   @override
-  String get settings_asr_en_nemo_ctc => '英文识别（~50M）';
+  String get settings_asr_en_nemo_ctc => 'English recognition (~50M)';
 
   @override
-  String get settings_zdpp_custom => '本地排版模型';
+  String get settings_zdpp_custom => 'Local typesetting model';
 
   @override
-  String get settings_zdpp_zh_en => '中英排版模型';
+  String get settings_zdpp_zh_en => 'Chinese-English typesetting model';
 
   @override
-  String get settings_zdpp_zh_en_int8 => '中英排版模型（int8）';
+  String get settings_zdpp_zh_en_int8 =>
+      'Chinese-English typesetting model (int8)';
 
   @override
-  String get settings_zdpp_model => '自动排版设置';
+  String get settings_zdpp_model => 'Automatic typesetting settings';
 
   @override
-  String get settings_zdpp_missing_fields => '自动排版配置不完整';
+  String get settings_zdpp_missing_fields =>
+      'Automatic typesetting configuration incomplete';
 
   @override
-  String get settings_zdpp_saved => '自动排版设置已保存';
+  String get settings_zdpp_saved => 'Automatic typesetting settings saved';
 
   @override
-  String get settings_zdpp_reset => '自动排版设置已重置';
+  String get settings_zdpp_reset => 'Automatic typesetting settings reset';
 
   @override
-  String get settings_zdpp_provider => '选择自动排版模型';
+  String get settings_zdpp_provider => 'Select automatic typesetting model';
 
   @override
-  String get settings_zdpp_path => '模型路径';
+  String get settings_zdpp_path => 'Model path';
 
   @override
-  String get settings_zdpp_download_desc => '请自行从sherpa-onnx下载模型，如果懒得搞可以使用预配置';
+  String get settings_zdpp_download_desc =>
+      'Please download models from sherpa-onnx yourself, or use pre-configured options if you prefer convenience';
 
   @override
-  String get settings_zdpp_download_exp => 'sherpa-onnx一共就提供了三个模型，自己看着办吧';
+  String get settings_zdpp_download_exp =>
+      'sherpa-onnx only provides three models in total, handle as you see fit';
 
   @override
   String get download_title => 'Download';
@@ -357,22 +364,22 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get metadata_edit_title => '编辑元数据';
+  String get metadata_edit_title => 'Edit metadata';
 
   @override
-  String get metadata_save => '保存';
+  String get metadata_save => 'Save';
 
   @override
-  String get metadata_transcript_label => '转录文本';
+  String get metadata_transcript_label => 'Transcription text';
 
   @override
-  String get metadata_transcript_hint => '输入音频转录文本';
+  String get metadata_transcript_hint => 'Enter audio transcription text';
 
   @override
-  String get metadata_zdpp => '自动排版';
+  String get metadata_zdpp => 'Automatic typesetting';
 
   @override
-  String get metadata_rebuild_transcript => '重新识别语音';
+  String get metadata_rebuild_transcript => 'Re-recognize speech';
 
   @override
   String get untitled_cd => 'Untitled Tape';
@@ -399,14 +406,17 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get transcript_empty => '未识别到文本';
+  String get transcript_empty => 'No text recognized';
 
   @override
-  String get missing_map_settings => '未配置地图源，地理视图不可用';
+  String get missing_map_settings =>
+      'Map source not configured, geographic view unavailable';
 
   @override
-  String get missing_asr_settings => '未配置转录模型，语音转文字不可用';
+  String get missing_asr_settings =>
+      'Transcription model not configured, speech-to-text unavailable';
 
   @override
-  String get missing_zdpp_settings => '未配置自动排版模型，自动排版不可用';
+  String get missing_zdpp_settings =>
+      'Automatic typesetting model not configured, automatic typesetting unavailable';
 }
