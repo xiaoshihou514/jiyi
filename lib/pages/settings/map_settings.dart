@@ -12,7 +12,7 @@ import 'package:jiyi/components/download_unzip.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/utils/data/map_setting.dart';
-import 'package:jiyi/utils/secure_storage.dart' as ss;
+import 'package:jiyi/services/secure_storage.dart' as ss;
 import 'package:permission_handler/permission_handler.dart';
 
 class MapSettings extends StatefulWidget {

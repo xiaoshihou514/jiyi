@@ -3,11 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
-import 'package:jiyi/utils/secure_storage.dart' as ss;
+import 'package:jiyi/services/secure_storage.dart' as ss;
 import 'package:jiyi/pages/settings/map_settings.dart';
 import 'package:jiyi/pages/settings/asr_settings.dart';
 import 'package:jiyi/pages/settings/zdpp_settings.dart';
-import 'package:jiyi/utils/io.dart';
+import 'package:jiyi/services/io.dart';
 
 extension on num {
   double get em => (ScreenUtil().screenWidth > ScreenUtil().screenHeight)

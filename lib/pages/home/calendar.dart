@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:jiyi/pages/md_edit.dart';
 import 'package:jiyi/pages/home.dart';
 import 'package:jiyi/utils/app_lifecycle_overlay.dart';
-import 'package:jiyi/utils/secure_storage.dart' as ss;
+import 'package:jiyi/services/secure_storage.dart' as ss;
 import 'package:provider/provider.dart';
 
 import 'package:jiyi/components/spinner.dart';
@@ -13,7 +13,7 @@ import 'package:jiyi/pages/player.dart';
 import 'package:jiyi/pages/playlist.dart';
 import 'package:jiyi/utils/anno.dart';
 import 'package:jiyi/utils/em.dart';
-import 'package:jiyi/utils/io.dart';
+import 'package:jiyi/services/io.dart';
 import 'package:jiyi/utils/data/metadata.dart';
 import 'package:jiyi/utils/notifier.dart';
 import 'package:jiyi/utils/smooth_router.dart';

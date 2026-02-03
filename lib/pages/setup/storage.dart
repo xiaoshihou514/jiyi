@@ -10,7 +10,7 @@ import 'package:jiyi/utils/em.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/pages/home.dart';
-import 'package:jiyi/utils/secure_storage.dart' as ss;
+import 'package:jiyi/services/secure_storage.dart' as ss;
 import 'package:jiyi/utils/smooth_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 

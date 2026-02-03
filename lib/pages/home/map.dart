@@ -19,11 +19,11 @@ import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/pages/player.dart';
 import 'package:jiyi/pages/playlist.dart';
 import 'package:jiyi/utils/em.dart';
-import 'package:jiyi/utils/io.dart';
+import 'package:jiyi/services/io.dart';
 import 'package:jiyi/utils/data/map_setting.dart';
 import 'package:jiyi/utils/data/metadata.dart';
 import 'package:jiyi/utils/notifier.dart';
-import 'package:jiyi/utils/secure_storage.dart' as ss;
+import 'package:jiyi/services/secure_storage.dart' as ss;
 import 'package:jiyi/utils/smooth_router.dart';
 
 class RichMarker extends Marker {

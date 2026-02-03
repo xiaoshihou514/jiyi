@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:jiyi/pages/record.dart';
+import 'package:jiyi/services/geo.dart';
 import 'package:jiyi/utils/data/asr_setting.dart';
 import 'package:jiyi/utils/data/zdpp_setting.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
@@ -12,8 +13,8 @@ import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/utils/anno.dart';
 import 'package:jiyi/utils/data/metadata.dart';
 import 'package:jiyi/l10n/localizations.dart';
-import 'package:jiyi/utils/io.dart';
-import 'package:jiyi/utils/secure_storage.dart' as ss;
+import 'package:jiyi/services/io.dart';
+import 'package:jiyi/services/secure_storage.dart' as ss;
 import 'package:jiyi/utils/asr.dart';
 import 'package:wav/wav.dart';
 
@@ -35,6 +36,8 @@ class _MdEditPageState extends State<MdEditPage> {
   final _lonController = TextEditingController();
   final _coverController = TextEditingController();
   final _transcriptController = TextEditingController();
+  @Claude()
+  String? _geodesc;
 
   so.OfflinePunctuationConfig? _zdppSetting;
   so.OnlineModelConfig? _asrSetting;
@@ -50,6 +53,7 @@ class _MdEditPageState extends State<MdEditPage> {
     _lonController.text = widget._md.longitude?.toString() ?? '';
     _coverController.text = widget._md.cover;
     _transcriptController.text = widget._md.transcript;
+    _geodesc = widget._md.geodesc;
     _readSettings();
   }
 
@@ -101,6 +105,7 @@ class _MdEditPageState extends State<MdEditPage> {
       cover: _coverController.text,
       path: widget._md.path, // 路径保持不变
       transcript: _transcriptController.text,
+      geodesc: _geodesc,
     );
 
     IO.updateMetadata(widget._md, updated);
@@ -128,6 +133,47 @@ class _MdEditPageState extends State<MdEditPage> {
       SAMPLE_RATE,
     );
     setState(() => _transcriptController.text = newTranscript);
+  }
+
+  @Claude()
+  Future<void> _lookupLocation() async {
+    if (widget._md.latitude == null || widget._md.longitude == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('无法查询位置：缺少经纬度信息'),
+          backgroundColor: DefaultColors.error,
+        ),
+      );
+      return;
+    }
+
+    final geo = Geo();
+    final locationDesc = await geo.getLocationDescription(
+      widget._md.latitude!,
+      widget._md.longitude!,
+    );
+
+    if (locationDesc != null) {
+      setState(() {
+        _geodesc = locationDesc;
+      });
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('位置信息已查询（保存后生效）'),
+            backgroundColor: DefaultColors.keyword,
+          ),
+        );
+      }
+    } else if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('未能查询到位置信息'),
+          backgroundColor: DefaultColors.error,
+        ),
+      );
+    }
   }
 
   @override
@@ -355,7 +401,7 @@ class _MdEditPageState extends State<MdEditPage> {
 
               SizedBox(height: 4.em),
 
-              // 按钮区域
+              // ASR相关按钮区域
               if (_asrSetting != null || _zdppSetting != null)
                 Wrap(
                   spacing: 16.0,
@@ -374,7 +420,10 @@ class _MdEditPageState extends State<MdEditPage> {
                         onPressed: _rebuildTranscript,
                         child: Text(
                           l.metadata_rebuild_transcript,
-                          style: TextStyle(fontSize: 3.5.em, fontFamily: "朱雀仿宋"),
+                          style: TextStyle(
+                            fontSize: 3.5.em,
+                            fontFamily: "朱雀仿宋",
+                          ),
                         ),
                       ),
                     if (_zdppSetting != null)
@@ -390,20 +439,62 @@ class _MdEditPageState extends State<MdEditPage> {
                         onPressed: _zdpp,
                         child: Text(
                           l.metadata_zdpp,
-                          style: TextStyle(fontSize: 3.5.em, fontFamily: "朱雀仿宋"),
+                          style: TextStyle(
+                            fontSize: 3.5.em,
+                            fontFamily: "朱雀仿宋",
+                          ),
                         ),
                       ),
                   ],
                 ),
-              if (_asrSetting == null && _zdppSetting == null)
-                Text(
-                  "${l.missing_asr_settings} ${l.missing_zdpp_settings}",
-                  style: TextStyle(
-                    color: DefaultColors.shade_6,
-                    fontSize: 3.5.em,
-                    fontFamily: "朱雀仿宋",
+
+              if (_asrSetting != null || _zdppSetting != null)
+                SizedBox(height: 4.em),
+
+              // 当前地理位置显示
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 2.em),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.location_on,
+                      size: 4.em,
+                      color: DefaultColors.info,
+                    ),
+                    SizedBox(width: 1.em),
+                    Expanded(
+                      child: Text(
+                        '位置: ${_geodesc ?? '未设置'}',
+                        style: TextStyle(
+                          color: DefaultColors.fg,
+                          fontSize: 3.5.em,
+                          fontFamily: "朱雀仿宋",
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Divider(height: 4.em, color: DefaultColors.shade_3),
+
+              // 地理位置查询按钮
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: DefaultColors.func,
+                  foregroundColor: DefaultColors.bg,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 4.em,
+                    vertical: 2.em,
                   ),
                 ),
+                onPressed: _lookupLocation,
+                child: Text(
+                  '查询位置',
+                  style: TextStyle(fontSize: 3.5.em, fontFamily: "朱雀仿宋"),
+                ),
+              ),
             ],
           ),
         ),
@@ -413,10 +504,7 @@ class _MdEditPageState extends State<MdEditPage> {
 }
 
 // 暴露的页面导航接口
-void navigateToMetadataEditPage(
-  BuildContext context,
-  Metadata metadata,
-) {
+void navigateToMetadataEditPage(BuildContext context, Metadata metadata) {
   Navigator.push<Metadata>(
     context,
     MaterialPageRoute(builder: (context) => MdEditPage(metadata)),

@@ -15,6 +15,7 @@ class Metadata {
   final String cover;
   final String path;
   final String transcript;
+  final String? geodesc;
 
   Metadata({
     required this.time,
@@ -25,6 +26,7 @@ class Metadata {
     required this.cover,
     required this.path,
     required this.transcript,
+    this.geodesc,
   });
 
   factory Metadata.fromDyn(Map<String, dynamic> dyn) => _$MetadataFromJson(dyn);

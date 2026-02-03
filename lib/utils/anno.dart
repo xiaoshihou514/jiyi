@@ -10,3 +10,15 @@ class DeepSeek extends AI {
 class Grok extends AI {
   const Grok();
 }
+
+class Qwen extends AI {
+  const Qwen();
+}
+
+class Copilot extends AI {
+  const Copilot();
+}
+
+class Claude extends AI {
+  const Claude();
+}

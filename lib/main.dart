@@ -4,7 +4,7 @@ import 'package:jiyi/utils/notifier.dart';
 import 'package:provider/provider.dart';
 
 import 'pages/app.dart';
-import 'package:jiyi/utils/secure_storage.dart' as ss;
+import 'package:jiyi/services/secure_storage.dart' as ss;
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();

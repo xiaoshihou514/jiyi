@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:jiyi/components/style/popup.dart';
 import 'package:jiyi/utils/data/zdpp_setting.dart';
-import 'package:jiyi/utils/secure_storage.dart' as ss;
+import 'package:jiyi/services/secure_storage.dart' as ss;
 import 'package:jiyi/utils/asr.dart';
 import 'package:jiyi/utils/data/asr_setting.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
@@ -16,13 +16,14 @@ import 'package:jiyi/components/spinner.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/utils/anno.dart';
-import 'package:jiyi/utils/encryption.dart';
+import 'package:jiyi/services/encryption.dart';
 import 'package:jiyi/utils/data/metadata.dart';
-import 'package:jiyi/utils/io.dart';
+import 'package:jiyi/services/io.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wav/wav_file.dart';
 
 @DeepSeek()
+@Qwen()
 class MetadataInputDialog extends StatefulWidget {
   const MetadataInputDialog({super.key});
 

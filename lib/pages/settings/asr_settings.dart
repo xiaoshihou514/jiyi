@@ -8,7 +8,7 @@ import 'package:jiyi/components/download_unzip.dart';
 import 'package:jiyi/components/style/settings.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
-import 'package:jiyi/utils/secure_storage.dart' as ss;
+import 'package:jiyi/services/secure_storage.dart' as ss;
 import 'package:jiyi/utils/data/asr_setting.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';

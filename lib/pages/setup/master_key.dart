@@ -9,7 +9,7 @@ import 'package:jiyi/utils/em.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/pages/setup/storage.dart';
-import 'package:jiyi/utils/secure_storage.dart' as ss;
+import 'package:jiyi/services/secure_storage.dart' as ss;
 import 'package:jiyi/utils/smooth_router.dart';
 
 const durationDim = Duration(seconds: 2);
