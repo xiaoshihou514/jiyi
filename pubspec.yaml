@@ -44,6 +44,7 @@ dependencies:
   audioplayers: ^6.4.0
   icons_launcher: ^3.0.1
   sherpa_onnx: ^1.12.1
+  geojson_vi: ^2.2.5
 
 dependency_overrides:
   geolocator_android:
