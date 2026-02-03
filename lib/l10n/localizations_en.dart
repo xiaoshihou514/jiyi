@@ -419,4 +419,25 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get missing_zdpp_settings =>
       'Automatic typesetting model not configured, automatic typesetting unavailable';
+
+  @override
+  String get geo_lookup_missing_coords =>
+      'Unable to query location: missing latitude/longitude information';
+
+  @override
+  String get geo_lookup_success => 'Location information queried';
+
+  @override
+  String get geo_lookup_failed => 'Failed to query location information';
+
+  @override
+  String get metadata_saved => 'Saved';
+
+  @override
+  String metadata_location_display(Object geodesc) {
+    return 'Location: $geodesc';
+  }
+
+  @override
+  String get metadata_location_unset => 'Not set';
 }

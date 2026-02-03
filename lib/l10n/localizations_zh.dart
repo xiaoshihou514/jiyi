@@ -398,4 +398,24 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get missing_zdpp_settings => '未配置自动排版模型，自动排版不可用';
+
+  @override
+  String get geo_lookup_missing_coords => '无法查询位置：缺少经纬度信息';
+
+  @override
+  String get geo_lookup_success => '已搜索到对应的地区';
+
+  @override
+  String get geo_lookup_failed => '未能查询到位置信息';
+
+  @override
+  String get metadata_saved => '已保存';
+
+  @override
+  String metadata_location_display(Object geodesc) {
+    return '位置: $geodesc';
+  }
+
+  @override
+  String get metadata_location_unset => '未设置';
 }

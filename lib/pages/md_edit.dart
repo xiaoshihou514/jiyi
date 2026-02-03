@@ -110,6 +110,14 @@ class _MdEditPageState extends State<MdEditPage> {
 
     IO.updateMetadata(widget._md, updated);
 
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.metadata_saved),
+        backgroundColor: DefaultColors.keyword,
+        duration: Duration(seconds: 1),
+      ),
+    );
+
     Navigator.pop(context, updated);
   }
 
@@ -140,7 +148,7 @@ class _MdEditPageState extends State<MdEditPage> {
     if (widget._md.latitude == null || widget._md.longitude == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('无法查询位置：缺少经纬度信息'),
+          content: Text(AppLocalizations.of(context)!.geo_lookup_missing_coords),
           backgroundColor: DefaultColors.error,
         ),
       );
@@ -161,7 +169,7 @@ class _MdEditPageState extends State<MdEditPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('位置信息已查询（保存后生效）'),
+            content: Text(AppLocalizations.of(context)!.geo_lookup_success),
             backgroundColor: DefaultColors.keyword,
           ),
         );
@@ -169,7 +177,7 @@ class _MdEditPageState extends State<MdEditPage> {
     } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('未能查询到位置信息'),
+          content: Text(AppLocalizations.of(context)!.geo_lookup_failed),
           backgroundColor: DefaultColors.error,
         ),
       );
@@ -465,7 +473,9 @@ class _MdEditPageState extends State<MdEditPage> {
                     SizedBox(width: 1.em),
                     Expanded(
                       child: Text(
-                        '位置: ${_geodesc ?? '未设置'}',
+                        AppLocalizations.of(context)!.metadata_location_display(
+                          _geodesc ?? AppLocalizations.of(context)!.metadata_location_unset,
+                        ),
                         style: TextStyle(
                           color: DefaultColors.fg,
                           fontSize: 3.5.em,

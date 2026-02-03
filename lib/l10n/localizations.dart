@@ -847,6 +847,42 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'未配置自动排版模型，自动排版不可用'**
   String get missing_zdpp_settings;
+
+  /// No description provided for @geo_lookup_missing_coords.
+  ///
+  /// In zh, this message translates to:
+  /// **'无法查询位置：缺少经纬度信息'**
+  String get geo_lookup_missing_coords;
+
+  /// No description provided for @geo_lookup_success.
+  ///
+  /// In zh, this message translates to:
+  /// **'已搜索到对应的地区'**
+  String get geo_lookup_success;
+
+  /// No description provided for @geo_lookup_failed.
+  ///
+  /// In zh, this message translates to:
+  /// **'未能查询到位置信息'**
+  String get geo_lookup_failed;
+
+  /// No description provided for @metadata_saved.
+  ///
+  /// In zh, this message translates to:
+  /// **'已保存'**
+  String get metadata_saved;
+
+  /// No description provided for @metadata_location_display.
+  ///
+  /// In zh, this message translates to:
+  /// **'位置: {geodesc}'**
+  String metadata_location_display(Object geodesc);
+
+  /// No description provided for @metadata_location_unset.
+  ///
+  /// In zh, this message translates to:
+  /// **'未设置'**
+  String get metadata_location_unset;
 }
 
 class _AppLocalizationsDelegate

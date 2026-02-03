@@ -136,5 +136,12 @@
   "transcript_empty": "No text recognized",
   "missing_map_settings": "Map source not configured, geographic view unavailable",
   "missing_asr_settings": "Transcription model not configured, speech-to-text unavailable",
-  "missing_zdpp_settings": "Automatic typesetting model not configured, automatic typesetting unavailable"
+  "missing_zdpp_settings": "Automatic typesetting model not configured, automatic typesetting unavailable",
+  
+  "geo_lookup_missing_coords": "Unable to query location: missing latitude/longitude information",
+  "geo_lookup_success": "Location information queried",
+  "geo_lookup_failed": "Failed to query location information",
+  "metadata_saved": "Saved",
+  "metadata_location_display": "Location: {geodesc}",
+  "metadata_location_unset": "Not set"
 }

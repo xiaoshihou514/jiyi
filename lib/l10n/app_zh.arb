@@ -137,5 +137,12 @@
 
   "missing_map_settings": "未配置地图源，地理视图不可用",
   "missing_asr_settings": "未配置转录模型，语音转文字不可用",
-  "missing_zdpp_settings": "未配置自动排版模型，自动排版不可用"
+  "missing_zdpp_settings": "未配置自动排版模型，自动排版不可用",
+  
+  "geo_lookup_missing_coords": "无法查询位置：缺少经纬度信息",
+  "geo_lookup_success": "已搜索到对应的地区",
+  "geo_lookup_failed": "未能查询到位置信息",
+  "metadata_saved": "已保存",
+  "metadata_location_display": "位置: {geodesc}",
+  "metadata_location_unset": "未设置"
 }
