@@ -4,6 +4,3 @@ linter:
   rules:
 
 analyzer:
-  enable-experiment:
-    - inline-class
-    - null-aware-elements

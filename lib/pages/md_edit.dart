@@ -18,15 +18,15 @@ import 'package:jiyi/utils/asr.dart';
 import 'package:wav/wav.dart';
 
 @DeepSeek()
-class MdEdit extends StatefulWidget {
+class MdEditPage extends StatefulWidget {
   final Metadata _md;
-  const MdEdit(this._md, {super.key});
+  const MdEditPage(this._md, {super.key});
 
   @override
-  State<MdEdit> createState() => _MdEditState();
+  State<MdEditPage> createState() => _MdEditPageState();
 }
 
-class _MdEditState extends State<MdEdit> {
+class _MdEditPageState extends State<MdEditPage> {
   final _formKey = GlobalKey<FormState>();
   late DateTime _selectedDate;
   late TimeOfDay _selectedTime;
@@ -134,21 +134,42 @@ class _MdEditState extends State<MdEdit> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
 
-    return AlertDialog(
-      backgroundColor: DefaultColors.bg,
-      title: Text(
-        l.metadata_edit_title,
-        style: TextStyle(
-          color: DefaultColors.fg,
-          fontSize: 4.5.em,
-          fontFamily: "朱雀仿宋",
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: DefaultColors.bg,
+        title: Text(
+          l.metadata_edit_title,
+          style: TextStyle(
+            color: DefaultColors.fg,
+            fontSize: 4.5.em,
+            fontFamily: "朱雀仿宋",
+          ),
         ),
+        leading: IconButton(
+          icon: Icon(Icons.close, color: DefaultColors.fg, size: 4.em),
+          onPressed: () => Navigator.pop(context),
+        ),
+        actions: [
+          TextButton(
+            onPressed: _saveChanges,
+            child: Text(
+              l.metadata_save,
+              style: TextStyle(
+                color: DefaultColors.func,
+                fontSize: 3.5.em,
+                fontFamily: "朱雀仿宋",
+              ),
+            ),
+          ),
+        ],
       ),
-      content: SingleChildScrollView(
+      backgroundColor: DefaultColors.bg,
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 音频时长显示（只读）
               Padding(
@@ -316,118 +337,88 @@ class _MdEditState extends State<MdEdit> {
               SizedBox(height: 4.em),
 
               // 转录文本输入
-              ConstrainedBox(
-                constraints: BoxConstraints.tightFor(width: 80.em),
-                child: TextFormField(
-                  cursorColor: DefaultColors.func,
-                  controller: _transcriptController,
-                  decoration: Popup.buildInputDecoration(
-                    l.metadata_transcript_label,
-                    l.metadata_transcript_hint,
-                  ),
+              TextFormField(
+                cursorColor: DefaultColors.func,
+                controller: _transcriptController,
+                decoration: Popup.buildInputDecoration(
+                  l.metadata_transcript_label,
+                  l.metadata_transcript_hint,
+                ),
+                style: TextStyle(
+                  color: DefaultColors.fg,
+                  fontSize: 3.5.em,
+                  fontFamily: "朱雀仿宋",
+                ),
+                maxLines: 5,
+                minLines: 3,
+              ),
+
+              SizedBox(height: 4.em),
+
+              // 按钮区域
+              if (_asrSetting != null || _zdppSetting != null)
+                Wrap(
+                  spacing: 16.0,
+                  runSpacing: 8.0,
+                  children: [
+                    if (_asrSetting != null)
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: DefaultColors.keyword,
+                          foregroundColor: DefaultColors.bg,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 4.em,
+                            vertical: 2.em,
+                          ),
+                        ),
+                        onPressed: _rebuildTranscript,
+                        child: Text(
+                          l.metadata_rebuild_transcript,
+                          style: TextStyle(fontSize: 3.5.em, fontFamily: "朱雀仿宋"),
+                        ),
+                      ),
+                    if (_zdppSetting != null)
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: DefaultColors.keyword,
+                          foregroundColor: DefaultColors.bg,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 4.em,
+                            vertical: 2.em,
+                          ),
+                        ),
+                        onPressed: _zdpp,
+                        child: Text(
+                          l.metadata_zdpp,
+                          style: TextStyle(fontSize: 3.5.em, fontFamily: "朱雀仿宋"),
+                        ),
+                      ),
+                  ],
+                ),
+              if (_asrSetting == null && _zdppSetting == null)
+                Text(
+                  "${l.missing_asr_settings} ${l.missing_zdpp_settings}",
                   style: TextStyle(
-                    color: DefaultColors.fg,
+                    color: DefaultColors.shade_6,
                     fontSize: 3.5.em,
                     fontFamily: "朱雀仿宋",
                   ),
-                  maxLines: 5,
-                  minLines: 3,
                 ),
-              ),
             ],
           ),
         ),
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(
-            l.metadata_cancel,
-            style: TextStyle(
-              color: DefaultColors.error,
-              fontSize: 3.5.em,
-              fontFamily: "朱雀仿宋",
-            ),
-          ),
-        ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: DefaultColors.func,
-            foregroundColor: DefaultColors.bg,
-            padding: EdgeInsets.symmetric(horizontal: 4.em, vertical: 2.em),
-          ),
-          onPressed: _saveChanges,
-          child: Text(
-            l.metadata_save,
-            style: TextStyle(fontSize: 3.5.em, fontFamily: "朱雀仿宋"),
-          ),
-        ),
-        _asrSetting != null
-            ? ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: DefaultColors.keyword,
-                  foregroundColor: DefaultColors.bg,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 4.em,
-                    vertical: 2.em,
-                  ),
-                ),
-                onPressed: _rebuildTranscript,
-                child: Text(
-                  l.metadata_rebuild_transcript,
-                  style: TextStyle(fontSize: 3.5.em, fontFamily: "朱雀仿宋"),
-                ),
-              )
-            : TextButton(
-                onPressed: () {},
-                child: Text(
-                  l.missing_asr_settings,
-                  style: TextStyle(
-                    color: DefaultColors.shade_6,
-                    fontSize: 3.5.em,
-                    fontFamily: "朱雀仿宋",
-                  ),
-                ),
-              ),
-        _zdppSetting != null
-            ? ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: DefaultColors.keyword,
-                  foregroundColor: DefaultColors.bg,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 4.em,
-                    vertical: 2.em,
-                  ),
-                ),
-                onPressed: _zdpp,
-                child: Text(
-                  l.metadata_zdpp,
-                  style: TextStyle(fontSize: 3.5.em, fontFamily: "朱雀仿宋"),
-                ),
-              )
-            : TextButton(
-                onPressed: () {},
-                child: Text(
-                  l.missing_zdpp_settings,
-                  style: TextStyle(
-                    color: DefaultColors.shade_6,
-                    fontSize: 3.5.em,
-                    fontFamily: "朱雀仿宋",
-                  ),
-                ),
-              ),
-      ],
     );
   }
 }
 
-// 暴露的对话框接口
-Future<Metadata?> showMetadataEditDialog(
+// 暴露的页面导航接口
+void navigateToMetadataEditPage(
   BuildContext context,
   Metadata metadata,
-) async {
-  return showDialog<Metadata>(
-    context: context,
-    builder: (context) => MdEdit(metadata),
+) {
+  Navigator.push<Metadata>(
+    context,
+    MaterialPageRoute(builder: (context) => MdEditPage(metadata)),
   );
 }

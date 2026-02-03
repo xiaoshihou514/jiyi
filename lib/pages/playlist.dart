@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:jiyi/components/md_edit.dart';
+import 'package:jiyi/pages/md_edit.dart';
 
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
@@ -120,7 +120,10 @@ class _PlaylistState extends State<Playlist> {
             onPressed: () async {
               Metadata? newEntry;
               if (context.mounted) {
-                newEntry = await showMetadataEditDialog(context, entry);
+                newEntry = await Navigator.push<Metadata>(
+                  context,
+                  MaterialPageRoute(builder: (context) => MdEditPage(entry)),
+                );
               }
               if (newEntry != null) {
                 // hacky reload

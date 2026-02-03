@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:jiyi/components/md_edit.dart';
+import 'package:jiyi/pages/md_edit.dart';
 import 'package:jiyi/pages/home.dart';
 import 'package:jiyi/utils/app_lifecycle_overlay.dart';
 import 'package:jiyi/utils/secure_storage.dart' as ss;
@@ -160,9 +160,9 @@ class _CalendarState extends State<Calendar> {
           },
           onLongPress: () async {
             if (context.mounted && covers.length == 1) {
-              await showMetadataEditDialog(
+              await Navigator.push<Metadata>(
                 context,
-                IO.metadataByDay(date).first,
+                MaterialPageRoute(builder: (context) => MdEditPage(IO.metadataByDay(date).first)),
               );
               // hacky reload
               final masterKey = await ss.read(key: ss.MASTER_KEY);
