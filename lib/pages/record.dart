@@ -41,6 +41,9 @@ extension on num {
 // ignore: constant_identifier_names
 const SAMPLE_RATE = 44100;
 
+// ignore: constant_identifier_names
+const DEFAULT_TITLE = "📼";
+
 class RecordPage extends StatefulWidget {
   final String storagePath;
   const RecordPage(this.storagePath, {super.key});
@@ -257,7 +260,7 @@ class _RecordPageState extends State<RecordPage> {
           barrierDismissible: false,
           builder: (context) => TitleAndCoverInput(),
         ) ??
-        (l.untitled_cd, "❔");
+        (l.untitled_cd, DEFAULT_TITLE);
 
     final asrSettings = await ss.read(key: ss.ASR_MODEL_SETTINGS);
     final model = asrSettings == null
@@ -448,7 +451,7 @@ class _TitleAndCoverInputState extends State<TitleAndCoverInput> {
   void _submit(AppLocalizations l) {
     Navigator.pop(context, (
       _titleController.text.isEmpty ? l.untitled_cd : _titleController.text,
-      _coverController.text.isEmpty ? "❔" : _coverController.text,
+      _coverController.text.isEmpty ? DEFAULT_TITLE : _coverController.text,
     ));
   }
 
