@@ -896,6 +896,12 @@ abstract class AppLocalizations {
   /// **'下载地理数据文件以支持位置查询功能'**
   String get settings_geo_desc;
 
+  /// No description provided for @settings_geo_download.
+  ///
+  /// In zh, this message translates to:
+  /// **'下载地理数据'**
+  String get settings_geo_download;
+
   /// No description provided for @settings_geo_saved.
   ///
   /// In zh, this message translates to:
@@ -907,6 +913,90 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'坐标解析设置已重置'**
   String get settings_geo_reset;
+
+  /// No description provided for @settings_geo_bulk_generate.
+  ///
+  /// In zh, this message translates to:
+  /// **'批量生成位置信息'**
+  String get settings_geo_bulk_generate;
+
+  /// No description provided for @settings_geo_bulk_generate_title.
+  ///
+  /// In zh, this message translates to:
+  /// **'批量生成位置信息'**
+  String get settings_geo_bulk_generate_title;
+
+  /// No description provided for @settings_geo_bulk_generate_message.
+  ///
+  /// In zh, this message translates to:
+  /// **'发现{count}条带有坐标但没有位置信息的录音，是否为它们生成位置信息？'**
+  String settings_geo_bulk_generate_message(int count);
+
+  /// No description provided for @settings_geo_bulk_cancel.
+  ///
+  /// In zh, this message translates to:
+  /// **'取消'**
+  String get settings_geo_bulk_cancel;
+
+  /// No description provided for @settings_geo_bulk_confirm.
+  ///
+  /// In zh, this message translates to:
+  /// **'确认'**
+  String get settings_geo_bulk_confirm;
+
+  /// No description provided for @settings_geo_bulk_processing.
+  ///
+  /// In zh, this message translates to:
+  /// **'正在处理...'**
+  String get settings_geo_bulk_processing;
+
+  /// No description provided for @settings_geo_bulk_complete.
+  ///
+  /// In zh, this message translates to:
+  /// **'已完成：成功生成{success}条，共{total}条'**
+  String settings_geo_bulk_complete(int success, int total);
+
+  /// No description provided for @settings_geo_bulk_no_recordings.
+  ///
+  /// In zh, this message translates to:
+  /// **'没有需要生成位置信息的录音'**
+  String get settings_geo_bulk_no_recordings;
+
+  /// No description provided for @geo_timeline_title.
+  ///
+  /// In zh, this message translates to:
+  /// **'地理位置时间轴'**
+  String get geo_timeline_title;
+
+  /// No description provided for @geo_timeline_empty.
+  ///
+  /// In zh, this message translates to:
+  /// **'没有包含地理位置的录音'**
+  String get geo_timeline_empty;
+
+  /// No description provided for @geo_timeline_recording_count.
+  ///
+  /// In zh, this message translates to:
+  /// **'{count}条录音'**
+  String geo_timeline_recording_count(int count);
+
+  /// No description provided for @geo_timeline_notable.
+  ///
+  /// In zh, this message translates to:
+  /// **'重要录音'**
+  String get geo_timeline_notable;
+
+  /// No description provided for @geo_spatial_title.
+  ///
+  /// In zh, this message translates to:
+  /// **'地理位置统计'**
+  String get geo_spatial_title;
+
+  /// No description provided for @geo_spatial_empty.
+  ///
+  /// In zh, this message translates to:
+  /// **'没有包含地理位置的录音'**
+  String get geo_spatial_empty;
 }
 
 class _AppLocalizationsDelegate

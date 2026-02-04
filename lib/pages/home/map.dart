@@ -14,8 +14,11 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:jiyi/components/spinner.dart';
+import 'package:jiyi/components/floating_btn.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
+import 'package:jiyi/pages/geo_spatial.dart';
+import 'package:jiyi/pages/geo_timeline.dart';
 import 'package:jiyi/pages/player.dart';
 import 'package:jiyi/pages/playlist.dart';
 import 'package:jiyi/utils/em.dart';
@@ -70,28 +73,44 @@ class _MapViewState extends State<MapView> {
 
   @override
   Widget build(BuildContext context) {
+    bool isMobile = ScreenUtil().screenWidth <= ScreenUtil().screenHeight;
+    
     // show a loading screen when _cacheStore hasn't been set yet
-    return FutureBuilder<MapSetting>(
-      future: _setting,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final data = snapshot.data!;
-          return data.isLocal ? _offlineMap(data) : _onlineMap(data);
-        }
-        if (snapshot.hasError) {
-          return Center(
-            child: Text(
-              snapshot.error.toString(),
-              style: TextStyle(
-                fontSize: 15.em,
-                color: DefaultColors.fg,
-                fontFamily: "朱雀仿宋",
+    return Scaffold(
+      backgroundColor: DefaultColors.bg,
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          buildFloatingBtn(isMobile, DefaultColors.keyword, Icons.timeline, () {
+            Navigator.of(context).push(SmoothRouter.builder(const GeoTimeline()));
+          }),
+          buildFloatingBtn(isMobile, DefaultColors.special, Icons.map, () {
+            Navigator.of(context).push(SmoothRouter.builder(const GeoSpatial()));
+          }),
+        ],
+      ),
+      body: FutureBuilder<MapSetting>(
+        future: _setting,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final data = snapshot.data!;
+            return data.isLocal ? _offlineMap(data) : _onlineMap(data);
+          }
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                snapshot.error.toString(),
+                style: TextStyle(
+                  fontSize: 15.em,
+                  color: DefaultColors.fg,
+                  fontFamily: "朱雀仿宋",
+                ),
               ),
-            ),
-          );
-        }
-        return const Center(child: CircularProgressIndicator());
-      },
+            );
+          }
+          return const Center(child: CircularProgressIndicator());
+        },
+      ),
     );
   }
 

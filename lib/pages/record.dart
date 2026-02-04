@@ -4,7 +4,9 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:jiyi/services/geo.dart';
 import 'package:jiyi/utils/asr.dart';
+import 'package:jiyi/utils/data/geo_setting.dart';
 import 'package:jiyi/utils/data/zdpp_setting.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 import 'package:geolocator_platform_interface/geolocator_platform_interface.dart';
@@ -270,6 +272,8 @@ class _RecordPageState extends State<RecordPage> {
     final zdppSettings = zdppJson == null
         ? null
         : ZdppSetting.fromJson(zdppJson);
+    
+    final geoJson = await ss.read(key: ss.GEO_SETTINGS);
 
     final metadata = await compute(_save, {
       'model': model,
@@ -288,8 +292,8 @@ class _RecordPageState extends State<RecordPage> {
         transcript: "",
       ).dyn,
       "_token": ServicesBinding.rootIsolateToken!,
-      // LLM opt
       "zdpp": zdppSettings,
+      "geo": geoJson,
     });
     IO.addEntry(metadata);
     await IO.updateIndexOnDisk();
@@ -316,10 +320,29 @@ class _RecordPageState extends State<RecordPage> {
 
     md["transcript"] = await Asr.fromWAV(
       params['model'] as so.OnlineModelConfig?,
-      params["zdpp"],
+      (params["zdpp"] as ZdppSetting?)?.model,
       Float32List.fromList(bytes),
       SAMPLE_RATE,
     );
+    
+    // Perform geo lookup if coordinates available and geo settings configured
+    if (md["latitude"] != null && md["longitude"] != null) {
+      final geoJson = params['geo'];
+      if (geoJson != null) {
+        final geoSetting = GeoSetting.fromJson(geoJson);
+        if (geoSetting.enabled && geoSetting.dataPath != null) {
+          final geo = Geo();
+          final geodesc = await geo.getLocationDescription(
+            md["latitude"] as double,
+            md["longitude"] as double,
+          );
+          if (geodesc != null && geodesc.isNotEmpty) {
+            md["geodesc"] = geodesc;
+          }
+        }
+      }
+    }
+    
     final metadata = Metadata.fromDyn(md);
     await IO.save(data, metadata);
     return metadata;

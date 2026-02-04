@@ -426,8 +426,59 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_geo_desc => '下载地理数据文件以支持位置查询功能';
 
   @override
+  String get settings_geo_download => '下载地理数据';
+
+  @override
   String get settings_geo_saved => '坐标解析设置已保存';
 
   @override
   String get settings_geo_reset => '坐标解析设置已重置';
+
+  @override
+  String get settings_geo_bulk_generate => '批量生成位置信息';
+
+  @override
+  String get settings_geo_bulk_generate_title => '批量生成位置信息';
+
+  @override
+  String settings_geo_bulk_generate_message(int count) {
+    return '发现$count条带有坐标但没有位置信息的录音，是否为它们生成位置信息？';
+  }
+
+  @override
+  String get settings_geo_bulk_cancel => '取消';
+
+  @override
+  String get settings_geo_bulk_confirm => '确认';
+
+  @override
+  String get settings_geo_bulk_processing => '正在处理...';
+
+  @override
+  String settings_geo_bulk_complete(int success, int total) {
+    return '已完成：成功生成$success条，共$total条';
+  }
+
+  @override
+  String get settings_geo_bulk_no_recordings => '没有需要生成位置信息的录音';
+
+  @override
+  String get geo_timeline_title => '地理位置时间轴';
+
+  @override
+  String get geo_timeline_empty => '没有包含地理位置的录音';
+
+  @override
+  String geo_timeline_recording_count(int count) {
+    return '$count条录音';
+  }
+
+  @override
+  String get geo_timeline_notable => '重要录音';
+
+  @override
+  String get geo_spatial_title => '地理位置统计';
+
+  @override
+  String get geo_spatial_empty => '没有包含地理位置的录音';
 }

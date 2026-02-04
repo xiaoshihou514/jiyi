@@ -449,8 +449,61 @@ class AppLocalizationsEn extends AppLocalizations {
       'Download geographic data files to support location query functionality';
 
   @override
+  String get settings_geo_download => 'Download geographic data';
+
+  @override
   String get settings_geo_saved => 'Coordinate parsing settings saved';
 
   @override
   String get settings_geo_reset => 'Coordinate parsing settings reset';
+
+  @override
+  String get settings_geo_bulk_generate => 'Bulk Generate Locations';
+
+  @override
+  String get settings_geo_bulk_generate_title =>
+      'Bulk Generate Location Information';
+
+  @override
+  String settings_geo_bulk_generate_message(int count) {
+    return 'Found $count recordings with coordinates but no location information. Generate location info for them?';
+  }
+
+  @override
+  String get settings_geo_bulk_cancel => 'Cancel';
+
+  @override
+  String get settings_geo_bulk_confirm => 'Confirm';
+
+  @override
+  String get settings_geo_bulk_processing => 'Processing...';
+
+  @override
+  String settings_geo_bulk_complete(int success, int total) {
+    return 'Completed: $success succeeded out of $total';
+  }
+
+  @override
+  String get settings_geo_bulk_no_recordings =>
+      'No recordings need location information';
+
+  @override
+  String get geo_timeline_title => 'Geographic Timeline';
+
+  @override
+  String get geo_timeline_empty => 'No recordings with geolocation';
+
+  @override
+  String geo_timeline_recording_count(int count) {
+    return '$count recordings';
+  }
+
+  @override
+  String get geo_timeline_notable => 'Notable Recordings';
+
+  @override
+  String get geo_spatial_title => 'Geographic Statistics';
+
+  @override
+  String get geo_spatial_empty => 'No recordings with geolocation';
 }

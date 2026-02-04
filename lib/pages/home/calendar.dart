@@ -1,13 +1,18 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiyi/pages/md_edit.dart';
 import 'package:jiyi/pages/home.dart';
+import 'package:jiyi/pages/record.dart';
+import 'package:jiyi/pages/search.dart';
 import 'package:jiyi/utils/app_lifecycle_overlay.dart';
 import 'package:jiyi/services/secure_storage.dart' as ss;
 import 'package:provider/provider.dart';
 
 import 'package:jiyi/components/spinner.dart';
+import 'package:jiyi/components/md_input.dart';
+import 'package:jiyi/components/floating_btn.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/pages/player.dart';
 import 'package:jiyi/pages/playlist.dart';
@@ -21,7 +26,8 @@ import 'package:jiyi/utils/text_color.dart';
 
 @DeepSeek()
 class Calendar extends StatefulWidget {
-  const Calendar({super.key});
+  final String storagePath;
+  const Calendar(this.storagePath, {super.key});
 
   @override
   State<Calendar> createState() => _CalendarState();
@@ -33,26 +39,58 @@ class _CalendarState extends State<Calendar> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Notifier>(
-      builder: (context, counter, child) => FutureBuilder<List<Metadata>>(
-        future: IO.indexFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: Spinner(Icons.sync, DefaultColors.keyword, 30.em),
+    bool isMobile = ScreenUtil().screenWidth <= ScreenUtil().screenHeight;
+    
+    return Scaffold(
+      backgroundColor: DefaultColors.bg,
+      floatingActionButton: _floatingBtns(isMobile),
+      body: Consumer<Notifier>(
+        builder: (context, counter, child) => FutureBuilder<List<Metadata>>(
+          future: IO.indexFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: Spinner(Icons.sync, DefaultColors.keyword, 30.em),
+              );
+            }
+
+            final records = snapshot.data ?? [];
+            _processRecords(records);
+
+            return Container(
+              color: DefaultColors.bg,
+              padding: EdgeInsets.symmetric(horizontal: 6.em, vertical: 3.em),
+              child: ListView(children: _buildMonthSections(context)),
             );
-          }
-
-          final records = snapshot.data ?? [];
-          _processRecords(records);
-
-          return Container(
-            color: DefaultColors.bg,
-            padding: EdgeInsets.symmetric(horizontal: 6.em, vertical: 3.em),
-            child: ListView(children: _buildMonthSections(context)),
-          );
-        },
+          },
+        ),
       ),
+    );
+  }
+  
+  Widget _floatingBtns(bool isMobile) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        // upload
+        buildFloatingBtn(isMobile, DefaultColors.func, Icons.upload, () async {
+          await showMetadataInputDialog(context);
+          if (mounted) {
+            context.read<Notifier>().trigger();
+          }
+        }),
+        // text search
+        buildFloatingBtn(isMobile, DefaultColors.keyword, Icons.search, () {
+          Navigator.push(context, SmoothRouter.builder(Search()));
+        }),
+        // record
+        buildFloatingBtn(isMobile, DefaultColors.special, Icons.mic, () {
+          Navigator.push(
+            context,
+            SmoothRouter.builder(RecordPage(widget.storagePath)),
+          );
+        }),
+      ],
     );
   }
 

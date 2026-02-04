@@ -1,22 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 
 import 'package:jiyi/pages/home/calendar.dart';
 import 'package:jiyi/pages/home/map.dart';
 import 'package:jiyi/pages/home/settings.dart';
-import 'package:jiyi/pages/search.dart';
 import 'package:jiyi/utils/em.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/utils/authenticator.dart';
-import 'package:jiyi/pages/record.dart';
 import 'package:jiyi/services/encryption.dart';
 import 'package:jiyi/services/io.dart';
-import 'package:jiyi/utils/notifier.dart';
-import 'package:jiyi/utils/smooth_router.dart';
-import 'package:jiyi/components/md_input.dart';
 
 class HomePage extends StatefulWidget {
   final bool skipEncryption;
@@ -129,7 +123,7 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
         body: TabBarView(
           controller: _tabController,
           children: [
-            Calendar(),
+            Calendar(widget.storagePath),
             MapView(AppLocalizations.of(context)!),
             Settings(),
           ],
@@ -150,59 +144,6 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
               Tab(icon: Icon(Icons.settings, size: isMobile ? 15.em : 5.em)),
             ],
           ),
-        ),
-        floatingActionButton: _tabController.index == 0
-            ? _floatingBtns(isMobile)
-            : null,
-      ),
-    );
-  }
-
-  Widget _floatingBtns(bool isMobile) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        // upload
-        _floatingBtn(isMobile, DefaultColors.func, Icons.upload, () async {
-          await showMetadataInputDialog(context);
-          if (mounted) {
-            context.read<Notifier>().trigger();
-          }
-        }),
-        // text search
-        _floatingBtn(isMobile, DefaultColors.keyword, Icons.search, () {
-          Navigator.push(context, SmoothRouter.builder(Search()));
-        }),
-        // record
-        _floatingBtn(isMobile, DefaultColors.special, Icons.mic, () {
-          Navigator.push(
-            context,
-            SmoothRouter.builder(RecordPage(widget.storagePath)),
-          );
-        }),
-      ],
-    );
-  }
-
-  IconButton _floatingBtn(
-    bool isMobile,
-    Color color,
-    IconData icon,
-    VoidCallback cb,
-  ) {
-    return IconButton(
-      onPressed: cb,
-      icon: Container(
-        width: isMobile ? 20.em : 10.em,
-        height: isMobile ? 20.em : 10.em,
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Icon(
-          icon,
-          color: DefaultColors.bg,
-          size: isMobile ? 15.em : 7.5.em,
         ),
       ),
     );

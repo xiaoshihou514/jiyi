@@ -149,5 +149,45 @@
   "settings_geo_desc": "Download geographic data files to support location query functionality",
   "settings_geo_download": "Download geographic data",
   "settings_geo_saved": "Coordinate parsing settings saved",
-  "settings_geo_reset": "Coordinate parsing settings reset"
+  "settings_geo_reset": "Coordinate parsing settings reset",
+  "settings_geo_bulk_generate": "Bulk Generate Locations",
+  "settings_geo_bulk_generate_title": "Bulk Generate Location Information",
+  "settings_geo_bulk_generate_message": "Found {count} recordings with coordinates but no location information. Generate location info for them?",
+  "@settings_geo_bulk_generate_message": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settings_geo_bulk_cancel": "Cancel",
+  "settings_geo_bulk_confirm": "Confirm",
+  "settings_geo_bulk_processing": "Processing...",
+  "settings_geo_bulk_complete": "Completed: {success} succeeded out of {total}",
+  "@settings_geo_bulk_complete": {
+    "placeholders": {
+      "success": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "settings_geo_bulk_no_recordings": "No recordings need location information",
+  
+  "geo_timeline_title": "Geographic Timeline",
+  "geo_timeline_empty": "No recordings with geolocation",
+  "geo_timeline_recording_count": "{count} recordings",
+  "@geo_timeline_recording_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "geo_timeline_notable": "Notable Recordings",
+  
+  "geo_spatial_title": "Geographic Statistics",
+  "geo_spatial_empty": "No recordings with geolocation"
 }
