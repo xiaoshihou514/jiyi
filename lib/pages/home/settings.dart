@@ -6,6 +6,7 @@ import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/services/secure_storage.dart' as ss;
 import 'package:jiyi/pages/settings/map_settings.dart';
 import 'package:jiyi/pages/settings/asr_settings.dart';
+import 'package:jiyi/pages/settings/geo_settings.dart';
 import 'package:jiyi/pages/settings/zdpp_settings.dart';
 import 'package:jiyi/services/io.dart';
 
@@ -49,6 +50,7 @@ class Settings extends StatelessWidget {
             MapSettings(l),
             ASRSettings(l),
             ZdppSettings(l),
+            GeoSettings(l),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

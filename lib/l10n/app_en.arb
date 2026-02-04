@@ -143,5 +143,11 @@
   "geo_lookup_failed": "Failed to query location information",
   "metadata_saved": "Saved",
   "metadata_location_display": "Location: {geodesc}",
-  "metadata_location_unset": "Not set"
+  "metadata_location_unset": "Not set",
+  
+  "settings_geo": "Coordinate Parsing Settings",
+  "settings_geo_desc": "Download geographic data files to support location query functionality",
+  "settings_geo_download": "Download geographic data",
+  "settings_geo_saved": "Coordinate parsing settings saved",
+  "settings_geo_reset": "Coordinate parsing settings reset"
 }

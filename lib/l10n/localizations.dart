@@ -883,6 +883,30 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'未设置'**
   String get metadata_location_unset;
+
+  /// No description provided for @settings_geo.
+  ///
+  /// In zh, this message translates to:
+  /// **'坐标解析设置'**
+  String get settings_geo;
+
+  /// No description provided for @settings_geo_desc.
+  ///
+  /// In zh, this message translates to:
+  /// **'下载地理数据文件以支持位置查询功能'**
+  String get settings_geo_desc;
+
+  /// No description provided for @settings_geo_saved.
+  ///
+  /// In zh, this message translates to:
+  /// **'坐标解析设置已保存'**
+  String get settings_geo_saved;
+
+  /// No description provided for @settings_geo_reset.
+  ///
+  /// In zh, this message translates to:
+  /// **'坐标解析设置已重置'**
+  String get settings_geo_reset;
 }
 
 class _AppLocalizationsDelegate

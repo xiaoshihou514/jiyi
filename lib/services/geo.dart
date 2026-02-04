@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:jiyi/services/secure_storage.dart' as ss;
 import 'package:jiyi/utils/anno.dart';
+import 'package:jiyi/utils/data/geo_setting.dart';
 import 'package:turf/turf.dart';
 
 @Claude()
@@ -8,8 +10,6 @@ class Geo {
   static final Geo _instance = Geo._internal();
   factory Geo() => _instance;
   Geo._internal();
-
-  static const String _geoJsonPath = '/home/xiaoshihou/Playground/github/geojson';
   
   FeatureCollection? _cnAdm1;
   FeatureCollection? _cnAdm2;
@@ -34,16 +34,26 @@ class Geo {
 
   Future<String?> getLocationDescription(double latitude, double longitude) async {
     try {
+      // Check if feature is enabled and get data path
+      final settingsJson = await ss.read(key: ss.GEO_SETTINGS);
+      if (settingsJson == null) return null;
+      
+      final setting = GeoSetting.fromJson(settingsJson);
+      if (!setting.enabled || setting.dataPath == null) {
+        return null;
+      }
+      
+      final geoJsonPath = setting.dataPath!;
       final point = Point(coordinates: Position(longitude, latitude));
       
       // 先检查是否在中国境内
-      _cnAdm1 ??= await _loadGeoJSON('$_geoJsonPath/cn_adm1.geojson');
+      _cnAdm1 ??= await _loadGeoJSON('$geoJsonPath/cn_adm1.geojson');
       final province = _findContainingFeature(_cnAdm1, point);
       
       if (province != null) {
         // 在中国境内，查找市和县
-        _cnAdm2 ??= await _loadGeoJSON('$_geoJsonPath/cn_adm2.geojson');
-        _cnAdm3 ??= await _loadGeoJSON('$_geoJsonPath/cn_adm3.geojson');
+        _cnAdm2 ??= await _loadGeoJSON('$geoJsonPath/cn_adm2.geojson');
+        _cnAdm3 ??= await _loadGeoJSON('$geoJsonPath/cn_adm3.geojson');
         
         final city = _findContainingFeature(_cnAdm2, point);
         final county = _findContainingFeature(_cnAdm3, point);
@@ -56,9 +66,9 @@ class Geo {
         return resultParts.isNotEmpty ? resultParts.join(', ') : null;
       } else {
         // 不在中国境内，检查世界数据
-        _worldAdm0 ??= await _loadGeoJSON('$_geoJsonPath/world_adm0.geojson');
-        _worldAdm1 ??= await _loadGeoJSON('$_geoJsonPath/world_adm1.geojson');
-        _worldAdm2 ??= await _loadGeoJSON('$_geoJsonPath/world_adm2.geojson');
+        _worldAdm0 ??= await _loadGeoJSON('$geoJsonPath/world_adm0.geojson');
+        _worldAdm1 ??= await _loadGeoJSON('$geoJsonPath/world_adm1.geojson');
+        _worldAdm2 ??= await _loadGeoJSON('$geoJsonPath/world_adm2.geojson');
         
         final country = _findContainingFeature(_worldAdm0, point, nameKey: 'shapeName');
         final state = _findContainingFeature(_worldAdm1, point, nameKey: 'shapeName');

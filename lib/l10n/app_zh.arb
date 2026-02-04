@@ -144,5 +144,10 @@
   "geo_lookup_failed": "未能查询到位置信息",
   "metadata_saved": "已保存",
   "metadata_location_display": "位置: {geodesc}",
-  "metadata_location_unset": "未设置"
+  "metadata_location_unset": "未设置",
+  
+  "settings_geo": "坐标解析设置",
+  "settings_geo_desc": "下载地理数据文件以支持位置查询功能",
+  "settings_geo_saved": "坐标解析设置已保存",
+  "settings_geo_reset": "坐标解析设置已重置"
 }

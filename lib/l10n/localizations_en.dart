@@ -440,4 +440,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get metadata_location_unset => 'Not set';
+
+  @override
+  String get settings_geo => 'Coordinate Parsing Settings';
+
+  @override
+  String get settings_geo_desc =>
+      'Download geographic data files to support location query functionality';
+
+  @override
+  String get settings_geo_saved => 'Coordinate parsing settings saved';
+
+  @override
+  String get settings_geo_reset => 'Coordinate parsing settings reset';
 }

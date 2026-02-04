@@ -418,4 +418,16 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get metadata_location_unset => '未设置';
+
+  @override
+  String get settings_geo => '坐标解析设置';
+
+  @override
+  String get settings_geo_desc => '下载地理数据文件以支持位置查询功能';
+
+  @override
+  String get settings_geo_saved => '坐标解析设置已保存';
+
+  @override
+  String get settings_geo_reset => '坐标解析设置已重置';
 }
