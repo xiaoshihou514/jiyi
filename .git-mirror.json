@@ -4,11 +4,19 @@
     "url": "ssh://git@codeberg.org/xiaoshihou/jiyi.git"
   },
   {
+    "name": "disroot",
+    "url": "ssh://git@git.disroot.org/xiaoshihou/jiyi.git"
+  },
+  {
     "name": "sourcehut",
     "url": "git@git.sr.ht:~xiaoshihou/jiyi"
   },
   {
     "name": "gitlab",
     "url": "git@gitlab.com:xiaoshihou/jiyi.git"
+  },
+  {
+    "name": "gitgud",
+    "url": "git@gitgud.io:xiaoshihou514/jiyi.git"
   }
 ]
