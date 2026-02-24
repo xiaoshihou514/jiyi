@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiyi/components/spinner.dart';
 import 'package:jiyi/utils/app_lifecycle_overlay.dart';
@@ -36,13 +37,25 @@ class _StoragePage extends State<StoragePage> {
     try {
       setState(() => _writing = true);
       ss.write(key: ss.STORAGE_PATH, value: _storagePath);
+      
+      // Notify Android widget that storage is now configured
+      try {
+        const platform = MethodChannel('com.github.xiaoshihou.jiyi/widget');
+        await platform.invokeMethod('setStorageConfigured', {'configured': true});
+      } catch (e) {
+        // Widget channel not available on non-Android platforms
+        debugPrint('Widget update failed: $e');
+      }
+      
       setState(() => _writing = false);
     } catch (e) {
       _error = e.toString();
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_error!), duration: Durations.long1),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(_error!), duration: Durations.long1),
+        );
+      }
     }
   }
 

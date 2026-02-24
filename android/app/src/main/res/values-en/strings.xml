@@ -1,3 +1,8 @@
 <resources>
   <string name="app_name">jiyi</string>
+  <string name="widget_description">Show daily recording status</string>
+  <string name="widget_status_description">Recording status icon</string>
+  <string name="widget_recorded">Recorded</string>
+  <string name="widget_not_recorded">Not recorded</string>
+  <string name="widget_not_configured">Not configured</string>
 </resources>

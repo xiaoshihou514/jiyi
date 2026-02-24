@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp"
+    android:background="@drawable/widget_background">
+
+    <ImageView
+        android:id="@+id/status_icon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="@string/widget_status_description"
+        android:src="@drawable/ic_widget_not_recorded" />
+
+    <TextView
+        android:id="@+id/status_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/status_icon"
+        android:layout_centerVertical="true"
+        android:text="@string/widget_not_recorded"
+        android:textSize="16sp"
+        android:textColor="#FFFFFF"
+        android:fontFamily="sans-serif" />
+
+</RelativeLayout>

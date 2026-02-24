@@ -298,6 +298,15 @@ class _RecordPageState extends State<RecordPage> {
     IO.addEntry(metadata);
     await IO.updateIndexOnDisk();
 
+    // Notify Android widget that recording was saved
+    try {
+      const platform = MethodChannel('com.github.xiaoshihou.jiyi/widget');
+      await platform.invokeMethod('updateWidgetStatus', {'recorded': true});
+    } catch (e) {
+      // Widget channel not available on non-Android platforms
+      debugPrint('Widget update failed: $e');
+    }
+
     _cleanup();
     if (mounted) {
       context.read<Notifier>().trigger();

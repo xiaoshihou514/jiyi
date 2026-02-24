@@ -1,3 +1,8 @@
 <resources>
   <string name="app_name">记忆</string>
+  <string name="widget_description">显示今日录音状态</string>
+  <string name="widget_status_description">录音状态图标</string>
+  <string name="widget_recorded">已录音</string>
+  <string name="widget_not_recorded">未录音</string>
+  <string name="widget_not_configured">未设置</string>
 </resources>
