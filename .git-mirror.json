@@ -18,5 +18,9 @@
   {
     "name": "gitgud",
     "url": "git@gitgud.io:xiaoshihou514/jiyi.git"
+  },
+  {
+    "name": "frama",
+    "url": "git@framagit.org:xiaoshihou/jiyi.git"
   }
 ]
