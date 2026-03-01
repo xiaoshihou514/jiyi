@@ -1,15 +1,19 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:jiyi/components/soundviz.dart';
 import 'package:jiyi/components/spinner.dart';
 import 'package:jiyi/components/tape.dart';
 import 'package:jiyi/components/tapewheel.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
+import 'package:jiyi/services/geo.dart';
 import 'package:jiyi/utils/anno.dart';
 import 'package:jiyi/utils/em.dart';
 import 'package:jiyi/services/encryption.dart';
@@ -34,11 +38,13 @@ class _PlayerState extends State<Player> {
   bool _isLoading = true;
   String? _error;
   bool _cancelled = false;
+  String? _resolvedGeoDesc;
 
   @override
   void initState() {
     super.initState();
     _initPlayer();
+    _initGeoDesc();
 
     // 设置位置监听器
     _audioPlayer.onPositionChanged.listen((position) {
@@ -89,6 +95,41 @@ class _PlayerState extends State<Player> {
     }
   }
 
+  Future<void> _initGeoDesc() async {
+    // Use existing geodesc if present.
+    if (widget._md.geodesc != null) {
+      setState(() => _resolvedGeoDesc = widget._md.geodesc);
+      return;
+    }
+    // Try live reverse geocoding if coordinates are available.
+    if (widget._md.hasGeo) {
+      try {
+        final desc = await Geo().getLocationDescription(
+          widget._md.latitude!,
+          widget._md.longitude!,
+        );
+        if (!_cancelled && mounted && desc != null) {
+          setState(() => _resolvedGeoDesc = desc);
+        } else if (!_cancelled && mounted) {
+          // Fall back to raw coordinates.
+          setState(
+            () => _resolvedGeoDesc =
+                '${widget._md.latitude!.toStringAsFixed(4)}, '
+                '${widget._md.longitude!.toStringAsFixed(4)}',
+          );
+        }
+      } catch (_) {
+        if (!_cancelled && mounted) {
+          setState(
+            () => _resolvedGeoDesc =
+                '${widget._md.latitude!.toStringAsFixed(4)}, '
+                '${widget._md.longitude!.toStringAsFixed(4)}',
+          );
+        }
+      }
+    }
+  }
+
   static Future<Uint8List> _read(Map<String, dynamic> params) async {
     Encryption.initByInstance(params['enc']);
     IO.STORAGE = params['base_path'];
@@ -118,6 +159,14 @@ class _PlayerState extends State<Player> {
             child: Icon(Icons.arrow_back, color: DefaultColors.fg, size: 8.em),
           ),
         ),
+        actions: [
+          if (!_isLoading && _error == null)
+            IconButton(
+              onPressed: _exportWav,
+              icon: Icon(Icons.share, color: DefaultColors.fg, size: 8.em),
+              tooltip: 'Export WAV',
+            ),
+        ],
       ),
       body: Padding(
         padding: EdgeInsets.all(8.em),
@@ -150,6 +199,11 @@ class _PlayerState extends State<Player> {
                   ],
                 ),
               ),
+
+            if (!_isLoading && _error == null) ...[
+              SizedBox(height: 3.em),
+              _metaStrip,
+            ],
 
             Spacer(flex: 1),
 
@@ -226,6 +280,48 @@ class _PlayerState extends State<Player> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget get _metaStrip {
+    final md = widget._md;
+    final dateStr = DateFormat('yyyy-MM-dd  HH:mm').format(md.time);
+    final durStr = _printDuration(md.length);
+
+    Widget chip(IconData icon, String label) => Container(
+      padding: EdgeInsets.symmetric(horizontal: 3.em, vertical: 1.em),
+      decoration: BoxDecoration(
+        color: DefaultColors.shade_1,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 4.em, color: DefaultColors.info),
+          SizedBox(width: 1.5.em),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 4.em,
+              color: DefaultColors.fg,
+              fontFamily: "朱雀仿宋",
+              decoration: TextDecoration.none,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    return Wrap(
+      spacing: 3.em,
+      runSpacing: 2.em,
+      alignment: WrapAlignment.center,
+      children: [
+        chip(Icons.calendar_today, dateStr),
+        chip(Icons.timer_outlined, durStr),
+        if (_resolvedGeoDesc != null)
+          chip(Icons.location_on_outlined, _resolvedGeoDesc!),
+      ],
     );
   }
 
@@ -317,6 +413,44 @@ class _PlayerState extends State<Player> {
     String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60).abs());
     String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60).abs());
     return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+  }
+
+  Future<void> _exportWav() async {
+    final bytes = await compute(_read, {
+      'base_path': IO.STORAGE,
+      'enc': Encryption.instance,
+      'file': widget._md.path,
+    });
+
+    final fileName = '${widget._md.title}.wav';
+
+    if (Platform.isAndroid || Platform.isIOS) {
+      // On mobile, save to Downloads via saveFile dialog.
+      final savePath = await FilePicker.platform.saveFile(
+        dialogTitle: 'Export WAV',
+        fileName: fileName,
+        bytes: bytes,
+      );
+      if (savePath == null) return; // user cancelled
+    } else {
+      // On desktop, let the user pick a save location.
+      final savePath = await FilePicker.platform.saveFile(
+        dialogTitle: 'Export WAV',
+        fileName: fileName,
+      );
+      if (savePath == null) return;
+      await File(savePath).writeAsBytes(bytes);
+    }
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Exported $fileName'),
+          backgroundColor: DefaultColors.shade_3,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   void _togglePause() async {
