@@ -4,11 +4,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:jiyi/services/geo.dart';
-import 'package:jiyi/services/reminder.dart';
-import 'package:jiyi/utils/asr.dart';
-import 'package:jiyi/utils/data/geo_setting.dart';
-import 'package:jiyi/utils/data/zdpp_setting.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 import 'package:geolocator_platform_interface/geolocator_platform_interface.dart';
 import 'package:flutter_recorder/flutter_recorder.dart';
@@ -34,6 +29,11 @@ import 'package:jiyi/utils/stop_model.dart';
 import 'package:jiyi/services/secure_storage.dart' as ss;
 import 'package:jiyi/utils/data/asr_setting.dart';
 import 'package:jiyi/pages/default_colors.dart';
+import 'package:jiyi/services/geo.dart';
+import 'package:jiyi/services/reminder.dart';
+import 'package:jiyi/utils/asr.dart';
+import 'package:jiyi/utils/data/geo_setting.dart';
+import 'package:jiyi/utils/data/zdpp_setting.dart';
 
 extension on num {
   double get em => (ScreenUtil().screenWidth > ScreenUtil().screenHeight)
@@ -176,7 +176,7 @@ class _RecordPageState extends State<RecordPage> {
                       fontSize: 4.em,
                       fontFamily: "851手写杂书体",
                       decoration: TextDecoration.none,
-                      color: DefaultColors.info,
+                      color: DefaultColors.fg,
                     ),
                   ),
                 ),
@@ -189,7 +189,7 @@ class _RecordPageState extends State<RecordPage> {
                       fontSize: 6.em,
                       fontFamily: "digital7-mono",
                       decoration: TextDecoration.none,
-                      color: DefaultColors.bg,
+                      color: DefaultColors.fg,
                     ),
                   ),
                 ),
@@ -273,7 +273,7 @@ class _RecordPageState extends State<RecordPage> {
     final zdppSettings = zdppJson == null
         ? null
         : ZdppSetting.fromJson(zdppJson);
-    
+
     final geoJson = await ss.read(key: ss.GEO_SETTINGS);
 
     final metadata = await compute(_save, {
@@ -335,7 +335,7 @@ class _RecordPageState extends State<RecordPage> {
       Float32List.fromList(bytes),
       SAMPLE_RATE,
     );
-    
+
     // Perform geo lookup if coordinates available and geo settings configured
     if (md["latitude"] != null && md["longitude"] != null) {
       final geoJson = params['geo'];
@@ -353,7 +353,7 @@ class _RecordPageState extends State<RecordPage> {
         }
       }
     }
-    
+
     final metadata = Metadata.fromDyn(md);
     await IO.save(data, metadata);
     return metadata;

@@ -67,6 +67,18 @@ abstract class Settings {
         ),
       );
 
+  static Widget settingSwitch({
+    required bool value,
+    required void Function(bool) onChanged,
+  }) => Switch(
+    value: value,
+    onChanged: onChanged,
+    activeTrackColor: DefaultColors.keyword,
+    inactiveTrackColor: DefaultColors.shade_2,
+    activeThumbColor: DefaultColors.fg,
+    inactiveThumbColor: DefaultColors.shade_5,
+  );
+
   static TextStyle get fBHintStyle =>
       TextStyle(fontSize: 5.em, color: DefaultColors.bg, fontFamily: "朱雀仿宋");
 

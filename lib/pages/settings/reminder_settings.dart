@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:jiyi/components/style/settings.dart';
 import 'package:jiyi/l10n/localizations.dart';
-import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/services/reminder.dart';
-
-extension on num {
-  double get em => (ScreenUtil().screenWidth > ScreenUtil().screenHeight)
-      ? ScreenUtil().screenHeight / 128
-      : ScreenUtil().screenWidth / 96;
-}
 
 class ReminderSettings extends StatefulWidget {
   final AppLocalizations loc;
@@ -37,25 +30,23 @@ class _ReminderSettingsState extends State<ReminderSettings> {
           children: [
             Text(
               l.settings_reminder,
-              style: TextStyle(fontSize: 8.em, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 8.em,
+                fontWeight: FontWeight.bold,
+                fontFamily: "朱雀仿宋",
+              ),
             ),
-            Switch(
+          ],
+        ),
+        Settings.flex(
+          children: [
+            Text(l.settings_reminder_desc, style: TextStyle(fontFamily: "朱雀仿宋")),
+            Settings.settingSwitch(
               value: _enabled,
-              activeThumbColor: DefaultColors.keyword,
               onChanged: (value) async {
                 await Reminder.setEnabled(value);
                 setState(() => _enabled = value);
               },
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            Flexible(
-              child: Text(
-                l.settings_reminder_desc,
-                style: TextStyle(color: DefaultColors.fg),
-              ),
             ),
           ],
         ),

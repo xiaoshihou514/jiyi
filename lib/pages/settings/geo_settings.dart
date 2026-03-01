@@ -68,17 +68,6 @@ class _GeoSettingsState extends State<GeoSettings> {
                     );
                   }
                 }, Icons.undo),
-                Settings.settingOpButton(() async {
-                  await ss.write(
-                    key: ss.GEO_SETTINGS,
-                    value: _setting.toJson(),
-                  );
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(l.settings_geo_saved)),
-                    );
-                  }
-                }, Icons.save),
               ],
             ),
           ],
@@ -86,15 +75,12 @@ class _GeoSettingsState extends State<GeoSettings> {
         Settings.flex(
           children: [
             Text(l.settings_geo_desc, style: TextStyle(fontFamily: "朱雀仿宋")),
-            Switch(
+            Settings.settingSwitch(
               value: _setting.enabled,
               onChanged: (value) async {
                 setState(() => _setting.enabled = value);
+                await ss.write(key: ss.GEO_SETTINGS, value: _setting.toJson());
               },
-              activeTrackColor: DefaultColors.keyword,
-              inactiveTrackColor: DefaultColors.shade_2,
-              activeThumbColor: DefaultColors.fg,
-              inactiveThumbColor: DefaultColors.shade_5,
             ),
           ],
         ),

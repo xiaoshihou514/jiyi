@@ -151,13 +151,13 @@ class SoundVizPainter extends CustomPainter {
     final vol = _source.getVolume();
 
     offsets.addFirst((
-      data
-              .slices(8)
-              .map((xs) => xs.sum)
-              .mapIndexed((i, freq) => i * freq)
-              .reduce((x, y) => x + y) /
-          List.generate(32, (i) => i, growable: false).sum /
-          4,
+      (data
+                  .slices(8)
+                  .map((xs) => xs.sum)
+                  .mapIndexed((i, freq) => i * freq)
+                  .reduce((x, y) => x + y) /
+              List.generate(32, (i) => i, growable: false).sum)
+          .clamp(0.0, 1.0),
       vol,
     ));
     if (offsets.length > sampleSize) {

@@ -176,8 +176,7 @@ class _PlayerState extends State<Player> {
           if (!_isLoading && _error == null)
             IconButton(
               onPressed: _exportWav,
-              icon: Icon(Icons.download, color: DefaultColors.fg, size: 8.em),
-              tooltip: 'Export WAV',
+              icon: Icon(Icons.share, color: DefaultColors.fg, size: 8.em),
             ),
         ],
       ),
@@ -409,7 +408,7 @@ class _PlayerState extends State<Player> {
               fontSize: 4.em,
               fontFamily: "851手写杂书体",
               decoration: TextDecoration.none,
-              color: DefaultColors.info,
+              color: DefaultColors.fg,
             ),
           ),
         ),
@@ -422,7 +421,7 @@ class _PlayerState extends State<Player> {
               fontSize: 6.em,
               fontFamily: "digital7-mono",
               decoration: TextDecoration.none,
-              color: DefaultColors.bg,
+              color: DefaultColors.fg,
             ),
           ),
         ),
