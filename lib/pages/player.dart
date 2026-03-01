@@ -1,11 +1,12 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_soloud/flutter_soloud.dart';
 import 'package:intl/intl.dart';
 import 'package:jiyi/components/soundviz.dart';
 import 'package:jiyi/components/spinner.dart';
@@ -32,7 +33,12 @@ class Player extends StatefulWidget {
 
 class _PlayerState extends State<Player> {
   final StopModel _stop = StopModel();
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  final SoLoud _soloud = SoLoud.instance;
+  late final SoLoudVizSource _vizSource;
+  AudioSource? _audioSource;
+  SoundHandle? _handle;
+  Timer? _positionTimer;
+
   Duration _position = Duration.zero;
   Duration _duration = Duration.zero;
   bool _isLoading = true;
@@ -43,48 +49,36 @@ class _PlayerState extends State<Player> {
   @override
   void initState() {
     super.initState();
+    _vizSource = SoLoudVizSource();
     _initPlayer();
     _initGeoDesc();
-
-    // 设置位置监听器
-    _audioPlayer.onPositionChanged.listen((position) {
-      if (!_cancelled) {
-        setState(() => _position = position);
-      }
-    });
-
-    // 设置时长监听器
-    _audioPlayer.onDurationChanged.listen((duration) {
-      if (!_cancelled) {
-        setState(() => _duration = duration);
-      }
-    });
-
-    // 设置播放状态监听器
-    _audioPlayer.onPlayerStateChanged.listen((state) {
-      if (!_cancelled) {
-        setState(() => _stop.set(state != PlayerState.playing));
-      }
-    });
   }
 
   Future<void> _initPlayer() async {
     try {
-      // 读取音频文件
       final audioData = await compute(_read, {
         'base_path': IO.STORAGE,
         'enc': Encryption.instance,
         'file': widget._md.path,
       });
 
-      // 设置音频源并准备播放
-      await _audioPlayer.setSourceBytes(audioData);
-      await _audioPlayer.resume();
+      if (!_soloud.isInitialized) {
+        await _soloud.init();
+      }
+      _soloud.setVisualizationEnabled(true);
 
-      setState(() {
-        _isLoading = false;
-        _duration = widget._md.length;
-      });
+      _audioSource = await _soloud.loadMem(widget._md.path, audioData);
+      _duration = _soloud.getLength(_audioSource!);
+      _handle = await _soloud.play(_audioSource!);
+
+      _positionTimer = Timer.periodic(
+        const Duration(milliseconds: 50),
+        (_) => _pollPosition(),
+      );
+
+      if (!_cancelled && mounted) {
+        setState(() => _isLoading = false);
+      }
     } catch (e) {
       if (mounted) {
         setState(() {
@@ -95,27 +89,39 @@ class _PlayerState extends State<Player> {
     }
   }
 
+  void _pollPosition() {
+    if (_cancelled || !mounted || _handle == null) return;
+    try {
+      final pos = _soloud.getPosition(_handle!);
+      // Detect natural end-of-playback.
+      if (pos >= _duration && !_stop.value) {
+        setState(() {
+          _position = _duration;
+          _stop.set(true);
+        });
+      } else {
+        setState(() => _position = pos);
+      }
+    } catch (_) {}
+  }
+
   Future<void> _initGeoDesc() async {
-    // Use existing geodesc if present.
     if (widget._md.geodesc != null) {
       setState(() => _resolvedGeoDesc = widget._md.geodesc);
       return;
     }
-    // Try live reverse geocoding if coordinates are available.
     if (widget._md.hasGeo) {
       try {
         final desc = await Geo().getLocationDescription(
           widget._md.latitude!,
           widget._md.longitude!,
         );
-        if (!_cancelled && mounted && desc != null) {
-          setState(() => _resolvedGeoDesc = desc);
-        } else if (!_cancelled && mounted) {
-          // Fall back to raw coordinates.
+        if (!_cancelled && mounted) {
           setState(
             () => _resolvedGeoDesc =
+                desc ??
                 '${widget._md.latitude!.toStringAsFixed(4)}, '
-                '${widget._md.longitude!.toStringAsFixed(4)}',
+                    '${widget._md.longitude!.toStringAsFixed(4)}',
           );
         }
       } catch (_) {
@@ -139,7 +145,14 @@ class _PlayerState extends State<Player> {
   @override
   void dispose() {
     _cancelled = true;
-    _audioPlayer.dispose();
+    _positionTimer?.cancel();
+    _vizSource.dispose();
+    if (_handle != null && _audioSource != null) {
+      try {
+        _soloud.stop(_handle!);
+        _soloud.disposeSource(_audioSource!);
+      } catch (_) {}
+    }
     super.dispose();
   }
 
@@ -163,7 +176,7 @@ class _PlayerState extends State<Player> {
           if (!_isLoading && _error == null)
             IconButton(
               onPressed: _exportWav,
-              icon: Icon(Icons.share, color: DefaultColors.fg, size: 8.em),
+              icon: Icon(Icons.download, color: DefaultColors.fg, size: 8.em),
               tooltip: 'Export WAV',
             ),
         ],
@@ -232,8 +245,13 @@ class _PlayerState extends State<Player> {
                       _position.inSeconds.toDouble(),
                       _duration.inSeconds.toDouble(),
                     ),
-                    onChanged: (value) async {
-                      await _audioPlayer.seek(Duration(seconds: value.toInt()));
+                    onChanged: (value) {
+                      if (_handle != null) {
+                        _soloud.seek(
+                          _handle!,
+                          Duration(seconds: value.toInt()),
+                        );
+                      }
                     },
                     activeColor: DefaultColors.func,
                     inactiveColor: DefaultColors.shade_4,
@@ -346,7 +364,11 @@ class _PlayerState extends State<Player> {
         // sound wave
         Padding(
           padding: EdgeInsets.only(bottom: 2.em),
-          child: SizedBox(width: 32.em, height: 12.em, child: SoundViz(_stop)),
+          child: SizedBox(
+            width: 32.em,
+            height: 12.em,
+            child: SoundViz(_stop, source: _vizSource),
+          ),
         ),
         // tape cog - left
         Positioned(
@@ -425,15 +447,13 @@ class _PlayerState extends State<Player> {
     final fileName = '${widget._md.title}.wav';
 
     if (Platform.isAndroid || Platform.isIOS) {
-      // On mobile, save to Downloads via saveFile dialog.
       final savePath = await FilePicker.platform.saveFile(
         dialogTitle: 'Export WAV',
         fileName: fileName,
         bytes: bytes,
       );
-      if (savePath == null) return; // user cancelled
+      if (savePath == null) return;
     } else {
-      // On desktop, let the user pick a save location.
       final savePath = await FilePicker.platform.saveFile(
         dialogTitle: 'Export WAV',
         fileName: fileName,
@@ -453,12 +473,9 @@ class _PlayerState extends State<Player> {
     }
   }
 
-  void _togglePause() async {
+  void _togglePause() {
+    if (_handle == null) return;
     _stop.flip();
-    if (_stop.value) {
-      await _audioPlayer.pause();
-    } else {
-      await _audioPlayer.resume();
-    }
+    _soloud.setPause(_handle!, _stop.value);
   }
 }
