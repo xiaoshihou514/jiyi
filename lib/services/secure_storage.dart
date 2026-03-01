@@ -8,6 +8,7 @@ final String MAP_SETTINGS = "JIYI_MAP_SETTINGS";
 final String ASR_MODEL_SETTINGS = "JIYI_ASR_SETTINGS";
 final String ZDPP_MODEL_SETTINGS = "JIYI_ZDPP_SETTINGS";
 final String GEO_SETTINGS = "JIYI_GEO_SETTINGS";
+final String REMINDER_ENABLED = "JIYI_REMINDER_ENABLED";
 
 final storage = FlutterSecureStorage();
 

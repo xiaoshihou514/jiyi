@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jiyi/services/geo.dart';
+import 'package:jiyi/services/reminder.dart';
 import 'package:jiyi/utils/asr.dart';
 import 'package:jiyi/utils/data/geo_setting.dart';
 import 'package:jiyi/utils/data/zdpp_setting.dart';
@@ -297,6 +298,7 @@ class _RecordPageState extends State<RecordPage> {
     });
     IO.addEntry(metadata);
     await IO.updateIndexOnDisk();
+    Reminder.cancelIfRecordedToday();
 
     // Notify Android widget that recording was saved
     try {
@@ -409,10 +411,14 @@ class _RecordPageState extends State<RecordPage> {
     }
     if (permission != LocationPermission.denied &&
         permission != LocationPermission.deniedForever) {
-      final pos = await _geo.getCurrentPosition(
-        locationSettings: LocationSettings(timeLimit: Duration(seconds: 5)),
-      );
-      return LatLng(pos.latitude, pos.longitude);
+      try {
+        final pos = await _geo.getCurrentPosition(
+          locationSettings: LocationSettings(timeLimit: Duration(seconds: 5)),
+        );
+        return LatLng(pos.latitude, pos.longitude);
+      } catch (_) {
+        return null;
+      }
     } else {
       return null;
     }

@@ -190,5 +190,10 @@
   "geo_timeline_notable": "重要录音",
   
   "geo_spatial_title": "地理位置统计",
-  "geo_spatial_empty": "没有包含地理位置的录音"
+  "geo_spatial_empty": "没有包含地理位置的录音",
+
+  "settings_reminder": "每日提醒",
+  "settings_reminder_desc": "如果今天还没有录音，在晚上8点提醒我录一段",
+  "reminder_notification_title": "今天还没有录音",
+  "reminder_notification_body": "今天还没有留下任何记忆，趁着一天结束前录一段吧！"
 }

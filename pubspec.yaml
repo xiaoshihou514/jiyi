@@ -45,6 +45,8 @@ dependencies:
   icons_launcher: ^3.0.1
   sherpa_onnx: ^1.12.1
   turf: ^0.0.10
+  flutter_local_notifications: ^18.0.0
+  timezone: ^0.10.0
 
 dependency_overrides:
   geolocator_android:

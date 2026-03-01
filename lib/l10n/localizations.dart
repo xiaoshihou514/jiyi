@@ -997,6 +997,30 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'没有包含地理位置的录音'**
   String get geo_spatial_empty;
+
+  /// No description provided for @settings_reminder.
+  ///
+  /// In zh, this message translates to:
+  /// **'每日提醒'**
+  String get settings_reminder;
+
+  /// No description provided for @settings_reminder_desc.
+  ///
+  /// In zh, this message translates to:
+  /// **'如果今天还没有录音，在晚上8点提醒我录一段'**
+  String get settings_reminder_desc;
+
+  /// No description provided for @reminder_notification_title.
+  ///
+  /// In zh, this message translates to:
+  /// **'今天还没有录音'**
+  String get reminder_notification_title;
+
+  /// No description provided for @reminder_notification_body.
+  ///
+  /// In zh, this message translates to:
+  /// **'今天还没有留下任何记忆，趁着一天结束前录一段吧！'**
+  String get reminder_notification_body;
 }
 
 class _AppLocalizationsDelegate

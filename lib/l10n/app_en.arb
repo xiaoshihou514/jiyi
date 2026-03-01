@@ -189,5 +189,10 @@
   "geo_timeline_notable": "Notable Recordings",
   
   "geo_spatial_title": "Geographic Statistics",
-  "geo_spatial_empty": "No recordings with geolocation"
+  "geo_spatial_empty": "No recordings with geolocation",
+
+  "settings_reminder": "Daily Reminder",
+  "settings_reminder_desc": "Remind me to make a recording at 8pm if I haven''t recorded anything today",
+  "reminder_notification_title": "Time to record a memory",
+  "reminder_notification_body": "You haven''t made any recordings today — capture something before the day ends!"
 }

@@ -506,4 +506,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get geo_spatial_empty => 'No recordings with geolocation';
+
+  @override
+  String get settings_reminder => 'Daily Reminder';
+
+  @override
+  String get settings_reminder_desc =>
+      'Remind me to make a recording at 8pm if I haven\'t recorded anything today';
+
+  @override
+  String get reminder_notification_title => 'Time to record a memory';
+
+  @override
+  String get reminder_notification_body =>
+      'You haven\'t made any recordings today — capture something before the day ends!';
 }

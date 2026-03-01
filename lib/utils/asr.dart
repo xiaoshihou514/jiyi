@@ -41,6 +41,7 @@ abstract class Asr {
   }
 
   static zdpp(String input, so.OfflinePunctuationConfig zdppConfig) {
+    so.initBindings();
     final zdppModel = so.OfflinePunctuation(config: zdppConfig);
     final result = zdppModel.addPunct(input);
     zdppModel.free();

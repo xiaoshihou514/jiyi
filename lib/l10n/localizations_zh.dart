@@ -481,4 +481,16 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get geo_spatial_empty => '没有包含地理位置的录音';
+
+  @override
+  String get settings_reminder => '每日提醒';
+
+  @override
+  String get settings_reminder_desc => '如果今天还没有录音，在晚上8点提醒我录一段';
+
+  @override
+  String get reminder_notification_title => '今天还没有录音';
+
+  @override
+  String get reminder_notification_body => '今天还没有留下任何记忆，趁着一天结束前录一段吧！';
 }
