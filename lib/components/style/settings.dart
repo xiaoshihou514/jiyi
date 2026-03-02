@@ -75,8 +75,6 @@ abstract class Settings {
     onChanged: onChanged,
     activeTrackColor: DefaultColors.keyword,
     inactiveTrackColor: DefaultColors.shade_2,
-    activeThumbColor: DefaultColors.fg,
-    inactiveThumbColor: DefaultColors.shade_5,
   );
 
   static TextStyle get fBHintStyle =>
