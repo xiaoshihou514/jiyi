@@ -1021,6 +1021,30 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'今天还没有留下任何记忆，趁着一天结束前录一段吧！'**
   String get reminder_notification_body;
+
+  /// No description provided for @player_load_error.
+  ///
+  /// In zh, this message translates to:
+  /// **'加载失败：{err}'**
+  String player_load_error(String err);
+
+  /// No description provided for @player_export_dialog_title.
+  ///
+  /// In zh, this message translates to:
+  /// **'导出 WAV'**
+  String get player_export_dialog_title;
+
+  /// No description provided for @player_exported.
+  ///
+  /// In zh, this message translates to:
+  /// **'已导出 {fileName}'**
+  String player_exported(String fileName);
+
+  /// No description provided for @geo_download_failed.
+  ///
+  /// In zh, this message translates to:
+  /// **'下载失败：{err}'**
+  String geo_download_failed(String err);
 }
 
 class _AppLocalizationsDelegate

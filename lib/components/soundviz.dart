@@ -7,9 +7,11 @@ import 'package:flutter_recorder/flutter_recorder.dart';
 import 'package:flutter_soloud/flutter_soloud.dart';
 
 import 'package:jiyi/pages/default_colors.dart';
+import 'package:jiyi/utils/anno.dart';
 import 'package:jiyi/utils/stop_model.dart';
 
 /// Abstract data source for the sound visualization.
+@Claude()
 abstract class VizSource {
   bool get isActive;
   Float32List getFft();
@@ -35,6 +37,7 @@ class RecorderVizSource implements VizSource {
 }
 
 /// Uses flutter_soloud's AudioData for playback visualization.
+@Claude()
 class SoLoudVizSource implements VizSource {
   final AudioData _audioData = AudioData(GetSamplesKind.linear);
 

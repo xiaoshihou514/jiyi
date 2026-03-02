@@ -183,9 +183,9 @@ class _GeoSettingsState extends State<GeoSettings> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _isDownloading = false);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Download failed: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l.geo_download_failed(e.toString()))),
+      );
     }
   }
   

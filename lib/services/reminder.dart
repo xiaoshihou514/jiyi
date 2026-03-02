@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:jiyi/services/io.dart';
 import 'package:jiyi/services/secure_storage.dart' as ss;
+import 'package:jiyi/utils/anno.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
+@Claude()
 abstract class Reminder {
   static const _notificationId = 42;
   static const _channelId = 'jiyi_reminder';

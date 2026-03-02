@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:jiyi/components/soundviz.dart';
 import 'package:jiyi/components/spinner.dart';
 import 'package:jiyi/components/tape.dart';
+import 'package:jiyi/components/tape_button.dart';
 import 'package:jiyi/components/tapewheel.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/pages/default_colors.dart';
@@ -22,6 +23,7 @@ import 'package:jiyi/utils/data/metadata.dart';
 import 'package:jiyi/services/io.dart';
 import 'package:jiyi/utils/stop_model.dart';
 
+@Claude()
 @DeepSeek()
 class Player extends StatefulWidget {
   final Metadata _md;
@@ -45,6 +47,7 @@ class _PlayerState extends State<Player> {
   String? _error;
   bool _cancelled = false;
   String? _resolvedGeoDesc;
+  late AppLocalizations _l;
 
   @override
   void initState() {
@@ -76,13 +79,13 @@ class _PlayerState extends State<Player> {
         (_) => _pollPosition(),
       );
 
-      if (!_cancelled && mounted) {
+      if (mounted) {
         setState(() => _isLoading = false);
       }
     } catch (e) {
       if (mounted) {
         setState(() {
-          _error = '加载失败: ${e.toString()}';
+          _error = _l.player_load_error(e.toString());
           _isLoading = false;
         });
       }
@@ -95,6 +98,9 @@ class _PlayerState extends State<Player> {
       final pos = _soloud.getPosition(_handle!);
       // Detect natural end-of-playback.
       if (pos >= _duration && !_stop.value) {
+        // Nullify handle immediately — native handle is invalid after natural
+        // end; further getPosition() calls return garbage values (SIGSEGV).
+        _handle = null;
         setState(() {
           _position = _duration;
           _stop.set(true);
@@ -110,29 +116,18 @@ class _PlayerState extends State<Player> {
       setState(() => _resolvedGeoDesc = widget._md.geodesc);
       return;
     }
-    if (widget._md.hasGeo) {
-      try {
-        final desc = await Geo().getLocationDescription(
-          widget._md.latitude!,
-          widget._md.longitude!,
-        );
-        if (!_cancelled && mounted) {
-          setState(
-            () => _resolvedGeoDesc =
-                desc ??
-                '${widget._md.latitude!.toStringAsFixed(4)}, '
-                    '${widget._md.longitude!.toStringAsFixed(4)}',
-          );
-        }
-      } catch (_) {
-        if (!_cancelled && mounted) {
-          setState(
-            () => _resolvedGeoDesc =
-                '${widget._md.latitude!.toStringAsFixed(4)}, '
-                '${widget._md.longitude!.toStringAsFixed(4)}',
-          );
-        }
-      }
+    if (!widget._md.hasGeo) return;
+    final fallback =
+        '${widget._md.latitude!.toStringAsFixed(4)}, '
+        '${widget._md.longitude!.toStringAsFixed(4)}';
+    try {
+      final desc = await Geo().getLocationDescription(
+        widget._md.latitude!,
+        widget._md.longitude!,
+      );
+      if (mounted) setState(() => _resolvedGeoDesc = desc ?? fallback);
+    } catch (_) {
+      if (mounted) setState(() => _resolvedGeoDesc = fallback);
     }
   }
 
@@ -159,6 +154,7 @@ class _PlayerState extends State<Player> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
+    _l = AppLocalizations.of(context)!;
     bool isMobile = ScreenUtil().screenWidth < ScreenUtil().screenHeight;
 
     return Scaffold(
@@ -245,12 +241,11 @@ class _PlayerState extends State<Player> {
                       _duration.inSeconds.toDouble(),
                     ),
                     onChanged: (value) {
+                      final seekTo = Duration(seconds: value.toInt());
                       if (_handle != null) {
-                        _soloud.seek(
-                          _handle!,
-                          Duration(seconds: value.toInt()),
-                        );
+                        _soloud.seek(_handle!, seekTo);
                       }
+                      setState(() => _position = seekTo);
                     },
                     activeColor: DefaultColors.func,
                     inactiveColor: DefaultColors.shade_4,
@@ -261,13 +256,10 @@ class _PlayerState extends State<Player> {
             // 控制按钮
             if (!_isLoading && _error == null)
               Center(
-                child: IconButton(
-                  onPressed: _togglePause,
-                  icon: Icon(
-                    _stop.value ? Icons.play_arrow : Icons.pause,
-                    size: 20.em,
-                    color: DefaultColors.fg,
-                  ),
+                child: TapeButton(
+                  icon: _stop.value ? Icons.play_arrow : Icons.pause,
+                  onPressed: () => _togglePause(),
+                  size: 20.em,
                 ),
               ),
           ],
@@ -277,7 +269,6 @@ class _PlayerState extends State<Player> {
   }
 
   Widget get _transcript {
-    final l = AppLocalizations.of(context)!;
     final content = widget._md.transcript;
     return Expanded(
       child: SingleChildScrollView(
@@ -286,7 +277,7 @@ class _PlayerState extends State<Player> {
             Container(
               color: DefaultColors.shade_1,
               child: Text(
-                content.isEmpty ? l.transcript_empty : content,
+                content.isEmpty ? _l.transcript_empty : content,
                 style: TextStyle(
                   color: DefaultColors.fg,
                   fontFamily: "朱雀仿宋",
@@ -444,17 +435,18 @@ class _PlayerState extends State<Player> {
     });
 
     final fileName = '${widget._md.title}.wav';
+    final dialogTitle = _l.player_export_dialog_title;
 
     if (Platform.isAndroid || Platform.isIOS) {
       final savePath = await FilePicker.platform.saveFile(
-        dialogTitle: 'Export WAV',
+        dialogTitle: dialogTitle,
         fileName: fileName,
         bytes: bytes,
       );
       if (savePath == null) return;
     } else {
       final savePath = await FilePicker.platform.saveFile(
-        dialogTitle: 'Export WAV',
+        dialogTitle: dialogTitle,
         fileName: fileName,
       );
       if (savePath == null) return;
@@ -464,7 +456,7 @@ class _PlayerState extends State<Player> {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Exported $fileName'),
+          content: Text(_l.player_exported(fileName)),
           backgroundColor: DefaultColors.shade_3,
           duration: Duration(seconds: 2),
         ),
@@ -472,8 +464,17 @@ class _PlayerState extends State<Player> {
     }
   }
 
-  void _togglePause() {
-    if (_handle == null) return;
+  Future<void> _togglePause() async {
+    if (_audioSource == null) return;
+    if (_handle == null) {
+      // Audio ended — restart and seek to wherever the slider is.
+      _handle = await _soloud.play(_audioSource!);
+      if (_position > Duration.zero && _position < _duration) {
+        _soloud.seek(_handle!, _position);
+      }
+      _stop.set(false);
+      return;
+    }
     _stop.flip();
     _soloud.setPause(_handle!, _stop.value);
   }

@@ -493,4 +493,22 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get reminder_notification_body => '今天还没有留下任何记忆，趁着一天结束前录一段吧！';
+
+  @override
+  String player_load_error(String err) {
+    return '加载失败：$err';
+  }
+
+  @override
+  String get player_export_dialog_title => '导出 WAV';
+
+  @override
+  String player_exported(String fileName) {
+    return '已导出 $fileName';
+  }
+
+  @override
+  String geo_download_failed(String err) {
+    return '下载失败：$err';
+  }
 }

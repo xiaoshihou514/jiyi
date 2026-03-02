@@ -3,8 +3,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:jiyi/pages/default_colors.dart';
+import 'package:jiyi/utils/anno.dart';
 import 'package:jiyi/utils/stop_model.dart';
 
+@Claude()
 class Tapewheel extends StatefulWidget {
   final StopModel _stop;
   const Tapewheel(this._stop, {super.key});

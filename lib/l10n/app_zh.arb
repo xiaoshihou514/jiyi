@@ -195,5 +195,25 @@
   "settings_reminder": "每日提醒",
   "settings_reminder_desc": "如果今天还没有录音，在晚上8点提醒我录一段",
   "reminder_notification_title": "今天还没有录音",
-  "reminder_notification_body": "今天还没有留下任何记忆，趁着一天结束前录一段吧！"
+  "reminder_notification_body": "今天还没有留下任何记忆，趁着一天结束前录一段吧！",
+
+  "player_load_error": "加载失败：{err}",
+  "@player_load_error": {
+    "placeholders": {
+      "err": { "type": "String" }
+    }
+  },
+  "player_export_dialog_title": "导出 WAV",
+  "player_exported": "已导出 {fileName}",
+  "@player_exported": {
+    "placeholders": {
+      "fileName": { "type": "String" }
+    }
+  },
+  "geo_download_failed": "下载失败：{err}",
+  "@geo_download_failed": {
+    "placeholders": {
+      "err": { "type": "String" }
+    }
+  }
 }

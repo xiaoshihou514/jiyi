@@ -520,4 +520,22 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get reminder_notification_body =>
       'You haven\'t made any recordings today — capture something before the day ends!';
+
+  @override
+  String player_load_error(String err) {
+    return 'Failed to load: $err';
+  }
+
+  @override
+  String get player_export_dialog_title => 'Export WAV';
+
+  @override
+  String player_exported(String fileName) {
+    return 'Exported $fileName';
+  }
+
+  @override
+  String geo_download_failed(String err) {
+    return 'Download failed: $err';
+  }
 }

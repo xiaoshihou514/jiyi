@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:jiyi/pages/default_colors.dart';
+import 'package:jiyi/utils/anno.dart';
 
+@Claude()
 class Tape extends StatelessWidget {
   const Tape({super.key});
 

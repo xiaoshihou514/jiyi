@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:jiyi/components/style/settings.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/services/reminder.dart';
+import 'package:jiyi/utils/anno.dart';
 
+@Claude()
 class ReminderSettings extends StatefulWidget {
   final AppLocalizations loc;
   const ReminderSettings(this.loc, {super.key});

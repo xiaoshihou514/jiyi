@@ -22,6 +22,7 @@ import 'package:jiyi/services/encryption.dart';
 import 'package:jiyi/utils/notifier.dart';
 import 'package:jiyi/components/spinner.dart';
 import 'package:jiyi/services/io.dart';
+import 'package:jiyi/components/tape_button.dart';
 import 'package:jiyi/utils/data/metadata.dart';
 import 'package:jiyi/components/tapewheel.dart';
 import 'package:jiyi/l10n/localizations.dart';
@@ -42,7 +43,7 @@ extension on num {
 }
 
 // ignore: constant_identifier_names
-const SAMPLE_RATE = 44100;
+const SAMPLE_RATE = 22050;
 
 // ignore: constant_identifier_names
 const DEFAULT_TITLE = "📼";
@@ -200,22 +201,24 @@ class _RecordPageState extends State<RecordPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(
-                  onPressed: done ? () {} : _cancel,
-                  icon: Icon(Icons.close, size: 20.em),
+                TapeButton(
+                  icon: Icons.close,
+                  onPressed: done ? null : _cancel,
+                  color: DefaultColors.error,
+                  size: 20.em,
                 ),
-                IconButton(
-                  onPressed: done ? () {} : _togglePause,
-                  icon: Icon(
-                    _stop.value ? Icons.play_arrow : Icons.pause,
-                    size: 20.em,
-                  ),
+                TapeButton(
+                  icon: _stop.value ? Icons.play_arrow : Icons.pause,
+                  onPressed: done ? null : _togglePause,
+                  size: 20.em,
                 ),
                 done
                     ? Spinner(Icons.sync, DefaultColors.keyword, 20.em)
-                    : IconButton(
+                    : TapeButton(
+                        icon: Icons.stop,
                         onPressed: _done,
-                        icon: Icon(Icons.stop, size: 20.em),
+                        color: DefaultColors.keyword,
+                        size: 20.em,
                       ),
               ],
             ),
@@ -251,7 +254,12 @@ class _RecordPageState extends State<RecordPage> {
   Future<void> _done() async {
     setState(() => done = true);
     _stop.value = true;
-
+    // Stop the recorder immediately — before the title dialog and ASR so no
+    // extra bytes accumulate after the user pressed stop.
+    _recorder.stopStreamingData();
+    _recorder.deinit();
+    timer.cancel();
+    _cancelled = true;
     // do this in another thread
     final coord = await _getLoc();
 
@@ -309,7 +317,6 @@ class _RecordPageState extends State<RecordPage> {
       debugPrint('Widget update failed: $e');
     }
 
-    _cleanup();
     if (mounted) {
       context.read<Notifier>().trigger();
       Navigator.pop(context);
@@ -378,7 +385,7 @@ class _RecordPageState extends State<RecordPage> {
     }
     try {
       await _recorder.init(
-        channels: RecorderChannels.stereo,
+        channels: RecorderChannels.mono,
         format: PCMFormat.f32le,
       );
       _recorder.start();
