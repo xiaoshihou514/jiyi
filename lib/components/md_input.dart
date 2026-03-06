@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:jiyi/components/style/popup.dart';
 import 'package:jiyi/utils/data/zdpp_setting.dart';
 import 'package:jiyi/services/secure_storage.dart' as ss;
-import 'package:jiyi/utils/asr.dart';
+import 'package:jiyi/services/speech.dart';
 import 'package:jiyi/utils/data/asr_setting.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 import 'package:flutter/material.dart';
@@ -454,7 +454,7 @@ class _MetadataInputDialogState extends State<MetadataInputDialog> {
     IO.STORAGE = params['base_path'];
 
     final wav = await Wav.readFile(file.path);
-    md["transcript"] = await Asr.fromWAV(
+    md["transcript"] = await Speech.fromWAV(
       params['model'] as so.OnlineModelConfig,
       params["zdpp"],
       Float32List.fromList(wav.channels.first.toList()),

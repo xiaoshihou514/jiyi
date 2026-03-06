@@ -893,7 +893,7 @@ abstract class AppLocalizations {
   /// No description provided for @settings_geo_desc.
   ///
   /// In zh, this message translates to:
-  /// **'下载地理数据文件以支持位置查询功能'**
+  /// **'下载地理数据文件以支持位置查询功能（非常吃内存，手机不建议开启）'**
   String get settings_geo_desc;
 
   /// No description provided for @settings_geo_download.

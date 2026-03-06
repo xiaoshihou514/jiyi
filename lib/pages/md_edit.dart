@@ -15,7 +15,7 @@ import 'package:jiyi/utils/data/metadata.dart';
 import 'package:jiyi/l10n/localizations.dart';
 import 'package:jiyi/services/io.dart';
 import 'package:jiyi/services/secure_storage.dart' as ss;
-import 'package:jiyi/utils/asr.dart';
+import 'package:jiyi/services/speech.dart';
 import 'package:wav/wav.dart';
 
 @DeepSeek()
@@ -123,7 +123,7 @@ class _MdEditPageState extends State<MdEditPage> {
 
   Future<void> _zdpp() async {
     setState(
-      () => _transcriptController.text = Asr.zdpp(
+      () => _transcriptController.text = Speech.zdpp(
         _transcriptController.text,
         _zdppSetting!,
       ),
@@ -134,7 +134,7 @@ class _MdEditPageState extends State<MdEditPage> {
     final data = Float32List.fromList(
       Wav.read(await IO.read(widget._md.path)).channels.first.toList(),
     );
-    final newTranscript = await Asr.fromWAV(
+    final newTranscript = await Speech.fromWAV(
       _asrSetting,
       _zdppSetting,
       data,
@@ -148,7 +148,9 @@ class _MdEditPageState extends State<MdEditPage> {
     if (widget._md.latitude == null || widget._md.longitude == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)!.geo_lookup_missing_coords),
+          content: Text(
+            AppLocalizations.of(context)!.geo_lookup_missing_coords,
+          ),
           backgroundColor: DefaultColors.error,
         ),
       );
@@ -474,7 +476,10 @@ class _MdEditPageState extends State<MdEditPage> {
                     Expanded(
                       child: Text(
                         AppLocalizations.of(context)!.metadata_location_display(
-                          _geodesc ?? AppLocalizations.of(context)!.metadata_location_unset,
+                          _geodesc ??
+                              AppLocalizations.of(
+                                context,
+                              )!.metadata_location_unset,
                         ),
                         style: TextStyle(
                           color: DefaultColors.fg,

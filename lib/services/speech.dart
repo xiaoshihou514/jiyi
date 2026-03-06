@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 
-abstract class Asr {
+abstract class Speech {
   // split when next word later than 1 second
   // ignore: non_constant_identifier_names
   static double THRESHOLD = 1.0;

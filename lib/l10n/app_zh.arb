@@ -147,7 +147,7 @@
   "metadata_location_unset": "未设置",
   
   "settings_geo": "坐标解析设置",
-  "settings_geo_desc": "下载地理数据文件以支持位置查询功能",
+  "settings_geo_desc": "下载地理数据文件以支持位置查询功能（非常吃内存，手机不建议开启）",
   "settings_geo_download": "下载地理数据",
   "settings_geo_saved": "坐标解析设置已保存",
   "settings_geo_reset": "坐标解析设置已重置",

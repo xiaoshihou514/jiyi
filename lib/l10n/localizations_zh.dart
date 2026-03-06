@@ -423,7 +423,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_geo => '坐标解析设置';
 
   @override
-  String get settings_geo_desc => '下载地理数据文件以支持位置查询功能';
+  String get settings_geo_desc => '下载地理数据文件以支持位置查询功能（非常吃内存，手机不建议开启）';
 
   @override
   String get settings_geo_download => '下载地理数据';

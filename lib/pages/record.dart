@@ -32,7 +32,7 @@ import 'package:jiyi/utils/data/asr_setting.dart';
 import 'package:jiyi/pages/default_colors.dart';
 import 'package:jiyi/services/geo.dart';
 import 'package:jiyi/services/reminder.dart';
-import 'package:jiyi/utils/asr.dart';
+import 'package:jiyi/services/speech.dart';
 import 'package:jiyi/utils/data/geo_setting.dart';
 import 'package:jiyi/utils/data/zdpp_setting.dart';
 
@@ -336,7 +336,7 @@ class _RecordPageState extends State<RecordPage> {
       WavFormat.pcm32bit,
     ).write();
 
-    md["transcript"] = await Asr.fromWAV(
+    md["transcript"] = await Speech.fromWAV(
       params['model'] as so.OnlineModelConfig?,
       (params["zdpp"] as ZdppSetting?)?.model,
       Float32List.fromList(bytes),
