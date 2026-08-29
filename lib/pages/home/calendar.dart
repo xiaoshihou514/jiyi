@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:jiyi/pages/cosmos/cosmos.dart';
 import 'package:jiyi/pages/md_edit.dart';
 import 'package:jiyi/pages/home.dart';
 import 'package:jiyi/pages/record.dart';
@@ -82,6 +83,10 @@ class _CalendarState extends State<Calendar> {
         // text search
         buildFloatingBtn(isMobile, DefaultColors.keyword, Icons.search, () {
           Navigator.push(context, SmoothRouter.builder(Search()));
+        }),
+        // memory cosmos (immersive mode)
+        buildFloatingBtn(isMobile, DefaultColors.constant, Icons.auto_awesome, () {
+          Navigator.push(context, SmoothRouter.builder(CosmosPage()));
         }),
         // record
         buildFloatingBtn(isMobile, DefaultColors.special, Icons.mic, () {

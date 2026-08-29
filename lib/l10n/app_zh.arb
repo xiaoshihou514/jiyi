@@ -215,5 +215,32 @@
     "placeholders": {
       "err": { "type": "String" }
     }
-  }
+  },
+
+  "cosmos_title": "记忆宇宙",
+  "cosmos_empty": "这里还一片虚无，去录下第一段记忆吧",
+  "cosmos_season_spring": "春季",
+  "cosmos_season_summer": "夏季",
+  "cosmos_season_autumn": "秋季",
+  "cosmos_season_winter": "冬季",
+  "cosmos_memories": "{count} 段记忆",
+  "@cosmos_memories": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "cosmos_weeks": "按周",
+  "cosmos_time_of_day": "按时段",
+  "cosmos_morning": "清晨",
+  "cosmos_afternoon": "午后",
+  "cosmos_night": "夜晚",
+  "cosmos_week_label": "第 {n} 周",
+  "@cosmos_week_label": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  },
+  "cosmos_legend_duration": "时长",
+  "cosmos_legend_rings": "光晕",
+  "cosmos_encrypted": "已加密"
 }

@@ -511,4 +511,56 @@ class AppLocalizationsZh extends AppLocalizations {
   String geo_download_failed(String err) {
     return '下载失败：$err';
   }
+
+  @override
+  String get cosmos_title => '记忆宇宙';
+
+  @override
+  String get cosmos_empty => '这里还一片虚无，去录下第一段记忆吧';
+
+  @override
+  String get cosmos_season_spring => '春季';
+
+  @override
+  String get cosmos_season_summer => '夏季';
+
+  @override
+  String get cosmos_season_autumn => '秋季';
+
+  @override
+  String get cosmos_season_winter => '冬季';
+
+  @override
+  String cosmos_memories(int count) {
+    return '$count 段记忆';
+  }
+
+  @override
+  String get cosmos_weeks => '按周';
+
+  @override
+  String get cosmos_time_of_day => '按时段';
+
+  @override
+  String get cosmos_morning => '清晨';
+
+  @override
+  String get cosmos_afternoon => '午后';
+
+  @override
+  String get cosmos_night => '夜晚';
+
+  @override
+  String cosmos_week_label(int n) {
+    return '第 $n 周';
+  }
+
+  @override
+  String get cosmos_legend_duration => '时长';
+
+  @override
+  String get cosmos_legend_rings => '光晕';
+
+  @override
+  String get cosmos_encrypted => '已加密';
 }

@@ -538,4 +538,56 @@ class AppLocalizationsEn extends AppLocalizations {
   String geo_download_failed(String err) {
     return 'Download failed: $err';
   }
+
+  @override
+  String get cosmos_title => 'Memory Cosmos';
+
+  @override
+  String get cosmos_empty => 'Nothing here yet — record your first memory';
+
+  @override
+  String get cosmos_season_spring => 'Spring';
+
+  @override
+  String get cosmos_season_summer => 'Summer';
+
+  @override
+  String get cosmos_season_autumn => 'Autumn';
+
+  @override
+  String get cosmos_season_winter => 'Winter';
+
+  @override
+  String cosmos_memories(int count) {
+    return '$count memories';
+  }
+
+  @override
+  String get cosmos_weeks => 'Weeks';
+
+  @override
+  String get cosmos_time_of_day => 'Time of day';
+
+  @override
+  String get cosmos_morning => 'Morning';
+
+  @override
+  String get cosmos_afternoon => 'Afternoon';
+
+  @override
+  String get cosmos_night => 'Night';
+
+  @override
+  String cosmos_week_label(int n) {
+    return 'Week $n';
+  }
+
+  @override
+  String get cosmos_legend_duration => 'Duration';
+
+  @override
+  String get cosmos_legend_rings => 'Rings';
+
+  @override
+  String get cosmos_encrypted => 'Encrypted';
 }

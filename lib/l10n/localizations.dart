@@ -1045,6 +1045,102 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'下载失败：{err}'**
   String geo_download_failed(String err);
+
+  /// No description provided for @cosmos_title.
+  ///
+  /// In zh, this message translates to:
+  /// **'记忆宇宙'**
+  String get cosmos_title;
+
+  /// No description provided for @cosmos_empty.
+  ///
+  /// In zh, this message translates to:
+  /// **'这里还一片虚无，去录下第一段记忆吧'**
+  String get cosmos_empty;
+
+  /// No description provided for @cosmos_season_spring.
+  ///
+  /// In zh, this message translates to:
+  /// **'春季'**
+  String get cosmos_season_spring;
+
+  /// No description provided for @cosmos_season_summer.
+  ///
+  /// In zh, this message translates to:
+  /// **'夏季'**
+  String get cosmos_season_summer;
+
+  /// No description provided for @cosmos_season_autumn.
+  ///
+  /// In zh, this message translates to:
+  /// **'秋季'**
+  String get cosmos_season_autumn;
+
+  /// No description provided for @cosmos_season_winter.
+  ///
+  /// In zh, this message translates to:
+  /// **'冬季'**
+  String get cosmos_season_winter;
+
+  /// No description provided for @cosmos_memories.
+  ///
+  /// In zh, this message translates to:
+  /// **'{count} 段记忆'**
+  String cosmos_memories(int count);
+
+  /// No description provided for @cosmos_weeks.
+  ///
+  /// In zh, this message translates to:
+  /// **'按周'**
+  String get cosmos_weeks;
+
+  /// No description provided for @cosmos_time_of_day.
+  ///
+  /// In zh, this message translates to:
+  /// **'按时段'**
+  String get cosmos_time_of_day;
+
+  /// No description provided for @cosmos_morning.
+  ///
+  /// In zh, this message translates to:
+  /// **'清晨'**
+  String get cosmos_morning;
+
+  /// No description provided for @cosmos_afternoon.
+  ///
+  /// In zh, this message translates to:
+  /// **'午后'**
+  String get cosmos_afternoon;
+
+  /// No description provided for @cosmos_night.
+  ///
+  /// In zh, this message translates to:
+  /// **'夜晚'**
+  String get cosmos_night;
+
+  /// No description provided for @cosmos_week_label.
+  ///
+  /// In zh, this message translates to:
+  /// **'第 {n} 周'**
+  String cosmos_week_label(int n);
+
+  /// No description provided for @cosmos_legend_duration.
+  ///
+  /// In zh, this message translates to:
+  /// **'时长'**
+  String get cosmos_legend_duration;
+
+  /// No description provided for @cosmos_legend_rings.
+  ///
+  /// In zh, this message translates to:
+  /// **'光晕'**
+  String get cosmos_legend_rings;
+
+  /// No description provided for @cosmos_encrypted.
+  ///
+  /// In zh, this message translates to:
+  /// **'已加密'**
+  String get cosmos_encrypted;
 }
 
 class _AppLocalizationsDelegate

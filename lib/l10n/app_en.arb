@@ -214,5 +214,32 @@
     "placeholders": {
       "err": { "type": "String" }
     }
-  }
+  },
+
+  "cosmos_title": "Memory Cosmos",
+  "cosmos_empty": "Nothing here yet — record your first memory",
+  "cosmos_season_spring": "Spring",
+  "cosmos_season_summer": "Summer",
+  "cosmos_season_autumn": "Autumn",
+  "cosmos_season_winter": "Winter",
+  "cosmos_memories": "{count} memories",
+  "@cosmos_memories": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "cosmos_weeks": "Weeks",
+  "cosmos_time_of_day": "Time of day",
+  "cosmos_morning": "Morning",
+  "cosmos_afternoon": "Afternoon",
+  "cosmos_night": "Night",
+  "cosmos_week_label": "Week {n}",
+  "@cosmos_week_label": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  },
+  "cosmos_legend_duration": "Duration",
+  "cosmos_legend_rings": "Rings",
+  "cosmos_encrypted": "Encrypted"
 }
