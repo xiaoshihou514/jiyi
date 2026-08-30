@@ -2,11 +2,11 @@ name: jiyi
 description: "Cross platform encrypted audio logging app"
 publish_to: "none"
 
-version: 1.0.3+14
+version: 1.0.4+15
 
 environment:
   sdk: "^3.8.0"
-  flutter: "^3.32.1"
+  flutter: "^3.38.7"
 
 dependencies:
   flutter:
@@ -42,7 +42,7 @@ dependencies:
   flutter_soloud: ^3.1.10
   provider: ^6.1.5
   audioplayers: ^6.4.0
-  sherpa_onnx: ^1.12.1
+  sherpa_onnx: 1.12.28
   turf: ^0.0.10
   flutter_local_notifications: ^18.0.0
   timezone: ^0.10.0
@@ -58,8 +58,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
-  flutter_app_name_localization: ^0.0.6
-  build_runner: ^2.3.3
+  flutter_app_name_localization: ^0.1.0
+  build_runner: ^2.15.1
   json_serializable: ^6.8.0
   icons_launcher: ^3.0.1
 

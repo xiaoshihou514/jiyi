@@ -28,11 +28,14 @@ jobs:
       - name: Setup Flutter SDK
         uses: flutter-actions/setup-flutter@v4
         with:
-          channel: stable
+          version: "3.38.7"
+
+      - name: Get dependencies
+        run: flutter pub get
 
       - name: Generate Code
         run: |
-          dart run build_runner build --build-filter 'package:jiyi/utils/data/*'
+          dart run build_runner build --force-jit --build-filter 'package:jiyi/utils/data/*'
 
       - name: Build Linux
         if: matrix.config.target == 'Linux'
@@ -77,7 +80,7 @@ jobs:
         if: matrix.config.target == 'Android'
         uses: android-actions/setup-android@v3
         with:
-          packages: "ndk;27.2.12479018"
+          packages: "ndk;28.2.13676358"
 
       - name: Build Android
         if: matrix.config.target == 'Android'
@@ -86,47 +89,36 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y pandoc
 
-          export JIYI=$(pwd)
-          export PUB_CACHE="$(pwd)/.pub-cache"
-          cd $HOME
-          git clone https://github.com/k2-fsa/sherpa-onnx
-          export FLUTTER=$(dirname $(which flutter))
-          export SHERPA_ONNX=$HOME/sherpa-onnx
-
-          cd $JIYI
-          export SHERPA_VERSION=$(sed -nE 's/.*sherpa_onnx:\s*\^?([0-9.]+).*/\1/p' pubspec.yaml)
-
-          flutterVersion=$(sed -nE 's/\s*flutter:\s*"\^([0-9.]+)".*/\1/p' pubspec.yaml)
-          git -C $FLUTTER checkout -f $flutterVersion
-          git -C $SHERPA_ONNX checkout -f "v$SHERPA_VERSION"
           flutter config --no-analytics
           flutter pub get
-          # sed -i -e 's/ndkVersion .*/ndkVersion = "27.2.12479018"/' {$PUB_CACHE/hosted/pub.dev/{flutter_recorder-*,flutter_soloud-*,sherpa_onnx_android-*}/android}/build.gradle.kts
+          FLUTTER_RECORDER=$(sed -nE '/"name": "flutter_recorder"/{n;s/.*"rootUri": "file:\/\/(.*)",/\1/p;}' .dart_tool/package_config.json)
+          FLUTTER_SOLOUD=$(sed -nE '/"name": "flutter_soloud"/{n;s/.*"rootUri": "file:\/\/(.*)",/\1/p;}' .dart_tool/package_config.json)
+          test -d "$FLUTTER_RECORDER" && test -d "$FLUTTER_SOLOUD"
+          export ANDROID_NDK="$ANDROID_HOME/ndk/28.2.13676358"
+          export ANDROID_NDK_HOME="$ANDROID_NDK"
+          test -d "$ANDROID_NDK"
+          # sed -i -e 's/ndkVersion .*/ndkVersion = "28.2.13676358"/' {$PUB_CACHE/hosted/pub.dev/{flutter_recorder-*,flutter_soloud-*,sherpa_onnx_android-*}/android}/build.gradle.kts
 
-          find $PUB_CACHE -type f -regex ".*\.\(wasm\|so\|zip\|gz\|exe\)$" -exec rm -f {} \;
+          find $PUB_CACHE -type f \
+            -regex ".*\.\(wasm\|so\|zip\|gz\|exe\)$" \
+            ! -path "*/flutter_recorder-*/android/libs/*" \
+            ! -path "*/sherpa_onnx_android-*/android/src/main/jniLibs/*" \
+            -exec rm -f {} \;
           rm -rf $PUB_CACHE/hosted/pub.dev/gsettings-*/test/dconf/test
           rm -rf $PUB_CACHE/hosted/pub.dev/audioplayers-*/example
 
-          pushd $PUB_CACHE/hosted/pub.dev/flutter_soloud-*/xiph
+          pushd "$FLUTTER_SOLOUD/xiph"
           ./build_Android.sh
           cp -a android ..
           popd
 
-          pushd $SHERPA_ONNX
-          export SHERPA_ONNX_ENABLE_JNI=OFF
-          export SHERPA_ONNX_ENABLE_C_API=ON
-          ./build-android-arm64-v8a.sh
-          ./build-android-armv7-eabi.sh
-          ./build-android-x86-64.sh
-          cp build-android-arm64-v8a/install/lib/lib*.so $PUB_CACHE/hosted/pub.dev/sherpa_onnx_android-*/android/src/main/jniLibs/arm64-v8a/
-          cp build-android-armv7-eabi/install/lib/lib*.so $PUB_CACHE/hosted/pub.dev/sherpa_onnx_android-*/android/src/main/jniLibs/armeabi-v7a/
-          cp build-android-x86-64/install/lib/lib*.so $PUB_CACHE/hosted/pub.dev/sherpa_onnx_android-*/android/src/main/jniLibs/x86_64/
-          popd
+          touch "$FLUTTER_RECORDER/web/libflutter_recorder_plugin.wasm"
+          touch "$FLUTTER_SOLOUD/web/libflutter_soloud_plugin.wasm"
+          rm -rf "$FLUTTER_SOLOUD"/xiph/build-*
 
-          touch $(echo $PUB_CACHE/hosted/pub.dev/flutter_recorder-*)/web/libflutter_recorder_plugin.wasm
-          touch $(echo $PUB_CACHE/hosted/pub.dev/flutter_soloud-*)/web/libflutter_soloud_plugin.wasm
-
-          flutter build apk --split-per-abi
+      - name: Build Android APK
+        if: matrix.config.target == 'Android'
+        run: flutter build apk --split-per-abi --no-pub
 
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
